@@ -16,3 +16,10 @@ Meanwhile, the compiled output files will be generated in the `bin` folder by de
 ## Dependency Management
 
 The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+
+This file contains provided code, testers, and test cases.
+
+provided shouls be a top level package in your src directory
+JottParserTester and JottTokenizerTester classes should be in a package call testers.
+
+the testCases directories should be in the working directory of your project. 
