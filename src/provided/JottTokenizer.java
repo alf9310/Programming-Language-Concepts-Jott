@@ -92,6 +92,7 @@ public class JottTokenizer {
 
         case WAITINGFORNEWLINE:
           if (ch == '\n') {
+            line_num++;
             state = State.START;
           }
           break;

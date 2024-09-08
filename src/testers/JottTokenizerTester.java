@@ -137,6 +137,18 @@ public class JottTokenizerTester {
         filename = "tokenizerTestCases/phase1ErrorExample.jott";
         testCases.add(new TestCase("Phase1ErrorExampleTest", filename, null, true));
 
+        // Extra test cases for phase 1 not created by prof
+        ArrayList<Token> commentCharTokens = new ArrayList<>();
+        filename = "tokenizerTestCases/commentsSingleChars.jott";
+        commentCharTokens.add(new Token("[", filename, 3, TokenType.L_BRACKET));
+        commentCharTokens.add(new Token(",", filename, 4, TokenType.COMMA));
+        commentCharTokens.add(new Token(";", filename, 5, TokenType.SEMICOLON));
+        testCases.add(new TestCase("CommentTokens", filename, commentCharTokens, false));
+
+        ArrayList<Token> commentTokens = new ArrayList<>();
+        filename = "tokenizerTestCases/comments.jott";
+        testCases.add(new TestCase("CommentTokens", filename, commentTokens, false));
+
     }
 
     private String tokenToString(Token t){
