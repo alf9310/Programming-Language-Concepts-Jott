@@ -105,11 +105,11 @@ public class JottTokenizer {
             state = State.NUMBER;
             buffer.append(ch);
           }
-          // Identifiers/keywords
-          else if (Character.isLetter(ch)) {
-            state = State.IDENTIFIER;
-            buffer.append(ch);
-          }
+          // // Identifiers/keywords
+          // else if (Character.isLetter(ch)) {
+          //   state = State.IDENTIFIER;
+          //   buffer.append(ch);
+          // }
           // String literals
           else if (ch == '"') {
             state = State.STRING;
