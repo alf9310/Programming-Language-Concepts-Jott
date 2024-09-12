@@ -13,7 +13,7 @@ import java.io.IOException;
 
 public class JottTokenizer {
   enum State {
-    START, WAITINGFORNEWLINE, REL_OP
+    START, WAITINGFORNEWLINE, REL_OP, NUMBER, IDENTIFIER, STRING
   }
 
   // @return character array
@@ -99,6 +99,21 @@ public class JottTokenizer {
           else if (ch == '+' || ch == '-' || ch == '*' || ch == '/') {
             Token token = new Token(String.valueOf(ch), filename, line_num, TokenType.MATH_OP);
             tokens.add(token);
+          }
+          // Numbers (start of number)
+          else if (Character.isDigit(ch)) {
+            state = State.NUMBER;
+            buffer.append(ch);
+          }
+          // Identifiers/keywords
+          else if (Character.isLetter(ch)) {
+            state = State.IDENTIFIER;
+            buffer.append(ch);
+          }
+          // String literals
+          else if (ch == '"') {
+            state = State.STRING;
+            buffer.append(ch);
           }
           break;
 
