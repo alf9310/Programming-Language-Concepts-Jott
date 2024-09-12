@@ -1,25 +1,27 @@
-## Getting Started
+## Authors:
+- Kaiy Muhammad     kkm4289@rit.edu
+- Sejal Bhattad     sab2713@rit.edu
+- Lauren Kaestle    lk2958@rit.edu
+- Audrey Fuller     alf9310@rit.edu
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+## Project Overview
+CSCI.344 - Programming Language Concepts Fall 2024
+This is an interpreter for the programming language Jott using Java. 
 
-## Folder Structure
+There are four distinct phases in the program; scanning (tokenizing), parsing (build parse tree), semantic analysis (building an AST), and execution.
 
-The workspace contains two folders by default, where:
+### Phase 1: Tokenizer
+    Defined by the JottTokenizer class. Will take in the absolute/relative path of the file to parse. It will return an ArrayList of tokens.
+### Phase 2: Parser
+    Defined by the JottParser class. Will take in an ArrayList of tokens created by a JottTokenizer and return the root of the tree represented by those tokens.
+### Phase 3: Semantic Analysis /AST
+    Defined by the validateTree function in Jott.java. Will determine if the parse tree follows all the required semantic rules.
+### Phase 4: Interpretation
+    Defined by the execute function in Jott.java. Interprets the code.
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
-
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
-
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
-
-## Dependency Management
-
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
-
-This file contains provided code, testers, and test cases.
-
-provided shouls be a top level package in your src directory
-JottParserTester and JottTokenizerTester classes should be in a package call testers.
-
-the testCases directories should be in the working directory of your project. 
+## Library Structure
+- `src`: contains the working code
+    - `provided`    - Where the helper classes are defined for interpreting the Jott Language
+    - `testers`     - Testers for the various phases of the project
+- `test-cases`: contains the test inputs and outputs, as used by the testers
+- `bin`: contains the compiled output files
