@@ -123,6 +123,31 @@ public class JottTokenizer {
             state = State.START;
           }
           break;
+
+        case REL_OP:
+          if (ch == '=') {
+            buffer.append(ch);
+            tokens.add(new Token(buffer.toString(), filename, line_num, TokenType.REL_OP));  // Handles "=="
+            buffer.setLength(0);  // Clear buffer
+          } else {
+            tokens.add(new Token("=", filename, line_num, TokenType.ASSIGN));  // Single '=' assignment
+            i--;  // Retract since this char needs further processing
+          }
+            state = State.START;
+            break;
+
+          case NUMBER:
+            if (Character.isDigit(ch)) {
+                buffer.append(ch);  // Continue collecting digits
+            } else if (ch == '.') {
+                buffer.append(ch);  // Start floating-point number
+            } else {
+                tokens.add(new Token(buffer.toString(), filename, line_num, TokenType.NUMBER));
+                buffer.setLength(0);  // Clear buffer
+                i--;  // Retract since this char needs further processing
+                state = State.START;
+            }
+            break;
       }
 
     }
