@@ -136,15 +136,24 @@ public class JottTokenizer {
             state = State.START;
             break;
 
-          case NUMBER:
-            if (Character.isDigit(ch)) {
-                buffer.append(ch);  // Continue collecting digits
-            } else if (ch == '.') {
-                buffer.append(ch);  // Start floating-point number
-            } else {
-                tokens.add(new Token(buffer.toString(), filename, line_num, TokenType.NUMBER));
+        case NUMBER:
+          if (Character.isDigit(ch)) {
+              buffer.append(ch);  // Continue collecting digits
+          } else if (ch == '.') {
+              buffer.append(ch);  // Start floating-point number
+          } else {
+              tokens.add(new Token(buffer.toString(), filename, line_num, TokenType.NUMBER));
+              buffer.setLength(0);  // Clear buffer
+              i--;  // Retract since this char needs further processing
+              state = State.START;
+          }
+          break;
+
+          case STRING:
+            buffer.append(ch);  // Continue collecting the string literal
+            if (ch == '"') {
+                tokens.add(new Token(buffer.toString(), filename, line_num, TokenType.STRING));
                 buffer.setLength(0);  // Clear buffer
-                i--;  // Retract since this char needs further processing
                 state = State.START;
             }
             break;
