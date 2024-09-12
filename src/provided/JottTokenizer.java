@@ -87,11 +87,11 @@ public class JottTokenizer {
             Token token = new Token(":", filename, line_num, TokenType.COLON);
             tokens.add(token);
           } else if (ch == '=') {
-            Token token = new Token("=", filename, line_num, TokenType.ASSIGN);
-            tokens.add(token);
-          }
+            //Token token = new Token("=", filename, line_num, TokenType.ASSIGN);
+            //tokens.add(token);
+          //}
           // Relational operator or assignment
-          else if (ch == '=') {
+          //else if (ch == '=') {
             state = State.REL_OP;
             buffer.append(ch);
           } 
