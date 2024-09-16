@@ -46,12 +46,12 @@ public class JottTokenizer {
   public static ArrayList<Token> tokenize(String filename) {
     ArrayList<Character> chars = process_file(filename);
     ArrayList<Token> tokens = new ArrayList<>();
-
     int line_num = 1;
     State state = State.START;
     // For accumulating multi-character tokens like numbers and identifiers
     StringBuilder buffer = new StringBuilder();
 
+    try {
     for (int i = 0; i < chars.size(); i++) {
       char ch = chars.get(i);
       switch (state) {
@@ -122,6 +122,9 @@ public class JottTokenizer {
           else if (ch == '"') {
             state = State.STRING;
             buffer.append(ch);
+          } else if(!(ch == ' ' || ch == '\t')) {
+            // if not whitespace, we don't recognize the char
+            throw new Exception("Invalid character \"" + ch + "\".\n");
           }
           break;
 
@@ -145,6 +148,7 @@ public class JottTokenizer {
             i--;
           } else {
             // throw error, can't accept ! alone
+            throw new Exception("Invalid token \"!\". \"!\" expects following \"=\"\n");
           }
             buffer.setLength(0);  // Clear buffer
             state = State.START;
@@ -152,15 +156,15 @@ public class JottTokenizer {
 
         case NUMBER:
           if (Character.isDigit(ch)) {
-              buffer.append(ch);  // Continue collecting digits
+            buffer.append(ch);  // Continue collecting digits
           } else if (ch == '.') {
-              buffer.append(ch);  // Start floating-point number
-              state = State.DECIMAL_NUMBER;
+            buffer.append(ch);  // Start floating-point number
+            state = State.DECIMAL_NUMBER;
           } else {
-              tokens.add(new Token(buffer.toString(), filename, line_num, TokenType.NUMBER));
-              buffer.setLength(0);  // Clear buffer
-              i--;  // Retract since this char needs further processing
-              state = State.START;
+            tokens.add(new Token(buffer.toString(), filename, line_num, TokenType.NUMBER));
+            buffer.setLength(0);  // Clear buffer
+            i--;  // Retract since this char needs further processing
+            state = State.START;
           }
           break;
 
@@ -175,15 +179,21 @@ public class JottTokenizer {
               state = State.START;
             } else {
               // error, can't have the period alone
+              throw new Exception("Invalid number \"" + buffer.toString() + "\". A decimal number must have at least one digit before or after the decimal\n");
             }
             break;
 
           case STRING:
-            buffer.append(ch);  // Continue collecting the string literal
+            // buffer.append(ch);  // Continue collecting the string literal
             if (ch == '"') {
-                tokens.add(new Token(buffer.toString(), filename, line_num, TokenType.STRING));
-                buffer.setLength(0);  // Clear buffer
-                state = State.START;
+              buffer.append(ch);
+              tokens.add(new Token(buffer.toString(), filename, line_num, TokenType.STRING));
+              buffer.setLength(0);  // Clear buffer
+              state = State.START;
+            } else if(Character.isAlphabetic(ch) || Character.isDigit(ch) || ch == ' ' || ch == '\t') {
+              buffer.append(ch);
+            } else {
+              throw new Exception("Invalid string " + buffer.toString() + ". A string must start and end with \"\n");
             }
             break;
           case IDENTIFIER:
@@ -207,34 +217,49 @@ public class JottTokenizer {
             buffer.setLength(0);
             state = State.START;
             break;
+        }
+
       }
 
-    }
-
-    // handle token left at end
-    if(buffer.length() > 0) {
-      switch(state){
-        case DECIMAL_NUMBER:
-          // throw error if buffer size < 2
-        case NUMBER:
-          tokens.add(new Token(buffer.toString(), filename, line_num, TokenType.NUMBER));
-          break;
-        case STRING:
-          if(buffer.length() < 2 || buffer.charAt(buffer.length() - 1) != '"') {
-            // throw error
-          } else {
-            tokens.add(new Token(buffer.toString(), filename, line_num, TokenType.STRING));
-          }
-          break;
-        case IDENTIFIER:
-          tokens.add(new Token(buffer.toString(), filename, line_num, TokenType.ID_KEYWORD));
-          break;
-        case REL_OP:
-          tokens.add(new Token(buffer.toString(), filename, line_num, TokenType.ASSIGN));
-          break;
-      }
+      // handle token left at end
+      if(buffer.length() > 0) {
+        switch(state){
+          case DECIMAL_NUMBER:
+            // throw error if buffer size < 2
+            if(buffer.length() < 2) {
+              throw new Exception("Invalid number \"" + buffer.toString() + "\". A decimal number must have at least one digit before or after the decimal\n");
+            }
+          case NUMBER:
+            tokens.add(new Token(buffer.toString(), filename, line_num, TokenType.NUMBER));
+            break;
+          case STRING:
+            if(buffer.length() < 2 || buffer.charAt(buffer.length() - 1) != '"') {
+              // throw error
+              throw new Exception("Invalid string " + buffer.toString() + ". A string must start and end with \"\n");
+            } else {
+              tokens.add(new Token(buffer.toString(), filename, line_num, TokenType.STRING));
+            }
+            break;
+          case IDENTIFIER:
+            tokens.add(new Token(buffer.toString(), filename, line_num, TokenType.ID_KEYWORD));
+            break;
+          case REL_OP:
+            if(buffer.charAt(0) == '!') {
+              throw new Exception("Invalid token \"!\". \"!\" expects following \"=\"\n");
+            } else {
+              tokens.add(new Token(buffer.toString(), filename, line_num, TokenType.ASSIGN));
+            }
+            break;
+          case COLON:
+            tokens.add(new Token(buffer.toString(), filename, line_num, TokenType.COLON));
+            break;
+        }
     }
 
     return tokens;
+    } catch (Exception e) {
+      System.err.println("Syntax Error\n" + e.getMessage() + filename + ":" + line_num);
+      return null;
+    }
   }
 }
