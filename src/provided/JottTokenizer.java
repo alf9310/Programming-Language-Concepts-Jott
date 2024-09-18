@@ -14,6 +14,7 @@ import java.util.ArrayList;
 public class JottTokenizer {
   enum State {
     START, WAITINGFORNEWLINE, REL_OP, NUMBER, DECIMAL_NUMBER, IDENTIFIER, STRING, COLON
+
   }
 
   // @return character array
@@ -25,7 +26,7 @@ public class JottTokenizer {
       int ch = 0;
       while ((ch = buff_reader.read()) != -1) {
         chars.add((char) ch);
-        System.out.print((char) ch);
+        // System.out.print((char) ch);
       }
     } catch (IOException exception) {
       exception.printStackTrace();
@@ -56,6 +57,8 @@ public class JottTokenizer {
       char ch = chars.get(i);
       switch (state) {
         case START:
+          buffer.setLength(0); // Clear buffer
+
           // Whitespace
           /*if (ch == ' ' || ch == '\t') {
             continue;
@@ -98,6 +101,7 @@ public class JottTokenizer {
             state = State.REL_OP;
             buffer.append(ch);
           } // add in <, >, !, etc. too?
+
           // Mathematical operators
           else if (ch == '+' || ch == '-' || ch == '*' || ch == '/') {
             Token token = new Token(String.valueOf(ch), filename, line_num, TokenType.MATH_OP);
@@ -118,6 +122,7 @@ public class JottTokenizer {
             state = State.IDENTIFIER;
             buffer.append(ch);
           }
+
           // String literals
           else if (ch == '"') {
             state = State.STRING;
@@ -127,7 +132,14 @@ public class JottTokenizer {
             throw new Exception("Invalid character \"" + ch + "\".\n");
           }
           break;
+          
+        // // Numbers (start of number)
+        // else if (Character.isDigit(ch)) {
+        // state = State.NUMBER;
+        // buffer.append(ch);
+        // }
 
+        //Discard everthing until newline
         case WAITINGFORNEWLINE:
           if (ch == '\n') {
             line_num++;
