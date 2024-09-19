@@ -7,7 +7,7 @@
 ## Build Instructions
 In the Programming-Language-Language-Concepts-Jott directory, run
 ```
-'java -XX:+ShowCodeDetailsInExceptionMessages -cp .\bin testers.JottTokenizerTester'
+java -XX:+ShowCodeDetailsInExceptionMessages -cp .\bin testers.JottTokenizerTester
 ```
 
 ## Project Overview

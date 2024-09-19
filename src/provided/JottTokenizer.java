@@ -178,7 +178,7 @@ public class JottTokenizer {
               tokens.add(new Token(buffer.toString(), filename, line_num, TokenType.STRING));
               buffer.setLength(0); // Clear buffer
               state = State.START;
-            } else if (Character.isAlphabetic(ch) || Character.isDigit(ch) || ch == ' ' || ch == '\t') {
+            } else if (Character.isAlphabetic(ch) || Character.isDigit(ch) || ch == ' ' || ch == '\t' || ch == '\r' || ch == '\f') {
               buffer.append(ch);
             } else {
               throw new Exception("Invalid string " + buffer.toString() + ". A string must start and end with \"\n");
