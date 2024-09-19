@@ -19,8 +19,7 @@ public class JottTokenizer {
   // @return character array
   public static ArrayList<Character> process_file(String filename) {
     ArrayList<Character> chars = new ArrayList<>();
-    // TODO not sure why I have to change the file name. Will ask prof --Kaiy
-    try (FileReader reader = new FileReader("test-cases/" + filename)) {
+    try (FileReader reader = new FileReader(filename)) {
       BufferedReader buff_reader = new BufferedReader(reader);
       int ch;
       while ((ch = buff_reader.read()) != -1) {
