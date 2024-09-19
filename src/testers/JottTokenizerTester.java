@@ -1,18 +1,6 @@
 package testers;
-import provided.*;
-
-/*
- * Tester for phase 1 of the Jott Translator
- *
- * This is not an all-inclusive tester. This tests a few of the common cases.
- *
- * This expects the test cases to be in the directory tokenizerTestCases in the
- * same directory as the tester is run.
- *
- * @author Scott C Johnson (scj@cs.rit.edu)
- */
-
 import java.util.ArrayList;
+import provided.*;
 
 public class JottTokenizerTester {
 
