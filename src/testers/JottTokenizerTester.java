@@ -1,18 +1,6 @@
 package testers;
-import provided.*;
-
-/*
- * Tester for phase 1 of the Jott Translator
- *
- * This is not an all-inclusive tester. This tests a few of the common cases.
- *
- * This expects the test cases to be in the directory tokenizerTestCases in the
- * same directory as the tester is run.
- *
- * @author Scott C Johnson (scj@cs.rit.edu)
- */
-
 import java.util.ArrayList;
+import provided.*;
 
 public class JottTokenizerTester {
 
@@ -137,6 +125,18 @@ public class JottTokenizerTester {
         filename = "tokenizerTestCases/phase1ErrorExample.jott";
         testCases.add(new TestCase("Phase1ErrorExampleTest", filename, null, true));
 
+        // Extra test cases for phase 1 not created by prof
+        ArrayList<Token> commentCharTokens = new ArrayList<>();
+        filename = "tokenizerTestCases/commentsSingleChars.jott";
+        commentCharTokens.add(new Token("[", filename, 3, TokenType.L_BRACKET));
+        commentCharTokens.add(new Token(",", filename, 4, TokenType.COMMA));
+        commentCharTokens.add(new Token(";", filename, 5, TokenType.SEMICOLON));
+        testCases.add(new TestCase("commentsSingleChars", filename, commentCharTokens, false));
+
+        ArrayList<Token> commentTokens = new ArrayList<>();
+        filename = "tokenizerTestCases/comments.jott";
+        testCases.add(new TestCase("CommentTokens", filename, commentTokens, false));
+
     }
 
     private String tokenToString(Token t){
@@ -191,6 +191,8 @@ public class JottTokenizerTester {
     public static void main(String[] args) {
         System.out.println("NOTE: System.err may print at the end. This is fine.");
         JottTokenizerTester tester = new JottTokenizerTester();
+        ArrayList<String> passingTests = new ArrayList<>();
+        ArrayList<String> failingTests = new ArrayList<>();
 
         int numTests = 0;
         int passedTests = 0;
@@ -200,12 +202,23 @@ public class JottTokenizerTester {
             if(tester.runTest(test)){
                 passedTests++;
                 System.out.println("\tPassed\n");
+                passingTests.add(test.testName);
+
             }
             else{
                 System.out.println("\tFailed\n");
+                failingTests.add(test.testName);
             }
         }
 
         System.out.printf("Passed: %d/%d%n", passedTests, numTests);
+        System.out.println("Passing tests:");
+        for (String testName : passingTests) {
+            System.out.println("\t" + testName);
+        }
+        System.out.println("Falling tests:");
+        for (String testName : failingTests) {
+            System.out.println("\t" + testName);
+        }
     }
 }
