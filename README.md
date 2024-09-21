@@ -9,7 +9,6 @@ In the Programming-Language-Language-Concepts-Jott directory, run
 ```
 java -XX:+ShowCodeDetailsInExceptionMessages -cp .\bin testers.JottTokenizerTester
 ```
-
 ## Project Overview
 CSCI.344 - Programming Language Concepts Fall 2024
 This is an interpreter for the programming language Jott using Java. 
