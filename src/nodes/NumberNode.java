@@ -10,20 +10,16 @@ public class NumberNode implements OperandNode {
 
     public NumberNode(Token number) {
         this.number = number;
-
     }
 
     public static NumberNode parse(ArrayList <Token> tokens) throws Exception{
-       if(tokens.isEmpty()){
-		throw new Exception(“Syntax Error\n[message]\n[filename, linenum from this token]\n”);
-}
-
-
-if(!(tokens.get(0).getTokenType() == TokenType.NUMBER)){
+        if(tokens.isEmpty()){
+		    throw new Exception(“Syntax Error\n[message]\n[filename, linenum from this token]\n”);
+        }
+        if(!(tokens.get(0).getTokenType() == TokenType.NUMBER)){
             throw new Exception(“Syntax Error\n[message]\n[filename, linenum from this token]\n”);
         }
-
-
+        
         Token number = tokens.pop(0);
         return new NumberNode(number);
     }

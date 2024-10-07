@@ -10,22 +10,18 @@ public class IDNode implements OperandNode {
 
     public IDNode(Token id) {
         this.id = id;
-
     }
 
     public static IDNode parse(ArrayList <Token> tokens) throws Exception{
-       if(tokens.isEmpty()){
-		throw new Exception(“Syntax Error\n[message]\n[filename, linenum from this token]\n”);
-}
-
-
-if(!(tokens.get(0).getTokenType() == TokenType.ID_KEYWORD)){
+        if(tokens.isEmpty()){
+		    throw new Exception(“Syntax Error\n[message]\n[filename, linenum from this token]\n”);
+        }
+        if(!(tokens.get(0).getTokenType() == TokenType.ID_KEYWORD)){
             throw new Exception(“Syntax Error\n[message]\n[filename, linenum from this token]\n”);
         }
-	else if(tokens.get(0).getToken().charAt(0).isUpperCase()) {
-		throw new Exception(“Syntax Error\n[msg]\n[file,line]\n”);
-}
-
+	    else if(tokens.get(0).getToken().charAt(0).isUpperCase()) {
+		    throw new Exception(“Syntax Error\n[msg]\n[file,line]\n”);
+        }
 
         Token id = tokens.pop(0);
         return new IDNode(id);

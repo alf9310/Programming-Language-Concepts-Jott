@@ -10,28 +10,23 @@ public class OperandNode implements JottTree {
 
     public OperandNode(Token operand) {
         this.operand = operand;
-
     }
 
     // Determine if the node is IDNode, number node, or FunctionCall node. Returns
     // the proper node type that you created above.
     public static OperandNode parseOperand(ArrayList <Token> tokens) throws Exception{
-if((tokens.get(0).getTokenType() == TokenType.ID_KEYWORD)){
-	return IDNode.parse(tokens);
-
-
-}
-Else if((tokens.get(0).getTokenType() == TokenType.Number)){
-	return NumberNode.parse(tokens);
-}
-Else if((tokens.get(0).getTokenType() == TokenType.FCHeader)){
-	return NumberNode.parse(tokens);
-}
-Else {
-throw new Exception(“Syntax Error\n[message]\n[filename, linenum from this token]\n”);
-}
-
-
+        if((tokens.get(0).getTokenType() == TokenType.ID_KEYWORD)){
+	        return IDNode.parse(tokens);
+        }
+        else if((tokens.get(0).getTokenType() == TokenType.Number)){
+	        return NumberNode.parse(tokens);
+        }
+        else if((tokens.get(0).getTokenType() == TokenType.FCHeader)){
+	        return NumberNode.parse(tokens);
+        }
+        else {
+            throw new Exception(“Syntax Error\n[message]\n[filename, linenum from this token]\n”);
+        }
     }
 
     /**
