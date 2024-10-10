@@ -5,18 +5,19 @@ import provided.Token;
 import java.util.ArrayList;
 
 public class BinaryOpNode implements JottTree {
-    private JottTree leftOperand;
-    private Token operator;
-    private JottTree rightOperand;
 
-    public BinaryOperationNode(JottTree left, Token op, JottTree right) {
+    JottTree leftOperand;
+    Token operator;
+    JottTree rightOperand;
+
+    public BinaryOpNode(JottTree left, Token op, JottTree right) {
         this.leftOperand = left;
         this.operator = op;
         this.rightOperand = right;
     }
 
     // Parsing Binary Operations
-    public static BinaryOperationNode parse(ArrayList<Token> tokens) throws Exception {
+    public static BinaryOpNode parse(ArrayList<Token> tokens) throws Exception {
         // Parse the left operand first
         JottTree left = ExpressionNode.parse(tokens);
         if (tokens.isEmpty()) {
@@ -32,7 +33,7 @@ public class BinaryOpNode implements JottTree {
         // Parse the right operand
         JottTree right = ExpressionNode.parse(tokens);
 
-        return new BinaryOperationNode(left, op, right);
+        return new BinaryOpNode(left, op, right);
     }
 
     // Checking if the operator is valid
@@ -61,5 +62,10 @@ public class BinaryOpNode implements JottTree {
     public void execute() {
         // To be implemented in phase 4
         throw new UnsupportedOperationException("Execution not supported yet.");
+    }
+
+    public static void main(String[] args) { 
+        System.out.println("Testing BinaryOpNode Main Method");
+
     }
 }
