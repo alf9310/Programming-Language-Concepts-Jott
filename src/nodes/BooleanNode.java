@@ -16,8 +16,8 @@ public class BooleanNode implements ExpressionNode{
         this.bool = bool;
     }
 
-    // Determine if the node is IDNode, number node, or FunctionCall node. Returns
-    // the proper node type that you created above.
+    // Returns Boolean Node if 'True' or 'False'
+    // Otherwise Throws SyntaxError Exception
     public static BooleanNode parse(ArrayList <Token> tokens) throws Exception{
 
         // Check if there is tokens
