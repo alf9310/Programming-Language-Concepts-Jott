@@ -11,9 +11,9 @@ import java.util.ArrayList;
 public class FunctionCallNode implements OperandNode {
 
     IDNode id;
-    ArrayList<ParamNode> params;
+    ParamsNode params;
 
-    public FunctionCallNode(IDNode id, ArrayList <ParamNode> params){   
+    public FunctionCallNode(IDNode id, ParamsNode params){   
 	    this.id = id;
         this.params = params;
     }
@@ -27,7 +27,7 @@ public class FunctionCallNode implements OperandNode {
 
         Token currentToken = tokens.get(0);
 
-        // Make sure token is type FC_HEADER (Function Header, ::)
+        // Make sure token is type FC_HEADER ::
         if(!(currentToken.getTokenType() == TokenType.FC_HEADER)){
             throw new SyntaxError("Function Call does not start with a FC_HEADER", currentToken); 
         }
@@ -45,7 +45,7 @@ public class FunctionCallNode implements OperandNode {
         tokens.remove(0);
 
         // Get Params
-        ArrayList<ParamNode> params = ParamNode.parse(tokens);
+        ParamsNode params = ParamsNode.parse(tokens);
 
         currentToken = tokens.get(0);
 
@@ -66,16 +66,7 @@ public class FunctionCallNode implements OperandNode {
      */
     @Override
     public String convertToJott() {
-        StringBuilder jottString = new StringBuilder();
-        // Function id
-        jottString.append(id.convertToJott()).append(" ");
-
-        // Function Params
-        for (FuncDefParam param : params) {
-            jottString.append(param.convertToJott()).append(" ");
-        }
-
-        return jottString.toString();
+        return "::" + id.convertToJott() + "[" + params.convertToJott() + "]"; 
     }
 
     @Override

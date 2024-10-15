@@ -1,10 +1,14 @@
 package nodes;
 
+import java.util.ArrayList;
 import provided.JottTree;
 import provided.Token;
-import java.util.ArrayList;
 
-public class BinaryOpNode implements JottTree {
+/*
+ * Binary Operation Node
+ * < operand > < relop > < operand > | < operand > < mathop > < operand >
+ */
+public class BinaryOpNode implements ExpressionNode {
 
     JottTree leftOperand;
     Token operator;

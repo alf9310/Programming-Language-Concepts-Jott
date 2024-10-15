@@ -27,7 +27,7 @@ public interface ExpressionNode extends JottTree {
             OperandNode left = OperandNode.parse(tokens);
 
             // < operand > < relop || mathop > < operand >
-            if(tokens.get(1).getTokenType == TokenType.REL_OP || tokens.get(1).getTokenType == TokenType.MATH_OP){
+            if(tokens.get(1).getTokenType() == TokenType.REL_OP || tokens.get(1).getTokenType() == TokenType.MATH_OP){
                 
                 BinaryOpNode op = BinaryOpNode.parse(tokens);
                 
@@ -40,11 +40,11 @@ public interface ExpressionNode extends JottTree {
             return left;
 
         // < string_literal >
-        } else if(tokens.get(0).getTokenType == TokenType.STRING){
+        } else if(tokens.get(0).getTokenType() == TokenType.STRING){
             return StringLiteralNode.parse(tokens);
 
         // < bool >
-        } else if(tokens.get(0).getTokenType == TokenType.ID_KEYWORD){
+        } else if(tokens.get(0).getTokenType() == TokenType.ID_KEYWORD){
             if(tokens.get(0).getToken().equals("True") || tokens.get(0).getToken().equals("False")){
                 return BooleanNode.parse(tokens);
             }
