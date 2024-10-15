@@ -1,51 +1,43 @@
 package nodes;
 
-import provided.JottTree;
-import provided.Token;
 import java.util.ArrayList;
+import provided.Token;
+import provided.TokenType;
 
-public abstract class OperandNode implements JottTree {
+/*
+ * Operand Node
+ * <id> | <num> | <func_call> | -<num>
+ */
+public interface OperandNode extends ExpressionNode {
 
-    Token operand;
+    // Determine if the node is IDNode, (-)NumberNode, or FunctionCallNode. 
+    // Returns the proper node type that you created above.
+    public static OperandNode parse(ArrayList <Token> tokens) throws Exception{
 
-    public OperandNode(Token operand) {
-        this.operand = operand;
-    }
+        // Check if there is tokens
+        if(tokens.isEmpty()){
+            throw new SyntaxError("Empty token list for operand");        
+        }
 
-    // Determine if the node is IDNode, number node, or FunctionCall node. Returns
-    // the proper node type that you created above.
-    public static OperandNode parseOperand(ArrayList <Token> tokens) throws Exception{
-        if((tokens.get(0).getTokenType() == TokenType.ID_KEYWORD)){
+        Token currentToken = tokens.get(0);
+
+        // <id>
+        if(currentToken.getTokenType() == TokenType.ID_KEYWORD){
 	        return IDNode.parse(tokens);
-        }
-        else if((tokens.get(0).getTokenType() == TokenType.Number)){
+        // <num>
+        } else if(currentToken.getTokenType() == TokenType.NUMBER){
 	        return NumberNode.parse(tokens);
+        // <func_call>
+        } else if(currentToken.getTokenType() == TokenType.FC_HEADER){
+	        return FunctionCallNode.parse(tokens);
+        // -<num>
+        } else if(currentToken.getToken().equals("-")){
+            if(currentToken.getTokenType() == TokenType.NUMBER){
+                tokens.remove(0);
+                return NumberNode.parse(tokens); // TODO Find some way to negate this number for the NumberNode
+            }
         }
-        else if((tokens.get(0).getTokenType() == TokenType.FCHeader)){
-	        return NumberNode.parse(tokens);
-        }
-        else {
-            throw new Exception(“Syntax Error\n[message]\n[filename, linenum from this token]\n”);
-        }
-    }
 
-    /**
-     * Will output a string of this tree in Jott
-     * 
-     * @return a string representing the Jott code of this tree
-     */
-    @Override
-    public String convertToJott() {
-        return operand.getToken();
-    }
-
-    @Override
-    public boolean validateTree() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void execute() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new SyntaxError("TokenType is not ID_KEYWORD, (-)NUMBER or FC_HEADER for Operand", currentToken);
     }
 }

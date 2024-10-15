@@ -1,32 +1,61 @@
 package nodes;
 
-import provided.JottTree;
 import provided.Token;
+import provided.TokenType;
 import java.util.ArrayList;
 
+/*
+ * Function Call Node
+ * ::<id>[<params>]
+ */
 public class FunctionCallNode implements OperandNode {
 
     IDNode id;
     ArrayList<ParamNode> params;
 
-    public FunctionCallNode(IdNode id, ArrayList <ParamNode> params){   
+    public FunctionCallNode(IDNode id, ArrayList <ParamNode> params){   
 	    this.id = id;
-        this.params = params
+        this.params = params;
     }
 
     public static FunctionCallNode parse(ArrayList <Token> tokens) throws Exception{
+
+        // Check if there is tokens
         if(tokens.isEmpty()){
-	        throw new Exception(“Syntax Error\n[message]\n[filename, linenum from this token]\n”);
-        }
-        if(!(tokens.get(0).getTokenType() == TokenType.FC_HEADER)){
-            throw new Exception(“Syntax Error\n[message]\n[filename, linenum from this token]\n”);
-        }
-	    // might want to check length first (in case no index 1 exists)
-	    if(!(tokens.get(1).getTokenType() == TokenType.ID_KEYWORD && tokens.get(1).getToken().charAt(0).isLowerCase())) {
-		throw new Exception(“Syntax Error\n[message]\n[filename, linenum from this token]\n”);
+		    throw new SyntaxError("Empty token list for function call"); 
         }
 
-        Token number = tokens.pop(0);
+        Token currentToken = tokens.get(0);
+
+        // Make sure token is type FC_HEADER (Function Header, ::)
+        if(!(currentToken.getTokenType() == TokenType.FC_HEADER)){
+            throw new SyntaxError("Function Call does not start with a FC_HEADER", currentToken); 
+        }
+        tokens.remove(0);
+
+        // Get ID
+        IDNode id = IDNode.parse(tokens);
+
+        currentToken = tokens.get(0);
+
+        // Make sure token is type L_BRACKET [
+        if(!(currentToken.getTokenType() == TokenType.L_BRACKET)){
+            throw new SyntaxError("Function Call does not contain L_BRACKET after id", currentToken); 
+        }
+        tokens.remove(0);
+
+        // Get Params
+        ArrayList<ParamNode> params = ParamNode.parse(tokens);
+
+        currentToken = tokens.get(0);
+
+        // Make sure token is type R_BRACKET ]
+        if(!(currentToken.getTokenType() == TokenType.R_BRACKET)){
+            throw new SyntaxError("Function Call does not end with R_BRACKET", currentToken); 
+        }
+        tokens.remove(0);
+	    
+
         return new FunctionCallNode(id, params);
     }
 
@@ -57,5 +86,29 @@ public class FunctionCallNode implements OperandNode {
     @Override
     public void execute() {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public static void main(String[] args) {
+        try {
+            // Create tokens for a sample function call: ::myFunc[param1,param2]
+            ArrayList<Token> tokens = new ArrayList<>();
+            tokens.add(new Token("::", "testFile.jott", 1, TokenType.FC_HEADER));
+            tokens.add(new Token("myFunc", "testFile.jott", 1, TokenType.ID_KEYWORD));
+            tokens.add(new Token("[", "testFile.jott", 1, TokenType.L_BRACKET));
+            tokens.add(new Token("param1", "testFile.jott", 1, TokenType.ID_KEYWORD));
+            tokens.add(new Token(",", "testFile.jott", 1, TokenType.COMMA));
+            tokens.add(new Token("param2", "testFile.jott", 1, TokenType.ID_KEYWORD));
+            tokens.add(new Token("]", "testFile.jott", 1, TokenType.R_BRACKET));
+
+            // Test parsing the tokens
+            FunctionCallNode funcCallNode = FunctionCallNode.parse(tokens);
+
+            // Output the result
+            System.out.println("Parsed Function Call: " + funcCallNode.convertToJott());
+
+        } catch (Exception e) {
+            // Catch and print any exceptions
+            System.err.println("Error: " + e.getMessage());
+        }
     }
 }
