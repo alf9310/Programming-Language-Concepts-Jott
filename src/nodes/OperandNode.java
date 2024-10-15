@@ -4,7 +4,7 @@ import provided.JottTree;
 import provided.Token;
 import java.util.ArrayList;
 
-public class OperandNode implements JottTree {
+public abstract class OperandNode implements JottTree {
 
     Token operand;
 
