@@ -19,23 +19,25 @@ public interface ExpressionNode extends JottTree {
 
         // Check if there is tokens
         if(tokens.isEmpty()){
-            throw new Exception("Error, empty token list for expression"); //TODO, better errors
+            throw new SyntaxError("Empty token list for expression");        
         }
 
+        // <operand> | <operand> <relop> <operand> | <operand> <mathop> <operand> 
         if(isOperand(tokens.get(0))){
 
             OperandNode left = OperandNode.parse(tokens);
 
-            // < operand > < relop || mathop > < operand >
-            if(tokens.get(1).getTokenType() == TokenType.REL_OP || tokens.get(1).getTokenType() == TokenType.MATH_OP){
+            // <relop> || <mathop>
+            if(tokens.get(0).getTokenType() == TokenType.REL_OP || tokens.get(0).getTokenType() == TokenType.MATH_OP){
                 
-                BinaryOpNode op = BinaryOpNode.parse(tokens);
+                Token op = BinaryOpNode.parse(tokens);
                 
                 if(isOperand(tokens.get(2))){
                     OperandNode right = OperandNode.parse(tokens);
-                    return BinaryOpNode(left, op, right);
+                    return new BinaryOpNode(left, op, right);
                 }
             }
+
             // < operand > 
             return left;
 
