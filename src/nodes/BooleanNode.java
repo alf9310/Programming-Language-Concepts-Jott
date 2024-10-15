@@ -22,13 +22,16 @@ public class BooleanNode implements ExpressionNode{
 
         // Check if there is tokens
         if(tokens.isEmpty()){
-            throw new Exception("Syntax Error\nEmpty token list for boolean\n"); //TODO, better errors
+            throw new SyntaxError("Empty token list for boolean");        
         }
-        if(!(tokens.get(0).getTokenType() == TokenType.ID_KEYWORD)){
-            throw new Exception("Syntax Error\nTokenType is not ID_KEYWORD for boolean\n" + tokens.get(0).getFilename() + ":" + tokens.get(0).getLineNum()); //TODO, better errors
+        Token currentToken = tokens.get(0);
+        // Make sure token is type ID_KEYWORD
+        if(currentToken.getTokenType() != TokenType.ID_KEYWORD){
+            throw new SyntaxError("TokenType is not ID_KEYWORD for boolean", currentToken);
         }
-        if(!(tokens.get(0).getToken().equals("True")) && !(tokens.get(0).getToken().equals("False"))){
-            throw new Exception("Syntax Error\nBoolean is not True or False\n" + tokens.get(0).getFilename() + ":" + tokens.get(0).getLineNum()); //TODO, better errors
+        // Make sure token is "True" or "False"
+        if (!(currentToken.getToken().equals("True")) && !(currentToken.getToken().equals("False"))){
+            throw new SyntaxError("Token is not 'True' or 'False'", currentToken);
         }
 
         Token bool = tokens.remove(0);
