@@ -6,8 +6,8 @@ import provided.TokenType;
 import provided.JottTree;
 
 /*
- * Type Node
- *  Double | Integer | String | Boolean
+ * Type Node and Function Return
+ *  Double | Integer | String | Boolean | Void
  */
 public class TypeNode implements JottTree{
 
@@ -17,9 +17,13 @@ public class TypeNode implements JottTree{
         this.type = type;
     }
 
+    // Overload to default FuncNode to false
+    public static TypeNode parse(ArrayList<Token> tokens) throws Exception {
+        return parse(tokens, false);
+    }
     // Returns Type Node if valid type
     // Otherwise Throws SyntaxError Exception
-    public static TypeNode parse(ArrayList<Token> tokens) throws Exception {
+    public static TypeNode parse(ArrayList<Token> tokens, Boolean FuncNode) throws Exception {
 
         // Check if there is tokens
         if (tokens.isEmpty()) {
@@ -31,13 +35,24 @@ public class TypeNode implements JottTree{
             throw new SyntaxError("TokenType is not ID_KEYWORD", currentToken);
         }
         // Make sure token is valid
-        if (!(currentToken.getToken().equals("Double")) && !(currentToken.getToken().equals("Integer"))
-                && !(currentToken.getToken().equals("String")) && !(currentToken.getToken().equals("Boolean"))) {
-            throw new SyntaxError("Token is not 'Double' or 'Integer' or 'String' or 'Boolean'", currentToken);
+        if (FuncNode) {
+            if (!(currentToken.getToken().equals("Double")) && !(currentToken.getToken().equals("Integer"))
+                    && !(currentToken.getToken().equals("String")) && !(currentToken.getToken().equals("Boolean")) 
+                    && !(currentToken.getToken().equals("Void"))) {
+                throw new SyntaxError("Token is not 'Double' or 'Integer' or 'String' or 'Boolean' or 'Void", currentToken);
+            }
+            Token type = tokens.remove(0);
+            return new TypeNode(type);
+
+        } else {
+            if (!(currentToken.getToken().equals("Double")) && !(currentToken.getToken().equals("Integer"))
+                    && !(currentToken.getToken().equals("String")) && !(currentToken.getToken().equals("Boolean"))) {
+                throw new SyntaxError("Token is not 'Double' or 'Integer' or 'String' or 'Boolean'", currentToken);
+            }
+            Token type = tokens.remove(0);
+            return new TypeNode(type);
         }
 
-        Token type = tokens.remove(0);
-        return new TypeNode(type);
     }
 
     /**
@@ -60,7 +75,17 @@ public class TypeNode implements JottTree{
     public static void main(String[] args) {
         System.out.println("Testing TypeNode Main Method");
 
-        // Test Case 1: Valid Boolean "Double"
+        // Test Case 0: Valid TypeNode "Void"
+        ArrayList<Token> tokens0 = new ArrayList<>();
+        tokens0.add(new Token("Void", "test.jott", 1, TokenType.ID_KEYWORD));
+        try {
+            TypeNode node0 = TypeNode.parse(tokens0, true);
+            System.out.println("Parsed TypeNode: " + node0.convertToJott()); // Expected: Void
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+
+        // Test Case 1: Valid TypeNode "Double"
         ArrayList<Token> tokens1 = new ArrayList<>();
         tokens1.add(new Token("Double", "test.jott", 1, TokenType.ID_KEYWORD));
         try {
@@ -70,7 +95,7 @@ public class TypeNode implements JottTree{
             System.err.println(e.getMessage());
         }
 
-        // Test Case 2: Valid Boolean "Integer"
+        // Test Case 2: Valid TypeNode "Integer"
         ArrayList<Token> tokens2 = new ArrayList<>();
         tokens2.add(new Token("Integer", "test.jott", 1, TokenType.ID_KEYWORD));
         try {
