@@ -47,7 +47,7 @@ public class TypeNode implements JottTree{
         } else {
             if (!(currentToken.getToken().equals("Double")) && !(currentToken.getToken().equals("Integer"))
                     && !(currentToken.getToken().equals("String")) && !(currentToken.getToken().equals("Boolean"))) {
-                throw new SyntaxError("Token is not 'Double' or 'Integer' or 'String' or 'Boolean'", currentToken);
+                throw new SyntaxError(String.format("Token '%s' is not 'Double' or 'Integer' or 'String' or 'Boolean'", currentToken.getToken()), currentToken);
             }
             Token type = tokens.remove(0);
             return new TypeNode(type);
