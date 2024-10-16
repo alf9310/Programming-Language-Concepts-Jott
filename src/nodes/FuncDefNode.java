@@ -1,3 +1,4 @@
+// TODO: Needs major overhaul, updated Syntax Errors, correct Node types, comments, etc.
 package nodes;
 
 import provided.JottTree;

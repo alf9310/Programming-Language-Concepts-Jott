@@ -1,9 +1,13 @@
 package nodes;
 
-import provided.JottTree;
-import provided.Token;
 import java.util.ArrayList;
+import provided.Token;
+import provided.TokenType;
 
+/*
+ * ID Node
+ * An identifier
+ */
 public class IDNode implements OperandNode {
 
     Token id;
@@ -12,24 +16,29 @@ public class IDNode implements OperandNode {
         this.id = id;
     }
 
+    // Returns ID Node if an ID
+    // Otherwise Throws SyntaxError Exception
     public static IDNode parse(ArrayList <Token> tokens) throws Exception{
+        // Check if there is tokens
         if(tokens.isEmpty()){
-		    throw new Exception(“Syntax Error\n[message]\n[filename, linenum from this token]\n”);
-        }
-        if(!(tokens.get(0).getTokenType() == TokenType.ID_KEYWORD)){
-            throw new Exception(“Syntax Error\n[message]\n[filename, linenum from this token]\n”);
-        }
-	    else if(tokens.get(0).getToken().charAt(0).isUpperCase()) {
-		    throw new Exception(“Syntax Error\n[msg]\n[file,line]\n”);
+		    throw new SyntaxError("Empty token list for id"); 
         }
 
-        Token id = tokens.pop(0);
+        Token currentToken = tokens.get(0);
+        // Make sure token is type ID_KEYWORD
+        if(!(currentToken.getTokenType() == TokenType.ID_KEYWORD)){
+            throw new SyntaxError("Id type is not ID_KEYWORD", currentToken); 
+        // Make sure first chatacter is lowercase
+        } else if(Character.isUpperCase(currentToken.getToken().charAt(0))) {
+		    throw new SyntaxError("First character is not lowercase for id", currentToken); 
+        }
+
+        Token id = tokens.remove(0);
         return new IDNode(id);
     }
 
     /**
      * Will output a string of this tree in Jott
-     * 
      * @return a string representing the Jott code of this tree
      */
     @Override
@@ -45,5 +54,48 @@ public class IDNode implements OperandNode {
     @Override
     public void execute() {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public static void main(String[] args) {
+        System.out.println("Testing IDNode Main Method");
+
+        // Test Case 1: Valid ID with lowercase first character
+        ArrayList<Token> tokens1 = new ArrayList<>();
+        tokens1.add(new Token("variableName", "test.jott", 1, TokenType.ID_KEYWORD));
+        try {
+            IDNode node1 = IDNode.parse(tokens1);
+            System.out.println("Parsed IDNode: " + node1.convertToJott());  // Expected: variableName
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+
+        // Test Case 2: Invalid Token Type (not ID_KEYWORD)
+        ArrayList<Token> tokens2 = new ArrayList<>();
+        tokens2.add(new Token("123", "test.jott", 2, TokenType.NUMBER));
+        try {
+            IDNode node2 = IDNode.parse(tokens2);
+            System.out.println("Parsed IDNode: " + node2.convertToJott());  // Should throw an error
+        } catch (Exception e) {
+            System.err.println(e.getMessage());  // Expected error: Id type is not ID_KEYWORD
+        }
+
+        // Test Case 3: ID with Uppercase first character (Invalid)
+        ArrayList<Token> tokens3 = new ArrayList<>();
+        tokens3.add(new Token("VariableName", "test.jott", 3, TokenType.ID_KEYWORD));
+        try {
+            IDNode node3 = IDNode.parse(tokens3);
+            System.out.println("Parsed IDNode: " + node3.convertToJott());  // Should throw an error
+        } catch (Exception e) {
+            System.err.println(e.getMessage());  // Expected error: First character is not lowercase for id
+        }
+
+        // Test Case 4: Empty Token List
+        ArrayList<Token> tokens4 = new ArrayList<>();
+        try {
+            IDNode node4 = IDNode.parse(tokens4);
+            System.out.println("Parsed IDNode: " + node4.convertToJott());  // Should throw an error
+        } catch (Exception e) {
+            System.err.println(e.getMessage());  // Expected error: Empty token list for id
+        }
     }
 }
