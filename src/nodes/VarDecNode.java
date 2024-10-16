@@ -13,9 +13,6 @@ public class VarDecNode implements JottTree {
 
     TypeNode type;
     IDNode id;
-    OperandNode leftOperand;
-    OperatorNode operator; // Generic, can be either a RelOpNode or a MathOpNode
-    OperandNode rightOperand;
 
     public VarDecNode(TypeNode type, IDNode id) {
         this.type = type;
@@ -23,7 +20,7 @@ public class VarDecNode implements JottTree {
 
     }
 
-    // Parsin
+    // Parsing
     public static VarDecNode parse(ArrayList<Token> tokens) throws Exception {
         // Check if there is tokens
         if (tokens.isEmpty()) {
@@ -85,7 +82,7 @@ public class VarDecNode implements JottTree {
                 System.err.println(e.getMessage()); // Expected error: ProfJohnson is not a valid type
             }
 
-            // Test Case 2: String Var; Invalid ID because first character is uppercase
+            // Test Case 3: String Var; Invalid ID because first character is uppercase
             ArrayList<Token> tokens3 = new ArrayList<>();
             // type token
             tokens3.add(new Token("String", "testFile.jott", 1, TokenType.ID_KEYWORD));
