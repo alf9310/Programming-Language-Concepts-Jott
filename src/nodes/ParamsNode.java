@@ -1,10 +1,9 @@
 package nodes;
 
+import java.util.ArrayList;
 import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
-
-import java.util.ArrayList;
 
 /*
  * Parameters Node
@@ -15,6 +14,11 @@ public class ParamsNode implements JottTree {
     ExpressionNode expr;
     ArrayList<ParamsTNode> paramst;
 
+    public ParamsNode() {
+        this.expr = null;
+        this.paramst = new ArrayList<>(); // Empty parameters
+    }
+
     public ParamsNode(ExpressionNode expr, ArrayList<ParamsTNode> paramst){   
 	    this.expr = expr;
         this.paramst = paramst;
@@ -24,8 +28,13 @@ public class ParamsNode implements JottTree {
 
         // Check if there is tokens
         if(tokens.isEmpty()){
-            // ε
-		    return new ParamsNode(null, null);
+            throw new SyntaxError("ParamsNode is Empty");
+        }
+
+        // If the next token is R_BRACKET, we know there are no parameters
+        // ε
+        if (tokens.get(0).getTokenType() == TokenType.R_BRACKET) {
+            return new ParamsNode(); // Assuming ParamsNode can handle an empty parameter list
         }
 
         // <expr>
@@ -34,30 +43,16 @@ public class ParamsNode implements JottTree {
         // <params_t>⋆
         ArrayList<ParamsTNode> paramst = new ArrayList<>();
         
-        // TODO verify this works as intended
         Token currentToken = tokens.get(0);
-        while(isOperand(currentToken)){
+
+        while (!tokens.isEmpty() && currentToken.getTokenType() == TokenType.COMMA) {
             paramst.add(ParamsTNode.parse(tokens));
-            currentToken = tokens.get(0);
+            if (!tokens.isEmpty()) {
+                currentToken = tokens.get(0);
+            }
         }
 
         return new ParamsNode(expr, paramst);
-    }
-
-    // Helper method to determine if a token is an operand (<id> | <num> | <func_call> | -<num>)
-    // Return true if it is
-    static boolean isOperand(Token token){
-        TokenType type = token.getTokenType();
-        if(type == TokenType.ID_KEYWORD){
-            return true;
-        } else if(type == TokenType.NUMBER){
-            return true;
-        } else if(type == TokenType.FC_HEADER){
-            return true;
-        } else if(type == TokenType.MATH_OP && token.getToken().equals("-")){
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -66,14 +61,14 @@ public class ParamsNode implements JottTree {
      */
     @Override
     public String convertToJott() {
-        String str = "";
-        if(expr != null){
-            str += expr.convertToJott();
-            for(ParamsTNode paramt: paramst){
-                str += paramt.convertToJott();
+        StringBuilder str = new StringBuilder();
+        if (expr != null) {
+            str.append(expr.convertToJott());
+            for (ParamsTNode paramt : paramst) {
+                str.append(paramt.convertToJott());
             }
         }
-        return str;
+        return str.toString();
     }
 
     @Override
@@ -84,5 +79,67 @@ public class ParamsNode implements JottTree {
     @Override
     public void execute() {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public static void main(String[] args) {
+        System.out.println("Testing ParamsNode Main Method");
+        try {
+            // Test Case 1: Empty parameter list []
+            ArrayList<Token> tokens1 = new ArrayList<>();
+            tokens1.add(new Token("]", "testFile.jott", 1, TokenType.R_BRACKET));  // ]
+            ParamsNode paramsNode1 = ParamsNode.parse(tokens1);
+            System.out.println("Parsed ParamsNode 1: " + paramsNode1.convertToJott()); // Expected output: ""
+    
+            // Test Case 2: Single parameter [param1]
+            ArrayList<Token> tokens2 = new ArrayList<>();
+            tokens2.add(new Token("param1", "testFile.jott", 1, TokenType.ID_KEYWORD));  // param1
+            tokens2.add(new Token("]", "testFile.jott", 1, TokenType.R_BRACKET));  // ]
+            ParamsNode paramsNode2 = ParamsNode.parse(tokens2);
+            System.out.println("Parsed ParamsNode 2: " + paramsNode2.convertToJott()); // Expected output: "param1"
+    
+            // Test Case 3: Two parameters [param1, param2]
+            ArrayList<Token> tokens3 = new ArrayList<>();
+            tokens3.add(new Token("param1", "testFile.jott", 1, TokenType.ID_KEYWORD));  // param1
+            tokens3.add(new Token(",", "testFile.jott", 1, TokenType.COMMA));  // ,
+            tokens3.add(new Token("param2", "testFile.jott", 1, TokenType.ID_KEYWORD));  // param2
+            tokens3.add(new Token("]", "testFile.jott", 1, TokenType.R_BRACKET));  // ]
+            ParamsNode paramsNode3 = ParamsNode.parse(tokens3);
+            System.out.println("Parsed ParamsNode 3: " + paramsNode3.convertToJott()); // Expected output: "param1, param2"
+    
+            // Test Case 4: Mixed parameter types [param1, -3, param2]
+            ArrayList<Token> tokens4 = new ArrayList<>();
+            tokens4.add(new Token("param1", "testFile.jott", 1, TokenType.ID_KEYWORD));  // param1
+            tokens4.add(new Token(",", "testFile.jott", 1, TokenType.COMMA));  // ,
+            tokens4.add(new Token("-3", "testFile.jott", 1, TokenType.NUMBER));  // -3
+            tokens4.add(new Token(",", "testFile.jott", 1, TokenType.COMMA));  // ,
+            tokens4.add(new Token("param2", "testFile.jott", 1, TokenType.ID_KEYWORD));  // param2
+            tokens4.add(new Token("]", "testFile.jott", 1, TokenType.R_BRACKET));  // ]
+            ParamsNode paramsNode4 = ParamsNode.parse(tokens4);
+            System.out.println("Parsed ParamsNode 4: " + paramsNode4.convertToJott()); // Expected output: "param1, -3, param2"
+    
+            // Test Case 5: Parameters with a function call [param1, myFunc[expr1]]
+            ArrayList<Token> tokens5 = new ArrayList<>();
+            tokens5.add(new Token("param1", "testFile.jott", 1, TokenType.ID_KEYWORD));  // param1
+            tokens5.add(new Token(",", "testFile.jott", 1, TokenType.COMMA));  // ,
+            tokens5.add(new Token("::", "testFile.jott", 1, TokenType.FC_HEADER));  // ::
+            tokens5.add(new Token("myFunc", "testFile.jott", 1, TokenType.ID_KEYWORD));  // myFunc
+            tokens5.add(new Token("[", "testFile.jott", 1, TokenType.L_BRACKET));  // [
+            tokens5.add(new Token("expr1", "testFile.jott", 1, TokenType.ID_KEYWORD));  // expr1
+            tokens5.add(new Token("]", "testFile.jott", 1, TokenType.R_BRACKET));  // ]
+            tokens5.add(new Token("]", "testFile.jott", 1, TokenType.R_BRACKET));  // final closing ]
+            ParamsNode paramsNode5 = ParamsNode.parse(tokens5);
+            System.out.println("Parsed ParamsNode 5: " + paramsNode5.convertToJott()); // Expected output: "param1, myFunc[expr1]"
+    
+            // Test Case 6: Single parameter with a negative number [-12]
+            ArrayList<Token> tokens6 = new ArrayList<>();
+            tokens6.add(new Token("-12", "testFile.jott", 1, TokenType.NUMBER));  // -12
+            tokens6.add(new Token("]", "testFile.jott", 1, TokenType.R_BRACKET));  // ]
+            ParamsNode paramsNode6 = ParamsNode.parse(tokens6);
+            System.out.println("Parsed ParamsNode 6: " + paramsNode6.convertToJott()); // Expected output: "-12"
+    
+        } catch (Exception e) {
+            // Catch and print any exceptions
+            System.err.println("Error: " + e.getMessage());
+        }
     }
 }

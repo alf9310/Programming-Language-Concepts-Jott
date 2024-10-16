@@ -1,38 +1,53 @@
 package nodes;
 
+import java.util.ArrayList;
 import provided.Token;
 import provided.TokenType;
 
-import java.util.ArrayList;
-
 /*
  * Number Node
- * A number
+ * A number, with negative functionality
  */
 public class NumberNode implements OperandNode {
 
     Token number;
+    boolean negative;
 
     public NumberNode(Token number) {
         this.number = number;
+        this.negative = false;  // Default to positive
     }
 
-    // Returns Number Node if a number
+    // Constructor with explicit positive/negative control
+    public NumberNode(Token number, boolean negative) {
+        this.number = number;
+        this.negative = negative;
+    }
+
+    // Returns Number Node if a number, supports negatives
     // Otherwise Throws SyntaxError Exception
     public static NumberNode parse(ArrayList <Token> tokens) throws Exception{
         // Check if there is tokens
         if(tokens.isEmpty()){
 		    throw new SyntaxError("Empty token list for number"); 
         }
+        boolean isNegative = false;
 
+        // Check if the first token is a negative sign (-)
         Token currentToken = tokens.get(0);
-        // Make sure token is type NUMBER
-        if(!(currentToken.getTokenType() == TokenType.NUMBER)){
-            throw new SyntaxError("Number type is not NUMBER", currentToken); 
+        if (currentToken.getTokenType() == TokenType.MATH_OP && currentToken.getToken().equals("-")) {
+            isNegative = true;
+            tokens.remove(0); 
+        }
+
+        // Make sure the next token is a NUMBER
+        currentToken = tokens.get(0);
+        if (!(currentToken.getTokenType() == TokenType.NUMBER)) {
+            throw new SyntaxError("Number type is not NUMBER", currentToken);
         }
 
         Token number = tokens.remove(0);
-        return new NumberNode(number);
+        return new NumberNode(number, isNegative);
     }
 
     /**
@@ -42,6 +57,9 @@ public class NumberNode implements OperandNode {
      */
     @Override
     public String convertToJott() {
+        if( negative ){
+            return "-" + number.getToken();
+        }
         return number.getToken();
     }
 
@@ -55,20 +73,25 @@ public class NumberNode implements OperandNode {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    // Main method to test NumberNode parsing and negation
     public static void main(String[] args) {
+        System.out.println("Testing Number Node Main Method");
         try {
-            // Create a test token list
+            // Test with a positive number
             ArrayList<Token> tokens = new ArrayList<>();
             tokens.add(new Token("123", "testFile.jott", 1, TokenType.NUMBER));
-
-            // Test the parse method
             NumberNode numberNode = NumberNode.parse(tokens);
+            System.out.println("Parsed Number (positive): " + numberNode.convertToJott());
 
-            // Output the result
-            System.out.println("Parsed Number: " + numberNode.convertToJott());
+            // Test with a negative number
+            tokens.clear();
+            tokens.add(new Token("-", "testFile.jott", 1, TokenType.MATH_OP));
+            tokens.add(new Token("456", "testFile.jott", 1, TokenType.NUMBER));
+            NumberNode negativeNumberNode = NumberNode.parse(tokens);
+            System.out.println("Parsed Number (negative): " + negativeNumberNode.convertToJott());
 
         } catch (Exception e) {
-            // Catch and print any exception
+            // Catch and print any exceptions
             System.err.println("Error: " + e.getMessage());
         }
     }

@@ -67,6 +67,9 @@ public class BinaryOpNode implements ExpressionNode {
 
     public static void main(String[] args) {
         try {
+
+            System.out.println("Testing BinaryOpNode Main Method");
+
             // Test Case 1: "5 + 3"
             ArrayList<Token> tokens1 = new ArrayList<>();
             tokens1.add(new Token("5", "testFile.jott", 1, TokenType.NUMBER));
