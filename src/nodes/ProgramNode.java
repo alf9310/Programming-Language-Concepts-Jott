@@ -26,7 +26,7 @@ public class ProgramNode implements JottTree{
             }
         }
 
-        // We've reached the end of tokens, which implicitly represents EOF
+        // The end of tokens implicitly represents EOF
         return new ProgramNode(nodes);
     }
 
