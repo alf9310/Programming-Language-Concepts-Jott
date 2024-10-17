@@ -31,6 +31,9 @@ public class ReturnStmtNode implements JottTree {
 
         ExpressionNode expr = ExpressionNode.parse(tokens);
 
+        if(tokens.isEmpty()){
+            throw new SyntaxError("Return statement missing semicolon at end");  
+        }
         currentToken = tokens.get(0);
         if(currentToken.getTokenType() != TokenType.SEMICOLON) {
             throw new SyntaxError("Return statement missing semicolon at end");
