@@ -112,6 +112,19 @@ public class BodyNode implements JottTree {
         tokens2.add(new Token(";", "testFile.jott", 3, TokenType.SEMICOLON));
         BodyNode BodyNode2 = BodyNode.parse(tokens2);
         System.out.println("Parsed BodyNode2: " + BodyNode2.convertToJott());
+        ArrayList<Token> tokens3 = new ArrayList<>();
+        tokens3.add(new Token("While", "tester", 5, TokenType.ID_KEYWORD));
+        tokens3.add(new Token("[", "tester", 5, TokenType.L_BRACKET));
+        tokens3.add(new Token("3", "tester", 5, TokenType.NUMBER));
+        tokens3.add(new Token("]", "tester", 5, TokenType.R_BRACKET));
+        tokens3.add(new Token("{", "tester", 5, TokenType.L_BRACE));
+        tokens3.add(new Token("var", "tester", 5, TokenType.ID_KEYWORD));
+        tokens3.add(new Token("=", "tester", 5, TokenType.ASSIGN));
+        tokens3.add(new Token("3", "tester", 5, TokenType.NUMBER));
+        tokens3.add(new Token(";", "tester", 5, TokenType.SEMICOLON));
+        tokens3.add(new Token("}", "tester", 5, TokenType.R_BRACE));
+        BodyNode BodyNode3 = BodyNode.parse(tokens3);
+        System.out.println("Parsed BodyNode3: " + BodyNode3.convertToJott());
 
         ArrayList<Token> errTokens = new ArrayList<>();
         errTokens.add(new Token("::", "testFile.jott", 3, TokenType.FC_HEADER));
