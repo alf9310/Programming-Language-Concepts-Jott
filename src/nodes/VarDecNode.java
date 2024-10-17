@@ -30,7 +30,7 @@ public class VarDecNode implements JottTree {
         TypeNode type = TypeNode.parse(tokens);
         // Parse the ID
         IDNode id = IDNode.parse(tokens);
-        // Parse semicolon. Do I need to save semicolon token or just consume it?
+        // Parse semicolon
         Token semicolon = tokens.remove(0);
         if (semicolon.getTokenType() != TokenType.SEMICOLON) {
             throw new SyntaxError("Invalid. Expected semicolon", semicolon);
