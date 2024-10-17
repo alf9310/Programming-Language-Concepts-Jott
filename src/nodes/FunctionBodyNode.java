@@ -1,13 +1,12 @@
 package nodes;
 
 import java.util.ArrayList;
-
 import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
 
 public class FunctionBodyNode implements JottTree {
-    private ArrayList<JottTree> statements;  // List of statements inside the function body
+    private final ArrayList<JottTree> statements;  // List of statements inside the function body
     private JottTree returnStatement;        // The return statement
 
     public FunctionBodyNode() {
