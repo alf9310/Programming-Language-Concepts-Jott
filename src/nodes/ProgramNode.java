@@ -3,6 +3,7 @@ package nodes;
 import java.util.ArrayList;
 import provided.JottTree;
 import provided.Token;
+import provided.TokenType;
 
 public class ProgramNode implements JottTree{
     
@@ -16,10 +17,16 @@ public class ProgramNode implements JottTree{
         ArrayList<FuncDefNode> nodes = new ArrayList<>();
 
         // Keep parsing until EOF
-        while(!tokens.isEmpty()){
-            nodes.add(FuncDefNode.parse(tokens));
+        while (!tokens.isEmpty()) {
+            if (tokens.get(0).getTokenType() == TokenType.ID_KEYWORD && tokens.get(0).getToken().equals("Def")) {
+                nodes.add(FuncDefNode.parse(tokens));
+            } else {
+                throw new Exception("Syntax Error: Expected function definition, found " + 
+                                    tokens.get(0).getToken() + " at line " + tokens.get(0).getLineNum());
+            }
         }
 
+        // We've reached the end of tokens, which implicitly represents EOF
         return new ProgramNode(nodes);
     }
 
