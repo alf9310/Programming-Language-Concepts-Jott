@@ -14,10 +14,10 @@ public class FuncDefNode implements JottTree{
     IDNode funcName;
     FDefParamsNode params;
     TypeNode returnType;
-    FunctionBodyNode body;
+    FuncBodyNode body;
 
     public FuncDefNode(IDNode name, FDefParamsNode params,
-                        TypeNode returnType, FunctionBodyNode body){
+                        TypeNode returnType, FuncBodyNode body){
         this.funcName = name;
         this.params = params;
         this.returnType = returnType;
@@ -65,16 +65,16 @@ public class FuncDefNode implements JottTree{
         }
         tokens.remove(0);
 
-        //FunctionBodyNode body = FunctionBodyNode.parse(tokens);
+        //FuncBodyNode body = FuncBodyNode.parse(tokens);
 
         // Check if the next token is R_BRACE, meaning an empty parameter list
-        FunctionBodyNode body;
+        FuncBodyNode body;
         if (tokens.get(0).getTokenType() == TokenType.R_BRACE) {
-            // No parameters, just an empty FunctionBodyNode
-            body = new FunctionBodyNode();
+            // No parameters, just an empty FuncBodyNode
+            throw new SyntaxError("Function def f_body cannot has no tokens");
         } else {
             // Parse the body normally
-            body = FunctionBodyNode.parse(tokens);
+            body = FuncBodyNode.parse(tokens);
         }
 
         if(tokens.get(0).getTokenType() != TokenType.R_BRACE){
@@ -147,13 +147,19 @@ public class FuncDefNode implements JottTree{
             tokens.add(new Token(":", "testFile.jott", 1, TokenType.COLON));  // :
             tokens.add(new Token("Void", "testFile.jott", 1, TokenType.ID_KEYWORD));  // Void
             tokens.add(new Token("{", "testFile.jott", 1, TokenType.L_BRACE));  // {
+            tokens.add(new Token("::", "testFile.jott", 2, TokenType.FC_HEADER));  // ::
+            tokens.add(new Token("print", "testFile.jott", 2, TokenType.ID_KEYWORD));  // print
+            tokens.add(new Token("[", "testFile.jott", 2, TokenType.L_BRACKET));  // [
+            tokens.add(new Token("5", "testFile.jott", 2, TokenType.NUMBER));  // 5
+            tokens.add(new Token("]", "testFile.jott", 2, TokenType.R_BRACKET));  // ]
+            tokens.add(new Token(";", "testFile.jott", 2, TokenType.SEMICOLON));  // ;
             tokens.add(new Token("}", "testFile.jott", 4, TokenType.R_BRACE));  // }
 
             // Parse the function definition
             FuncDefNode funcDefNode = FuncDefNode.parse(tokens);
 
             // Convert the parsed function back to Jott code and print
-            System.out.println("Parsed FuncDefNode: " + funcDefNode.convertToJott());
+            System.out.println("Parsed 'Def main[]:Void { ::print[5]; }' to  " + funcDefNode.convertToJott());
 
         } catch (Exception e) {
             // Catch and print any exceptions

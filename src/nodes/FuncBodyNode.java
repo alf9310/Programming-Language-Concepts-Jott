@@ -26,7 +26,6 @@ public class FuncBodyNode implements JottTree {
                 && (tokens.get(0).getToken().equals("Boolean") || tokens.get(0).getToken().equals("Integer")
                         || tokens.get(0).getToken().equals("String") || tokens.get(0).getToken().equals("Double")
                         || tokens.get(0).getToken().equals("Void"))) {
-            System.out.println("HERE: trying to parse var dec");
             System.out.println("Current Token: " + tokens.get(0).getToken());
             VarDecNode currentStmt = VarDecNode.parse(tokens);
             if (currentStmt != null) {
@@ -34,11 +33,6 @@ public class FuncBodyNode implements JottTree {
             } else {
                 break;
             }
-        }
-
-        System.out.println("HERE: parsed var decs");
-        for (VarDecNode varDec : varDecs) {
-            System.out.println("VarDec: " + varDec.convertToJott());
         }
 
         BodyNode body = BodyNode.parse(tokens);
