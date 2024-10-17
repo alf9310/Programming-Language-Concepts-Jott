@@ -5,10 +5,6 @@ import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
 
-/*
- * if, elseif, else, while
- * 
- */
 public class ElseNode implements JottTree {
     BodyNode body;
     
