@@ -1,15 +1,13 @@
 package nodes;
 
 import java.util.ArrayList;
-
-import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
 
 /*
  * Assignment Node
  */
-public class AssignmentNode implements JottTree {
+public class AssignmentNode implements BodyStmtNode {
 
     IDNode id;
     ExpressionNode expression;

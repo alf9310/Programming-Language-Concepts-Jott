@@ -8,7 +8,7 @@ import provided.TokenType;
  * Function Call Node
  * ::<id>[<params>]
  */
-public class FunctionCallNode implements OperandNode {
+public class FunctionCallNode implements OperandNode, BodyStmtNode {
 
     IDNode id;
     ParamsNode params;
