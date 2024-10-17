@@ -27,6 +27,7 @@ public class IDNode implements OperandNode {
         Token currentToken = tokens.get(0);
         // Make sure token is type ID_KEYWORD
         if(!(currentToken.getTokenType() == TokenType.ID_KEYWORD)){
+            System.err.println(currentToken.getTokenType());
             throw new SyntaxError("Id type is not ID_KEYWORD", currentToken); 
         // Make sure first chatacter is lowercase
         } else if(Character.isUpperCase(currentToken.getToken().charAt(0))) {
