@@ -4,15 +4,16 @@ package nodes;
 import provided.JottTree;
 import provided.Token;
 import java.util.ArrayList;
+import provided.TokenType;
 
 public class FuncDefNode implements JottTree{
 
-    IdNode funcName;
+    IDNode funcName;
     ArrayList<FuncDefParam> params;
     TypeNode returnType;
     FuncBodyNode body;
 
-    public FuncDefNode(IdNode name, ArrayList<FuncDefParam> params,
+    public FuncDefNode(IDNode name, ArrayList<FuncDefParam> params,
                         TypeNode returnType, FuncBodyNode body){
         this.funcName = name;
         this.params = params;
@@ -22,42 +23,42 @@ public class FuncDefNode implements JottTree{
     
     public static FuncDefNode parse(ArrayList <Token> tokens) throws Exception{
         if(!tokens.get(0).getToken().equals("Def")){
-            throw Exception;
+            throw new SyntaxError("Function definition does not start with the correct keyword");
         }
-        tokens.pop(0);
+        tokens.remove(0);
 
-        IdNode name = IdNode.parse(tokens);
+        IDNode name = IDNode.parse(tokens);
 
-        if(!tokens.get(0).getToken().equals("[")){
-            throw Exception;
+        if(tokens.get(0).getTokenType() != TokenType.L_BRACKET){
+            throw new SyntaxError("Function definition missing left bracket");
         }
-        tokens.pop(0);
+        tokens.remove(0);
 
         ArrayList<FuncDefParam> params = FuncDefParam.parse(tokens);
 
-        if(!tokens.get(0).getToken().equals("]")){
-            throw Exception;
+        if(tokens.get(0).getTokenType() != TokenType.R_BRACKET){
+            throw new SyntaxError("Function definition missing right bracket");
         }
-        tokens.pop(0);
+        tokens.remove(0);
 
-        if(!tokens.get(0).getToken().equals(":")){
-            throw Exception;
+        if(tokens.get(0).getTokenType() != TokenType.COLON){
+            throw new SyntaxError("Function definition missing colon");
         }
-        tokens.pop(0);
+        tokens.remove(0);
 
         TypeNode returnType = TypeNode.parse(tokens);
 
-        if(!tokens.get(0).getToken().equals("{")){
-            throw Exception;
+        if(tokens.get(0).getTokenType() != TokenType.L_BRACE){
+            throw new SyntaxError("Function definition missing left brace");
         }
-        tokens.pop(0);
+        tokens.remove(0);
 
         FuncBodyNode body = FuncBodyNode.parse(tokens);
 
-        if(!tokens.get(0).getToken().equals("}")){
-            throw Exception;
+        if(tokens.get(0).getTokenType() != TokenType.R_BRACE){
+            throw new SyntaxError("Function definition missing right brace");
         }
-        tokens.pop(0);
+        tokens.remove(0);
 
         return new FuncDefNode(name, params, returnType, body);
     }
@@ -68,6 +69,8 @@ public class FuncDefNode implements JottTree{
      */
     @Override
     public String convertToJott(){
+        // need to add "Def" to beginning?
+        
         StringBuilder jottString = new StringBuilder();
         // Function Name
         jottString.append(funcName.convertToJott()).append(" ");
