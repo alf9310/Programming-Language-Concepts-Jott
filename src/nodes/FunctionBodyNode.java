@@ -1,99 +1,110 @@
 package nodes;
 
 import java.util.ArrayList;
-
 import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
 
-public class FunctionBodyNode implements JottTree {
-    private ArrayList<JottTree> statements;  // List of statements inside the function body
-    private JottTree returnStatement;        // The return statement
+public class FuncBodyNode implements JottTree {
+    ArrayList<VarDecNode> varDecs;
+    BodyNode body;
 
-    public FunctionBodyNode() {
-        statements = new ArrayList<>();
-        returnStatement = null;
+    public FuncBodyNode(ArrayList<VarDecNode> varDecs, BodyNode body) {
+        this.varDecs = varDecs;
+        this.body = body;
     }
 
-    // Parse the function body from tokens
-    public static FunctionBodyNode parse(ArrayList<Token> tokens) throws Exception {
-        FunctionBodyNode bodyNode = new FunctionBodyNode();
+    // parse
+    public static FuncBodyNode parse(ArrayList<Token> tokens) throws Exception {
+        if (tokens.isEmpty()) {
+            throw new SyntaxError("Empty token list for function body statement");
+        }
+        ArrayList<VarDecNode> varDecs = new ArrayList<>();
+        // Token currentToken =;
 
-        while (!tokens.isEmpty()) {
-            Token token = tokens.get(0);
-
-            // If we encounter a 'Return' token, parse the return statement
-            if (token.getTokenType() == TokenType.ID_KEYWORD && token.getToken().equals("Return")) {
-                ReturnStmtNode returnNode = ReturnStmtNode.parse(tokens);
-                if (returnNode == null) {
-                    throw new SyntaxError("Invalid return statement.");
-                }
-                bodyNode.returnStatement = returnNode;
-                break; // Return is the last part of a function body
+        while (!tokens.isEmpty()
+                && (tokens.get(0).getToken().equals("Boolean") || tokens.get(0).getToken().equals("Integer")
+                        || tokens.get(0).getToken().equals("String") || tokens.get(0).getToken().equals("Double")
+                        || tokens.get(0).getToken().equals("Void"))) {
+            System.out.println("HERE: trying to parse var dec");
+            System.out.println("Current Token: " + tokens.get(0).getToken());
+            VarDecNode currentStmt = VarDecNode.parse(tokens);
+            if (currentStmt != null) {
+                varDecs.add(currentStmt);
+            } else {
+                break;
             }
-
-            // Parse different types of statements
-            JottTree statementNode = parseStatement(tokens);
-            if (statementNode == null) {
-                throw new SyntaxError("Invalid statement.");
-            }
-            bodyNode.statements.add(statementNode);
         }
 
-        return bodyNode;
-    }
-
-    // Helper method to parse individual statements
-    private static JottTree parseStatement(ArrayList<Token> tokens) throws Exception {
-        Token token = tokens.get(0);
-
-        // Check if it's a function call
-        if (token.getTokenType() == TokenType.FC_HEADER) {
-            return FunctionCallNode.parse(tokens);
-        }
-        
-        // Check if it's an assignment
-        if (token.getTokenType() == TokenType.ID_KEYWORD) {
-            return AssignmentNode.parse(tokens);
+        System.out.println("HERE: parsed var decs");
+        for (VarDecNode varDec : varDecs) {
+            System.out.println("VarDec: " + varDec.convertToJott());
         }
 
-        throw new SyntaxError("Unexpected token: " + token.getToken());
+        BodyNode body = BodyNode.parse(tokens);
+
+        return new FuncBodyNode(varDecs, body);
     }
 
     @Override
     public String convertToJott() {
-        StringBuilder sb = new StringBuilder();
-        for (JottTree statement : statements) {
-            sb.append(statement.convertToJott()).append(" ");
+        String outStr = "";
+        for (VarDecNode bodyStmt : this.varDecs) {
+            String currentStmt = bodyStmt.convertToJott();
+            outStr += currentStmt;
+            if (currentStmt.length() > 1 && currentStmt.charAt(0) == ':' && currentStmt.charAt(1) == ':') {
+                // check for function call, there might be an easier way to do this...
+                outStr += ";";
+            }
         }
-        if (returnStatement != null) {
-            sb.append(returnStatement.convertToJott()).append(" ");
+
+        if (this.body != null) {
+            outStr += this.body.convertToJott();
         }
-        return sb.toString();
+
+        return outStr;
     }
 
     @Override
     public boolean validateTree() {
-        // Validate all statements and the return statement (if any)
-        for (JottTree statement : statements) {
-            if (!statement.validateTree()) {
-                return false;
-            }
-        }
-        if (returnStatement != null && !returnStatement.validateTree()) {
-            return false;
-        }
-        return true;
+        // To be implemented in phase 3
+        throw new UnsupportedOperationException("Validation not supported yet.");
     }
 
     @Override
     public void execute() {
-        // Execute all statements and the return statement (if any)
-        for (JottTree statement : statements) {
-            statement.execute();
-        }
-        if (returnStatement != null) {
-            returnStatement.execute();
+        // To be implemented in phase 4
+        throw new UnsupportedOperationException("Execution not supported yet.");
+    }
+
+    public static void main(String[] args) {
+        try {
+
+            // Test Case 1:
+            ArrayList<Token> tokens2 = new ArrayList<>();
+            // var dec
+            tokens2.add(new Token("Boolean", "testFile.jott", 1, TokenType.ID_KEYWORD));
+            tokens2.add(new Token("var", "testFile.jott", 1, TokenType.ID_KEYWORD));
+            tokens2.add(new Token(";", "testFile.jott", 1, TokenType.SEMICOLON));
+            // body
+            tokens2.add(new Token("::", "testFile.jott", 3, TokenType.FC_HEADER));
+            tokens2.add(new Token("multiParamsFunc", "testFile.jott", 3, TokenType.ID_KEYWORD));
+            tokens2.add(new Token("[", "testFile.jott", 3, TokenType.L_BRACKET));
+            tokens2.add(new Token("param1", "testFile.jott", 3, TokenType.ID_KEYWORD));
+            tokens2.add(new Token(",", "testFile.jott", 3, TokenType.COMMA));
+            tokens2.add(new Token("param2", "testFile.jott", 3, TokenType.ID_KEYWORD));
+            tokens2.add(new Token(",", "testFile.jott", 3, TokenType.COMMA));
+            tokens2.add(new Token("param3", "testFile.jott", 3, TokenType.ID_KEYWORD));
+            tokens2.add(new Token("]", "testFile.jott", 3, TokenType.R_BRACKET));
+            tokens2.add(new Token(";", "testFile.jott", 3, TokenType.SEMICOLON));
+            FuncBodyNode funcBodyNode = FuncBodyNode.parse(tokens2);
+            System.out.println(
+                    "Parsed func body 'Boolean var; :: multiParamsFunc [param1, param2, param3];':   "
+                            + funcBodyNode.convertToJott());
+
+        } catch (Exception e) {
+            // Catch and print any exceptions
+            System.err.println("Error: " + e.getMessage());
         }
     }
 }

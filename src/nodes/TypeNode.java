@@ -1,9 +1,9 @@
 package nodes;
 
 import java.util.ArrayList;
+import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
-import provided.JottTree;
 
 /*
  * Type Node and Function Return
@@ -60,14 +60,17 @@ public class TypeNode implements JottTree{
      * 
      * @return a string representing the Jott code of this tree
      */
+    @Override
     public String convertToJott() {
         return type.getToken();
     }
 
+    @Override
     public boolean validateTree() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public void execute() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
