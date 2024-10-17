@@ -24,7 +24,8 @@ public class ReturnStmtNode implements JottTree {
 
         Token currentToken = tokens.get(0);
         if(currentToken.getTokenType() != TokenType.ID_KEYWORD || !currentToken.getToken().equals("Return")) {
-            throw new SyntaxError("Return statement does not start with the correct keyword");
+            //throw new SyntaxError("Return statement does not start with the correct keyword");
+            return null;
         }
         tokens.remove(0);
 

@@ -3,6 +3,7 @@ package nodes;
 import java.util.ArrayList;
 import provided.JottTree;
 import provided.Token;
+import provided.TokenType;
 
 /*
  * <if_stmt> | <while_loop> | <asmt> | <func_call>;
@@ -32,7 +33,12 @@ public interface BodyStmtNode extends JottTree {
             }
                         }
             case FC_HEADER -> {
-                return FunctionCallNode.parse(tokens);
+                FunctionCallNode fc = FunctionCallNode.parse(tokens);
+                if(tokens.isEmpty() || tokens.get(0).getTokenType() != TokenType.SEMICOLON) {
+                    throw new SyntaxError("Function call body statement is missing a semicolon");
+                }
+                tokens.remove(0);
+                return fc;
             }
             default -> {
                 return null;//throw new SyntaxError("Invalid start of body statement");
