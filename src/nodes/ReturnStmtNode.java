@@ -1,10 +1,15 @@
 package nodes;
 
 import java.util.ArrayList;
+import provided.JottParser;
 import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
 
+/*
+ * Return Statement Node
+ * Return < expr >; | ε
+ */
 public class ReturnStmtNode implements JottTree {
     ExpressionNode expr;
 
@@ -24,22 +29,18 @@ public class ReturnStmtNode implements JottTree {
 
         Token currentToken = tokens.get(0);
         if(currentToken.getTokenType() != TokenType.ID_KEYWORD || !currentToken.getToken().equals("Return")) {
-            //throw new SyntaxError("Return statement does not start with the correct keyword");
             return null;
         }
         tokens.remove(0);
 
         ExpressionNode expr = ExpressionNode.parse(tokens);
 
-        // if(tokens.isEmpty() || tokens.get(0).getTokenType() != TokenType.SEMICOLON) {
-        //     throw new SyntaxError("ReturnStatementNode Error:  missing semicolon at end");  
-        // }
         if (tokens.isEmpty()) {
-            throw new SyntaxError("Return statement missing semicolon at end");
+            throw new SyntaxError("Expected semicolon ; after return got " + JottParser.finalToken.getToken(), JottParser.finalToken);
         }
         currentToken = tokens.get(0);
         if (currentToken.getTokenType() != TokenType.SEMICOLON) {
-            throw new SyntaxError("Return statement missing semicolon at end");
+            throw new SyntaxError("Expected semicolon ; after return got " + currentToken.getToken(), currentToken);
         }
         tokens.remove(0);
 

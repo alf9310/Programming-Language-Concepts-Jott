@@ -1,10 +1,15 @@
 package nodes;
 
 import java.util.ArrayList;
+import provided.JottParser;
 import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
 
+/*
+ * Function Body Node
+ * <var_dec >⋆ <body>
+ */
 public class FuncBodyNode implements JottTree {
     ArrayList<VarDecNode> varDecs;
     BodyNode body;
@@ -17,16 +22,14 @@ public class FuncBodyNode implements JottTree {
     // parse
     public static FuncBodyNode parse(ArrayList<Token> tokens) throws Exception {
         if (tokens.isEmpty()) {
-            throw new SyntaxError("FuncBodyNode Error: Empty token list for function body statement");
+            throw new SyntaxError("Expected variable description or body got " + JottParser.finalToken.getToken(), JottParser.finalToken);            
         }
         ArrayList<VarDecNode> varDecs = new ArrayList<>();
-        // Token currentToken =;
 
         while (!tokens.isEmpty()
                 && (tokens.get(0).getToken().equals("Boolean") || tokens.get(0).getToken().equals("Integer")
                         || tokens.get(0).getToken().equals("String") || tokens.get(0).getToken().equals("Double")
                         || tokens.get(0).getToken().equals("Void"))) {
-            // System.out.println("Current Token: " + tokens.get(0).getToken());
             VarDecNode currentStmt = VarDecNode.parse(tokens);
             if (currentStmt != null) {
                 varDecs.add(currentStmt);

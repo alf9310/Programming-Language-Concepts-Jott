@@ -1,11 +1,13 @@
 package nodes;
 
 import java.util.ArrayList;
+import provided.JottParser;
 import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
 
 /*
+ * Body Statement Node
  * <if_stmt> | <while_loop> | <asmt> | <func_call>;
  * since these can be followed by an optional return, this will return null when a node can't be formed
  * rather than throwing an error
@@ -14,7 +16,6 @@ public interface BodyStmtNode extends JottTree {
     
     public static BodyStmtNode parse(ArrayList<Token> tokens) throws Exception {
         if(tokens.isEmpty()){
-            //throw new SyntaxError("Empty token list for body statement");   
             return null;     
         }
 
@@ -35,13 +36,13 @@ public interface BodyStmtNode extends JottTree {
             case FC_HEADER -> {
                 FunctionCallNode fc = FunctionCallNode.parse(tokens);
                 if(tokens.isEmpty() || tokens.get(0).getTokenType() != TokenType.SEMICOLON) {
-                    throw new SyntaxError("BodyStatementNode Error: Function call body statement is missing a semicolon");
+                    throw new SyntaxError("Function call body statement missing a closing semicolon", JottParser.finalToken);
                 }
                 tokens.remove(0);
                 return fc;
             }
             default -> {
-                return null;//throw new SyntaxError("Invalid start of body statement");
+                return null;
             }
         }
     }
