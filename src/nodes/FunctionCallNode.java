@@ -22,14 +22,14 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
 
         // Check if there is tokens
         if(tokens.isEmpty()){
-		    throw new SyntaxError("Empty token list for function call"); 
+		    throw new SyntaxError("FunctionCall Node Error: Empty token list for function call"); 
         }
 
         Token currentToken = tokens.get(0);
 
         // Make sure token is type FC_HEADER ::
         if(!(currentToken.getTokenType() == TokenType.FC_HEADER)){
-            throw new SyntaxError("Function Call does not start with a FC_HEADER", currentToken); 
+            throw new SyntaxError("FunctionCall Node Error: Function Call does not start with a FC_HEADER", currentToken); 
         }
         tokens.remove(0);
 
@@ -39,7 +39,7 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
         currentToken = tokens.get(0);
         // Make sure token is type L_BRACKET [
         if(currentToken.getTokenType() != TokenType.L_BRACKET){
-            throw new SyntaxError("Function Call does not contain L_BRACKET after id", currentToken); 
+            throw new SyntaxError("FunctionCall Node Error: Function Call does not contain L_BRACKET after id", currentToken); 
         }
         tokens.remove(0);
 
@@ -56,12 +56,12 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
 
             // Check if there is tokens
             if(tokens.isEmpty()){
-		        throw new SyntaxError("Function Call does not end with R_BRACKET"); 
+		        throw new SyntaxError("FunctionCall Node Error: Function Call does not end with R_BRACKET"); 
             }
             // Ensure the next token is an R_BRACKET "]"
             currentToken = tokens.get(0);
             if (currentToken.getTokenType() != TokenType.R_BRACKET) {
-                throw new SyntaxError("Function Call does not end with R_BRACKET", currentToken);
+                throw new SyntaxError("FunctionCall Node Error: Function Call does not end with R_BRACKET", currentToken);
             }
             tokens.remove(0); // Remove R_BRACKET token
         }

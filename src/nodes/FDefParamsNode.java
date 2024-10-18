@@ -39,7 +39,7 @@ public class FDefParamsNode implements JottTree {
         // Parse colon
         Token colon = tokens.remove(0);
         if (colon.getTokenType() != TokenType.COLON) {
-            throw new SyntaxError("Invalid. Expected colon", colon);
+            throw new SyntaxError("FDefParamNode Error: Invalid. Expected colon", colon);
         }
 
         // Parse the type

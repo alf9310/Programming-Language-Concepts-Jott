@@ -24,7 +24,7 @@ public class VarDecNode implements JottTree {
     public static VarDecNode parse(ArrayList<Token> tokens) throws Exception {
         // Check if there is tokens
         if (tokens.isEmpty()) {
-            throw new SyntaxError("Empty token list for VarDeclaration");
+            throw new SyntaxError("VarDecNode Error: Empty token list for VarDeclaration");
         }
         // Parse the type
         TypeNode type = TypeNode.parse(tokens);
@@ -32,7 +32,7 @@ public class VarDecNode implements JottTree {
         IDNode id = IDNode.parse(tokens);
         // Parse semicolon
         if (tokens.isEmpty() || tokens.remove(0).getTokenType() != TokenType.SEMICOLON) {
-            throw new SyntaxError("Invalid. Expected semicolon");
+            throw new SyntaxError("VarDecNode Error: Invalid. Expected semicolon");
         }
         return new VarDecNode(type, id);
     }

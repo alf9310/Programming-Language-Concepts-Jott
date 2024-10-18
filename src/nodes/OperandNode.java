@@ -16,7 +16,7 @@ public interface OperandNode extends ExpressionNode {
 
         // Check if there is tokens
         if(tokens.isEmpty()){
-            throw new SyntaxError("Empty token list for operand");        
+            throw new SyntaxError("OperandNode Error: Empty token list for operand");        
         }
 
         Token currentToken = tokens.get(0);
@@ -36,7 +36,7 @@ public interface OperandNode extends ExpressionNode {
             return NumberNode.parse(tokens); // Negation is handled in NumberNode's parse method
         }
 
-        throw new SyntaxError("TokenType is not ID_KEYWORD, (-)NUMBER or FC_HEADER for Operand", currentToken);
+        throw new SyntaxError("OperandNodeError: TokenType is not ID_KEYWORD, (-)NUMBER or FC_HEADER for Operand", currentToken);
     }
 
     public static void main(String[] args) {

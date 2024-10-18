@@ -26,14 +26,14 @@ public class FuncDefNode implements JottTree{
     
     public static FuncDefNode parse(ArrayList <Token> tokens) throws Exception{
         if(tokens.isEmpty() || !tokens.get(0).getToken().equals("Def")){
-            throw new SyntaxError("Function definition does not start with the correct keyword");
+            throw new SyntaxError("FuncDefNode Error: Function definition does not start with the correct keyword");
         }
         tokens.remove(0);
 
         IDNode name = IDNode.parse(tokens);
 
         if(tokens.isEmpty() || tokens.get(0).getTokenType() != TokenType.L_BRACKET){
-            throw new SyntaxError("Function definition missing left bracket");
+            throw new SyntaxError("FuncDefNode Error: Function definition missing left bracket");
         }
         tokens.remove(0);
 
@@ -49,19 +49,19 @@ public class FuncDefNode implements JottTree{
         }
 
         if(tokens.isEmpty() || tokens.get(0).getTokenType() != TokenType.R_BRACKET){
-            throw new SyntaxError("Function definition missing right bracket");
+            throw new SyntaxError("FuncDefNode Error: Function definition missing right bracket");
         }
         tokens.remove(0);
 
         if(tokens.isEmpty() || tokens.get(0).getTokenType() != TokenType.COLON){
-            throw new SyntaxError("Function definition missing colon");
+            throw new SyntaxError("FuncDefNode Error: Function definition missing colon");
         }
         tokens.remove(0);
 
         TypeNode returnType = TypeNode.parse(tokens, true);
 
         if(tokens.isEmpty() || tokens.get(0).getTokenType() != TokenType.L_BRACE){
-            throw new SyntaxError("Function definition missing left brace");
+            throw new SyntaxError("FuncDefNode Error: Function definition missing left brace");
         }
         tokens.remove(0);
 
@@ -75,7 +75,7 @@ public class FuncDefNode implements JottTree{
         }
 
         if(tokens.isEmpty() || tokens.get(0).getTokenType() != TokenType.R_BRACE){
-            throw new SyntaxError("Function body missing right brace");
+            throw new SyntaxError("FuncDefNode Error: Function body missing right brace");
         }
         tokens.remove(0);
 

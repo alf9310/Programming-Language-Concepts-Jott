@@ -31,11 +31,14 @@ public class ReturnStmtNode implements JottTree {
 
         ExpressionNode expr = ExpressionNode.parse(tokens);
 
-        if(tokens.isEmpty()){
-            throw new SyntaxError("Return statement missing semicolon at end");  
+        // if(tokens.isEmpty() || tokens.get(0).getTokenType() != TokenType.SEMICOLON) {
+        //     throw new SyntaxError("ReturnStatementNode Error:  missing semicolon at end");  
+        // }
+        if (tokens.isEmpty()) {
+            throw new SyntaxError("Return statement missing semicolon at end");
         }
         currentToken = tokens.get(0);
-        if(currentToken.getTokenType() != TokenType.SEMICOLON) {
+        if (currentToken.getTokenType() != TokenType.SEMICOLON) {
             throw new SyntaxError("Return statement missing semicolon at end");
         }
         tokens.remove(0);

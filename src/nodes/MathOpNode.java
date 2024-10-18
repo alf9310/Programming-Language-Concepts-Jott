@@ -22,19 +22,19 @@ public class MathOpNode implements OperatorNode{
 
         // Check if there is tokens
         if(tokens.isEmpty()){
-            throw new SyntaxError("Empty token list for Math operator");        
+            throw new SyntaxError("MathOpNode Error: Empty token list for Math operator");        
         }
         Token currentToken = tokens.get(0);
         // Make sure token is type Math_OP
         if(currentToken.getTokenType() != TokenType.MATH_OP){
-            throw new SyntaxError("TokenType is not MATH_OP for Math operator", currentToken);
+            throw new SyntaxError("MathOpNode Error: TokenType is not MATH_OP for Math operator", currentToken);
         }
         // Make sure token is a valid operator character
         if(!(currentToken.getToken().equals("+") || 
         currentToken.getToken().equals("-") || 
         currentToken.getToken().equals("*") || 
         currentToken.getToken().equals("/"))){
-            throw new SyntaxError("token is not a valid character for Math operator", currentToken);
+            throw new SyntaxError("MathOpNode Error: token is not a valid character for Math operator", currentToken);
         }
 
         Token operator = tokens.remove(0);

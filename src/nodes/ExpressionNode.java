@@ -19,7 +19,7 @@ public interface ExpressionNode extends JottTree {
 
         // Check if there is tokens
         if(tokens.isEmpty()){
-            throw new SyntaxError("Empty token list for expression");        
+            throw new SyntaxError("ExpressionNode Error: Empty token list for expression");        
         }
 
         // <operand> | <operand> <relop> <operand> | <operand> <mathop> <operand> 
@@ -47,7 +47,7 @@ public interface ExpressionNode extends JottTree {
             }
         }
 
-        throw new SyntaxError("Invalid expression token", tokens.get(0));  
+        throw new SyntaxError("ExpressionNode Error: Invalid expression token", tokens.get(0));  
     }
 
     // Helper method to determine if a token is an operand (<id> | <num> | <func_call> | -<num>)

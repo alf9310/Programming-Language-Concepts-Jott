@@ -25,7 +25,7 @@ public class BinaryOpNode implements ExpressionNode {
     public static BinaryOpNode parse(ArrayList<Token> tokens) throws Exception {
         // Check if there is tokens
         if(tokens.isEmpty()){
-            throw new SyntaxError("Empty token list for binary operation");        
+            throw new SyntaxError("BinaryOpNode Error: Empty token list for binary operation");        
         }
 
         // Parse the left operand first
@@ -39,7 +39,7 @@ public class BinaryOpNode implements ExpressionNode {
         } else if(op.getTokenType() == TokenType.REL_OP){
             operator = RelOpNode.parse(tokens);
         } else {
-            throw new SyntaxError("Invalid operator", op);
+            throw new SyntaxError("BinaryOpNode Error: Invalid operator", op);
         }
 
         // Parse the right operand

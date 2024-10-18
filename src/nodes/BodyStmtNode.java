@@ -35,7 +35,7 @@ public interface BodyStmtNode extends JottTree {
             case FC_HEADER -> {
                 FunctionCallNode fc = FunctionCallNode.parse(tokens);
                 if(tokens.isEmpty() || tokens.get(0).getTokenType() != TokenType.SEMICOLON) {
-                    throw new SyntaxError("Function call body statement is missing a semicolon");
+                    throw new SyntaxError("BodyStatementNode Error: Function call body statement is missing a semicolon");
                 }
                 tokens.remove(0);
                 return fc;

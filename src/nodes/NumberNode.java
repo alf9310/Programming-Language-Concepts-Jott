@@ -29,7 +29,7 @@ public class NumberNode implements OperandNode {
     public static NumberNode parse(ArrayList <Token> tokens) throws Exception{
         // Check if there is tokens
         if(tokens.isEmpty()){
-		    throw new SyntaxError("Empty token list for number"); 
+		    throw new SyntaxError("NumberNode Error: Empty token list"); 
         }
         boolean isNegative = false;
 
@@ -43,7 +43,7 @@ public class NumberNode implements OperandNode {
         // Make sure the next token is a NUMBER
         currentToken = tokens.get(0);
         if (!(currentToken.getTokenType() == TokenType.NUMBER)) {
-            throw new SyntaxError("Number type is not NUMBER", currentToken);
+            throw new SyntaxError("NumberNode Error: token type is not number", currentToken);
         }
 
         Token number = tokens.remove(0);

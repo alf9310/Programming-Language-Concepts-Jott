@@ -67,18 +67,18 @@ public class AssignmentNode implements BodyStmtNode {
 
             System.out.println("Testing AssignmentNode Main Method");
 
-            // Test Case 1:  var = 4;
+            // Test Case 1: var = 4;
             ArrayList<Token> tokens1 = new ArrayList<>();
             // type token
             tokens1.add(new Token("var", "testFile.jott", 1, TokenType.ID_KEYWORD));
             tokens1.add(new Token("=", "testFile.jott", 1, TokenType.ASSIGN));
             tokens1.add(new Token("4", "testFile.jott", 1, TokenType.NUMBER));
             tokens1.add(new Token(";", "testFile.jott", 1, TokenType.SEMICOLON));
-            
+
             AssignmentNode AssignmentNode1 = AssignmentNode.parse(tokens1);
             System.out.println("Parsed AssignmentNode 'var=4;' :   " + AssignmentNode1.convertToJott());
 
-            // Test Case 2:  var = 4 + 5;
+            // Test Case 2: var = 4 + 5;
             ArrayList<Token> tokens2 = new ArrayList<>();
             // type token
             tokens2.add(new Token("var", "testFile.jott", 1, TokenType.ID_KEYWORD));
@@ -90,7 +90,7 @@ public class AssignmentNode implements BodyStmtNode {
             AssignmentNode AssignmentNode2 = AssignmentNode.parse(tokens2);
             System.out.println("Parsed AssignmentNode 'var=4+5;' :   " + AssignmentNode2.convertToJott());
 
-            // Test Case 3:  var = 4++5; Invalid
+            // Test Case 3: var = 4++5; Invalid
             ArrayList<Token> tokens3 = new ArrayList<>();
             // type token
             tokens3.add(new Token("var", "testFile.jott", 1, TokenType.ID_KEYWORD));
@@ -102,7 +102,10 @@ public class AssignmentNode implements BodyStmtNode {
             tokens3.add(new Token(";", "testFile.jott", 1, TokenType.SEMICOLON));
             try {
                 AssignmentNode AssignmentNode3 = AssignmentNode.parse(tokens3);
-                System.out.println("Parsed AssignmentNode 'var=4++5;' :   " + AssignmentNode3.convertToJott()); // Should throw an error
+                System.out.println("Parsed AssignmentNode 'var=4++5;' :   " + AssignmentNode3.convertToJott()); // Should
+                                                                                                                // throw
+                                                                                                                // an
+                                                                                                                // error
             } catch (Exception e) {
                 System.err.println(e.getMessage()); // Expected error: Invalid token
             }

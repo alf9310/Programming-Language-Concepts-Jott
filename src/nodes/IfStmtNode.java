@@ -23,41 +23,41 @@ public class IfStmtNode implements BodyStmtNode {
 
     public static IfStmtNode parse(ArrayList<Token> tokens) throws Exception {
         if(tokens.isEmpty()){
-		    throw new SyntaxError("Empty token list for if statement"); 
+		    throw new SyntaxError("IfStatementNode Error: Empty token list for if statement"); 
         }
 
         Token currentToken = tokens.get(0);
         if(currentToken.getTokenType() != TokenType.ID_KEYWORD || !currentToken.getToken().equals("If")) {
-            throw new SyntaxError("If statement does not start with correct keyword");
+            throw new SyntaxError("IfStatementNode Error:If statement does not start with correct keyword");
         }
         tokens.remove(0);
 
         if(tokens.isEmpty()){
-		    throw new SyntaxError("If statement is missing a left bracket");
+		    throw new SyntaxError("IfStatementNode Error:If statement is missing a left bracket");
         }
         currentToken = tokens.get(0);
         if(currentToken.getTokenType() != TokenType.L_BRACKET) {
-            throw new SyntaxError("If statement is missing a left bracket");
+            throw new SyntaxError("IfStatementNode Error: If statement is missing a left bracket");
         }
         tokens.remove(0);
 
         ExpressionNode expr = ExpressionNode.parse(tokens); // error checking handled
 
         if(tokens.isEmpty()){
-		    throw new SyntaxError("If statement is missing a right bracket");
+		    throw new SyntaxError("IfStatementNode Error: If statement is missing a right bracket");
         }
         currentToken = tokens.get(0);
         if(currentToken.getTokenType() != TokenType.R_BRACKET) {
-            throw new SyntaxError("If statement is missing a right bracket");
+            throw new SyntaxError("IfStatementNode Error: If statement is missing a right bracket");
         }
         tokens.remove(0);
 
         if(tokens.isEmpty()){
-		    throw new SyntaxError("If statement is missing a left brace");
+		    throw new SyntaxError("IfStatementNode Error: If statement is missing a left brace");
         }
         currentToken = tokens.get(0);
         if(currentToken.getTokenType() != TokenType.L_BRACE) {
-            throw new SyntaxError("If statement is missing a left brace");
+            throw new SyntaxError("IfStatementNode Error: If statement is missing a left brace");
         }
         tokens.remove(0);
 
@@ -66,11 +66,11 @@ public class IfStmtNode implements BodyStmtNode {
 
         // brace
         if(tokens.isEmpty()){
-		    throw new SyntaxError("If statement is missing a right brace");
+		    throw new SyntaxError("IfStatementNode Error: If statement is missing a right brace");
         }
         currentToken = tokens.get(0);
         if(currentToken.getTokenType() != TokenType.R_BRACE) {
-            throw new SyntaxError("If statement is missing a right brace");
+            throw new SyntaxError("IfStatementNode Error: If statement is missing a right brace");
         }
         tokens.remove(0);
 

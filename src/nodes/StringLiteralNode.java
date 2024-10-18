@@ -22,12 +22,12 @@ public class StringLiteralNode implements ExpressionNode{
 
         // Check if there is tokens
         if(tokens.isEmpty()){
-            throw new SyntaxError("Empty token list for string literal");        
+            throw new SyntaxError("StringLiteralNode Error: No tokens");        
         }
         Token currentToken = tokens.get(0);
         // Make sure token is type STRING
         if(currentToken.getTokenType() != TokenType.STRING){
-            throw new SyntaxError("TokenType is not STRING for string literal", currentToken);
+            throw new SyntaxError("StringLiteralNode Error: TokenType is not STRING for string literal", currentToken);
         }
 
         Token string = tokens.remove(0);

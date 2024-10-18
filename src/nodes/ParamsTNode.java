@@ -21,13 +21,13 @@ public class ParamsTNode implements JottTree {
 
         // Check if there is tokens
         if(tokens.isEmpty()){
-            throw new SyntaxError("Empty token list for ParamsT");
+            throw new SyntaxError("ParamsTNode Error: Empty token list for ParamsT");
         }
 
         Token currentToken = tokens.get(0);
         // Make sure token is type COMMA ,
         if(!(currentToken.getTokenType() == TokenType.COMMA)){
-            throw new SyntaxError("ParamsT does not have a comma", currentToken); 
+            throw new SyntaxError("ParamsTNode Error: Missing comma", currentToken); 
         }
         tokens.remove(0);
 
