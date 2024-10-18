@@ -22,12 +22,12 @@ public class RelOpNode implements OperatorNode{
 
         // Check if there is tokens
         if(tokens.isEmpty()){
-            throw new SyntaxError("Empty token list for relational operator");        
+            throw new SyntaxError("RelOpNode Error: Empty token list for relational operator");        
         }
         Token currentToken = tokens.get(0);
         // Make sure token is type REL_OP
         if(currentToken.getTokenType() != TokenType.REL_OP){
-            throw new SyntaxError("TokenType is not REL_OP for relational operator", currentToken);
+            throw new SyntaxError("RelopNode Error: TokenType is not REL_OP for relational operator", currentToken);
         }
         // Make sure token is a valid operator character
         if(!(currentToken.getToken().equals(">") || 
@@ -36,7 +36,7 @@ public class RelOpNode implements OperatorNode{
         currentToken.getToken().equals("<=") || 
         currentToken.getToken().equals("==") || 
         currentToken.getToken().equals("!="))){
-            throw new SyntaxError("token is not a valid character for relational operator", currentToken);
+            throw new SyntaxError("RelopNode Error: token is not a valid character for relational operator", currentToken);
         }
 
         Token operator = tokens.remove(0);

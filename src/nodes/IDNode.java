@@ -24,14 +24,15 @@ public class IDNode implements OperandNode {
     public static IDNode parse(ArrayList <Token> tokens) throws Exception{
         // Check if there is tokens
         if(tokens.isEmpty()){
-		    throw new SyntaxError("Empty token list for id"); 
+		    throw new SyntaxError("IDNode Error: Empty token list for id"); 
         }
 
         Token currentToken = tokens.get(0);
         // Make sure token is type ID_KEYWORD
         if(!(currentToken.getTokenType() == TokenType.ID_KEYWORD)){
-            System.err.println(currentToken.getTokenType());
-            throw new SyntaxError("Id type is not ID_KEYWORD", currentToken); 
+            // System.err.println(currentToken.getTokenType());
+            throw new SyntaxError("IDNode Error: Type of '" +currentToken.getToken()+ "' is not ID_KEYWORD", currentToken);
+
         // Make sure first chatacter is lowercase
         } 
 
@@ -39,11 +40,11 @@ public class IDNode implements OperandNode {
         if(!uppercaseAllowed.contains(currentToken.getToken())) {
             if(Character.isUpperCase(currentToken.getToken().charAt(0))) {
                 // System.err.println("Problem token "+ currentToken.getToken());
-                throw new SyntaxError("First character is not lowercase for id", currentToken); 
+                throw new SyntaxError("IDNode Error: First character is not lowercase for id", currentToken); 
             }
         }
         if (tokens.isEmpty()) {
-            throw new SyntaxError("Empty token list for id");
+            throw new SyntaxError("IDNode Error: Empty token list for id");
         }
         Token id = tokens.remove(0);
         return new IDNode(id);

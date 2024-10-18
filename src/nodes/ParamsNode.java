@@ -28,7 +28,7 @@ public class ParamsNode implements JottTree {
 
         // Check if there is tokens
         if(tokens.isEmpty()){
-            throw new SyntaxError("ParamsNode is Empty");
+            throw new SyntaxError("ParamsNode Error: No tokens");
         }
 
         // If the next token is R_BRACKET, we know there are no parameters
@@ -42,9 +42,12 @@ public class ParamsNode implements JottTree {
 
         // <params_t>⋆
         ArrayList<ParamsTNode> paramst = new ArrayList<>();
+
+        // if (tokens.isEmpty()) {
+        //     return new ParamsNode(expr, paramst);
+        // }
         
         Token currentToken = tokens.get(0);
-
         while (!tokens.isEmpty() && currentToken.getTokenType() == TokenType.COMMA) {
             paramst.add(ParamsTNode.parse(tokens));
             if (!tokens.isEmpty()) {

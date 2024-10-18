@@ -25,17 +25,17 @@ public class FDefParamsTNode implements JottTree {
     public static FDefParamsTNode parse(ArrayList<Token> tokens) throws Exception {
         // Check if there is tokens
         if (tokens.isEmpty()) {
-            throw new SyntaxError("Empty token list for Function Definition Parameters T");
+            throw new SyntaxError("FDefParams Error: Empty token list for Function Definition Parameters T");
         }
         // Check that there are at least 4 tokens
         if (tokens.size() < 4) {
-            throw new SyntaxError("Invalid. Expected at least 4 tokens for Function Definition Parameters T");
+            throw new SyntaxError("FDefParams Error: Invalid. Expected at least 4 tokens for Function Definition Parameters T");
         }
 
         // Parse comma
         Token comma = tokens.remove(0);
         if (comma.getTokenType() != TokenType.COMMA) {
-            throw new SyntaxError("Invalid. Expected semicolon", comma);
+            throw new SyntaxError("FDefParams Error: Invalid. Expected semicolon", comma);
         }
 
         // Parse the ID
@@ -44,7 +44,7 @@ public class FDefParamsTNode implements JottTree {
         // Parse colon
         Token colon = tokens.remove(0);
         if (colon.getTokenType() != TokenType.COLON) {
-            throw new SyntaxError("Invalid. Expected semicolon", colon);
+            throw new SyntaxError("FDefParams Error: Invalid. Expected semicolon", colon);
         }
 
         // Parse the type

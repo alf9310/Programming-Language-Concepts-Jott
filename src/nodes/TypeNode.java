@@ -27,19 +27,19 @@ public class TypeNode implements JottTree{
 
         // Check if there is tokens
         if (tokens.isEmpty()) {
-            throw new SyntaxError("Empty token list for type");
+            throw new SyntaxError("TypeNode Error: Empty token list for type");
         }
         Token currentToken = tokens.get(0);
         // Make sure token is type ID_KEYWORD
         if (currentToken.getTokenType() != TokenType.ID_KEYWORD) {
-            throw new SyntaxError("TokenType is not ID_KEYWORD", currentToken);
+            throw new SyntaxError("TypeNode Error: TokenType is not ID_KEYWORD", currentToken);
         }
         // Make sure token is valid
         if (FuncNode) {
             if (!(currentToken.getToken().equals("Double")) && !(currentToken.getToken().equals("Integer"))
                     && !(currentToken.getToken().equals("String")) && !(currentToken.getToken().equals("Boolean")) 
                     && !(currentToken.getToken().equals("Void"))) {
-                throw new SyntaxError("Token is not 'Double' or 'Integer' or 'String' or 'Boolean' or 'Void", currentToken);
+                throw new SyntaxError("TypeNode Error: Token is not 'Double' or 'Integer' or 'String' or 'Boolean' or 'Void", currentToken);
             }
             Token type = tokens.remove(0);
             return new TypeNode(type);
@@ -47,7 +47,7 @@ public class TypeNode implements JottTree{
         } else {
             if (!(currentToken.getToken().equals("Double")) && !(currentToken.getToken().equals("Integer"))
                     && !(currentToken.getToken().equals("String")) && !(currentToken.getToken().equals("Boolean"))) {
-                throw new SyntaxError(String.format("Token '%s' is not 'Double' or 'Integer' or 'String' or 'Boolean'", currentToken.getToken()), currentToken);
+                throw new SyntaxError(String.format("TypeNode Error: Token '%s' is not 'Double' or 'Integer' or 'String' or 'Boolean'", currentToken.getToken()), currentToken);
             }
             Token type = tokens.remove(0);
             return new TypeNode(type);

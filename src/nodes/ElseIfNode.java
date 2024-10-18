@@ -19,52 +19,52 @@ public class ElseIfNode implements JottTree {
     // parse
     public static ElseIfNode parse(ArrayList<Token> tokens) throws Exception {
         if(tokens.isEmpty()) {
-            throw new SyntaxError("Empty token list for else if");
+            throw new SyntaxError("ElseIfNode Error: Empty token list for else if");
         }
 
         Token currentToken = tokens.get(0);
         if(currentToken.getTokenType() != TokenType.ID_KEYWORD || !currentToken.getToken().equals("Elseif")) {
-            throw new SyntaxError("Else if statement does not start with correct keyword");
+            throw new SyntaxError("ElseIfNode Error: Else if statement does not start with correct keyword");
         }
         tokens.remove(0);
 
         if(tokens.isEmpty()){
-		    throw new SyntaxError("Else if statement is missing a left bracket");
+		    throw new SyntaxError("ElseIfNode Error: Else if statement is missing a left bracket");
         }
         currentToken = tokens.get(0);
         if(currentToken.getTokenType() != TokenType.L_BRACKET) {
-            throw new SyntaxError("Else if statement missing a left bracket");
+            throw new SyntaxError("ElseIfNode Error: Else if statement missing a left bracket");
         }
         tokens.remove(0);
 
         ExpressionNode expr = ExpressionNode.parse(tokens);
 
         if(tokens.isEmpty()){
-		    throw new SyntaxError("Else if statement is missing a right bracket");
+		    throw new SyntaxError("ElseIfNode Error: Else if statement is missing a right bracket");
         }
         currentToken = tokens.get(0);
         if(currentToken.getTokenType() != TokenType.R_BRACKET) {
-            throw new SyntaxError("Else if statement missing a right bracket");
+            throw new SyntaxError("ElseIfNode Error: Else if statement missing a right bracket");
         }
         tokens.remove(0);
 
         if(tokens.isEmpty()){
-		    throw new SyntaxError("Else if statement is missing a left brace");
+		    throw new SyntaxError("ElseIfNode Error: Else if statement is missing a left brace");
         }
         currentToken = tokens.get(0);
         if(currentToken.getTokenType() != TokenType.L_BRACE) {
-            throw new SyntaxError("Else if statement missing a left brace");
+            throw new SyntaxError("ElseIfNode Error: Else if statement missing a left brace");
         }
         tokens.remove(0);
 
         BodyNode body = BodyNode.parse(tokens);
 
         if(tokens.isEmpty()){
-		    throw new SyntaxError("Else if statement is missing a right brace");
+		    throw new SyntaxError("ElseIfNode Error: Else if statement is missing a right brace");
         }
         currentToken = tokens.get(0);
         if(currentToken.getTokenType() != TokenType.R_BRACE) {
-            throw new SyntaxError("Else if statement missing a right brace");
+            throw new SyntaxError("ElseIfNode Error: Else if statement missing a right brace");
         }
         tokens.remove(0);
 

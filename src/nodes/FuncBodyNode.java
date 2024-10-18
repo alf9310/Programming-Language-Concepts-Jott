@@ -17,7 +17,7 @@ public class FuncBodyNode implements JottTree {
     // parse
     public static FuncBodyNode parse(ArrayList<Token> tokens) throws Exception {
         if (tokens.isEmpty()) {
-            throw new SyntaxError("Empty token list for function body statement");
+            throw new SyntaxError("FuncBodyNode Error: Empty token list for function body statement");
         }
         ArrayList<VarDecNode> varDecs = new ArrayList<>();
         // Token currentToken =;
