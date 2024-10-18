@@ -26,7 +26,7 @@ public class FuncBodyNode implements JottTree {
                 && (tokens.get(0).getToken().equals("Boolean") || tokens.get(0).getToken().equals("Integer")
                         || tokens.get(0).getToken().equals("String") || tokens.get(0).getToken().equals("Double")
                         || tokens.get(0).getToken().equals("Void"))) {
-            System.out.println("Current Token: " + tokens.get(0).getToken());
+            // System.out.println("Current Token: " + tokens.get(0).getToken());
             VarDecNode currentStmt = VarDecNode.parse(tokens);
             if (currentStmt != null) {
                 varDecs.add(currentStmt);

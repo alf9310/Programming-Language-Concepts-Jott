@@ -31,9 +31,8 @@ public class VarDecNode implements JottTree {
         // Parse the ID
         IDNode id = IDNode.parse(tokens);
         // Parse semicolon
-        Token semicolon = tokens.remove(0);
-        if (semicolon.getTokenType() != TokenType.SEMICOLON) {
-            throw new SyntaxError("Invalid. Expected semicolon", semicolon);
+        if (tokens.isEmpty() || tokens.remove(0).getTokenType() != TokenType.SEMICOLON) {
+            throw new SyntaxError("Invalid. Expected semicolon");
         }
         return new VarDecNode(type, id);
     }

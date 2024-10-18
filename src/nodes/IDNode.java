@@ -1,6 +1,9 @@
 package nodes;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import provided.Token;
 import provided.TokenType;
 
@@ -30,10 +33,18 @@ public class IDNode implements OperandNode {
             System.err.println(currentToken.getTokenType());
             throw new SyntaxError("Id type is not ID_KEYWORD", currentToken); 
         // Make sure first chatacter is lowercase
-        } else if(Character.isUpperCase(currentToken.getToken().charAt(0))) {
-		    throw new SyntaxError("First character is not lowercase for id", currentToken); 
-        }
+        } 
 
+        List<String> uppercaseAllowed = Arrays.asList("Boolean","Integer", "String", "Double", "Void", "True", "False");
+        if(!uppercaseAllowed.contains(currentToken.getToken())) {
+            if(Character.isUpperCase(currentToken.getToken().charAt(0))) {
+                // System.err.println("Problem token "+ currentToken.getToken());
+                throw new SyntaxError("First character is not lowercase for id", currentToken); 
+            }
+        }
+        if (tokens.isEmpty()) {
+            throw new SyntaxError("Empty token list for id");
+        }
         Token id = tokens.remove(0);
         return new IDNode(id);
     }
