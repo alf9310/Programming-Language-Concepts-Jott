@@ -35,12 +35,12 @@ public class BinaryOpNode implements ExpressionNode {
         // Parse the operator (can be either MathOpNode or RelOpNode)
         Token op = tokens.get(0); // Don't want to remove, as Math & Rel Op nodes does that
         OperatorNode operator;
-        if(op.getTokenType() == TokenType.MATH_OP){
-            operator = MathOpNode.parse(tokens);
-        } else if(op.getTokenType() == TokenType.REL_OP){
-            operator = RelOpNode.parse(tokens);
-        } else {
+        if(null == op.getTokenType()){
             throw new SyntaxError("Expected " + TokenType.MATH_OP + " or " + TokenType.REL_OP + " got " + op.getTokenType(), op);
+        } else switch (op.getTokenType()) {
+            case MATH_OP -> operator = MathOpNode.parse(tokens);
+            case REL_OP -> operator = RelOpNode.parse(tokens);
+            default -> throw new SyntaxError("Expected " + TokenType.MATH_OP + " or " + TokenType.REL_OP + " got " + op.getTokenType(), op);
         }
 
         // Parse the right operand
