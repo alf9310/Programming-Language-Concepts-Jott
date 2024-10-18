@@ -24,14 +24,40 @@ public interface ExpressionNode extends JottTree {
 
         // <operand> | <operand> <relop> <operand> | <operand> <mathop> <operand> 
         if (isOperand(tokens.get(0))) {
-
-            if (tokens.size() > 2) {
-                // Check if the next token is <relop> or <mathop>
-                Token op = tokens.get(1);
-                if (op.getTokenType() == TokenType.REL_OP || op.getTokenType() == TokenType.MATH_OP) {
-                    return BinaryOpNode.parse(tokens);
+            
+            if(tokens.size() > 1) {
+                // -num operand
+                if(tokens.get(0).getTokenType() == TokenType.MATH_OP && tokens.get(0).getToken().equals("-") && tokens.get(1).getTokenType() == TokenType.NUMBER) {
+                    if(tokens.size() > 3) {
+                        Token op = tokens.get(2);
+                        if(op.getTokenType() == TokenType.REL_OP || op.getTokenType() == TokenType.MATH_OP) {
+                            return BinaryOpNode.parse(tokens);
+                        }
+                    }
+                } else if(tokens.get(0).getTokenType() == TokenType.FC_HEADER) {
+                    int index = 1;
+                    while(index < tokens.size()) {
+                        if(tokens.get(index).getTokenType() == TokenType.R_BRACKET) {
+                            break;
+                        }
+                        index++;
+                    }
+                    // number of tokens leftover after the func call
+                    int leftover = tokens.size() - index;
+                    if(leftover > 1) {
+                        Token op = tokens.get(index + 1);
+                        if(op.getTokenType() == TokenType.REL_OP || op.getTokenType() == TokenType.MATH_OP) {
+                            return BinaryOpNode.parse(tokens);
+                        }
+                    }
+                } else if (tokens.size() > 2) {
+                    // Check if the next token is <relop> or <mathop>
+                    Token op = tokens.get(1);
+                    if (op.getTokenType() == TokenType.REL_OP || op.getTokenType() == TokenType.MATH_OP) {
+                        return BinaryOpNode.parse(tokens);
+                    }
                 }
-            }
+            } 
 
             // <operand>
             return OperandNode.parse(tokens);
@@ -113,6 +139,7 @@ public interface ExpressionNode extends JottTree {
     private static void testSimpleRelationalOperation() {
         try {
             ArrayList<Token> tokens = new ArrayList<>();
+            //tokens.add(new Token("-", "testFile.jott", 3, TokenType.MATH_OP));
             tokens.add(new Token("10", "testFile.jott", 3, TokenType.NUMBER));
             tokens.add(new Token(">", "testFile.jott", 3, TokenType.REL_OP));
             tokens.add(new Token("4", "testFile.jott", 3, TokenType.NUMBER));
