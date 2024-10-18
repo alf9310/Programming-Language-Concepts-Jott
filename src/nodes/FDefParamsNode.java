@@ -43,7 +43,7 @@ public class FDefParamsNode implements JottTree {
         }
 
         // Parse the type
-        TypeNode type = TypeNode.parse(tokens, true);
+        TypeNode type = TypeNode.parse(tokens);
 
         // <FDefParamsTNode>⋆
         ArrayList<FDefParamsTNode> list = new ArrayList<>();
