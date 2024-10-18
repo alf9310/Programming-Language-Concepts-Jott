@@ -1,6 +1,7 @@
 package nodes;
 
 import java.util.ArrayList;
+import provided.JottParser;
 import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
@@ -19,7 +20,7 @@ public interface ExpressionNode extends JottTree {
 
         // Check if there is tokens
         if(tokens.isEmpty()){
-            throw new SyntaxError("ExpressionNode Error: Empty token list for expression");        
+            throw new SyntaxError("Expected Operand, string literal or boolean got " + JottParser.finalToken.getToken(), JottParser.finalToken);            
         }
 
         // <operand> | <operand> <relop> <operand> | <operand> <mathop> <operand> 
@@ -73,7 +74,7 @@ public interface ExpressionNode extends JottTree {
             }
         }
 
-        throw new SyntaxError("ExpressionNode Error: Invalid expression token", tokens.get(0));  
+        throw new SyntaxError("Unexpected token " + tokens.get(0).getToken() + " after expression", tokens.get(0));  
     }
 
     // Helper method to determine if a token is an operand (<id> | <num> | <func_call> | -<num>)

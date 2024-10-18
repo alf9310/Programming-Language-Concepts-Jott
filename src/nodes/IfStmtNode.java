@@ -1,10 +1,12 @@
 package nodes;
 
 import java.util.ArrayList;
+import provided.JottParser;
 import provided.Token;
 import provided.TokenType;
 
 /*
+ * If Statement Node
  * If[<expr>]{<body>}<elseif_lst>*<else>
  */
 public class IfStmtNode implements BodyStmtNode {
@@ -23,41 +25,41 @@ public class IfStmtNode implements BodyStmtNode {
 
     public static IfStmtNode parse(ArrayList<Token> tokens) throws Exception {
         if(tokens.isEmpty()){
-		    throw new SyntaxError("IfStatementNode Error: Empty token list for if statement"); 
+            throw new SyntaxError("Expected If got " + JottParser.finalToken.getToken(), JottParser.finalToken);
         }
 
         Token currentToken = tokens.get(0);
         if(currentToken.getTokenType() != TokenType.ID_KEYWORD || !currentToken.getToken().equals("If")) {
-            throw new SyntaxError("IfStatementNode Error:If statement does not start with correct keyword");
+            throw new SyntaxError("Expected If got " + currentToken.getToken(), currentToken);
         }
         tokens.remove(0);
 
         if(tokens.isEmpty()){
-		    throw new SyntaxError("IfStatementNode Error:If statement is missing a left bracket");
+		    throw new SyntaxError("If statement is missing a left bracket [", JottParser.finalToken);
         }
         currentToken = tokens.get(0);
         if(currentToken.getTokenType() != TokenType.L_BRACKET) {
-            throw new SyntaxError("IfStatementNode Error: If statement is missing a left bracket");
+            throw new SyntaxError("If statement missing a left bracket [, instead got " + currentToken.getTokenType(), currentToken);
         }
         tokens.remove(0);
 
         ExpressionNode expr = ExpressionNode.parse(tokens); // error checking handled
 
         if(tokens.isEmpty()){
-		    throw new SyntaxError("IfStatementNode Error: If statement is missing a right bracket");
+		    throw new SyntaxError("If statement is missing a right bracket ]", JottParser.finalToken);
         }
         currentToken = tokens.get(0);
         if(currentToken.getTokenType() != TokenType.R_BRACKET) {
-            throw new SyntaxError("IfStatementNode Error: If statement is missing a right bracket");
+            throw new SyntaxError("If statement missing a right bracket ], instead got " + currentToken.getTokenType(), currentToken);
         }
         tokens.remove(0);
 
         if(tokens.isEmpty()){
-		    throw new SyntaxError("IfStatementNode Error: If statement is missing a left brace");
+		    throw new SyntaxError("If statement is missing a left brace {", JottParser.finalToken);
         }
         currentToken = tokens.get(0);
         if(currentToken.getTokenType() != TokenType.L_BRACE) {
-            throw new SyntaxError("IfStatementNode Error: If statement is missing a left brace");
+            throw new SyntaxError("If statement missing a left brace {, instead got " + currentToken.getTokenType(), currentToken);
         }
         tokens.remove(0);
 
@@ -66,11 +68,11 @@ public class IfStmtNode implements BodyStmtNode {
 
         // brace
         if(tokens.isEmpty()){
-		    throw new SyntaxError("IfStatementNode Error: If statement is missing a right brace");
+		    throw new SyntaxError("If statement is missing a right brace }", JottParser.finalToken);
         }
         currentToken = tokens.get(0);
         if(currentToken.getTokenType() != TokenType.R_BRACE) {
-            throw new SyntaxError("IfStatementNode Error: If statement is missing a right brace");
+            throw new SyntaxError("If statement missing a right brace }, instead got " + currentToken.getTokenType(), currentToken);
         }
         tokens.remove(0);
 

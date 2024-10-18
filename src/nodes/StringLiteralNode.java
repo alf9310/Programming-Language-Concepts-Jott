@@ -1,6 +1,7 @@
 package nodes;
 
 import java.util.ArrayList;
+import provided.JottParser;
 import provided.Token;
 import provided.TokenType;
 
@@ -22,12 +23,12 @@ public class StringLiteralNode implements ExpressionNode{
 
         // Check if there is tokens
         if(tokens.isEmpty()){
-            throw new SyntaxError("StringLiteralNode Error: No tokens");        
+            throw new SyntaxError("Expected string literal got " + JottParser.finalToken.getToken(), JottParser.finalToken);
         }
         Token currentToken = tokens.get(0);
         // Make sure token is type STRING
         if(currentToken.getTokenType() != TokenType.STRING){
-            throw new SyntaxError("StringLiteralNode Error: TokenType is not STRING for string literal", currentToken);
+            throw new SyntaxError("Expected string literal got " + currentToken.getToken(), currentToken);
         }
 
         Token string = tokens.remove(0);

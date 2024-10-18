@@ -11,6 +11,9 @@ import nodes.ProgramNode;
 
 public class JottParser {
 
+  // For when the program errors on an empty token list, reference the final token
+  public static Token finalToken; 
+
     /**
      * Parses an ArrayList of Jotton tokens into a Jott Parse Tree.
      * @param tokens the ArrayList of Jott tokens to parse
@@ -18,6 +21,10 @@ public class JottParser {
      *         or null upon an error in parsing.
      */
     public static JottTree parse(ArrayList<Token> tokens) throws Exception{
+      if(!tokens.isEmpty()){
+        finalToken = tokens.get(tokens.size() - 1);
+      }
+
       return ProgramNode.parse(tokens);
     }
 }

@@ -1,6 +1,7 @@
 package nodes;
 
 import java.util.ArrayList;
+import provided.JottParser;
 import provided.Token;
 import provided.TokenType;
 
@@ -22,16 +23,16 @@ public class BooleanNode implements ExpressionNode{
 
         // Check if there is tokens
         if(tokens.isEmpty()){
-            throw new SyntaxError("BooleanNode Error: Empty token list for boolean");        
+            throw new SyntaxError("Expected 'True' or 'False' got " + JottParser.finalToken.getToken(), JottParser.finalToken);            
         }
         Token currentToken = tokens.get(0);
         // Make sure token is type ID_KEYWORD
         if(currentToken.getTokenType() != TokenType.ID_KEYWORD){
-            throw new SyntaxError("BooleanNode Error: TokenType is not ID_KEYWORD for boolean", currentToken);
+            throw new SyntaxError("Expected " + TokenType.ID_KEYWORD + " got " + currentToken.getTokenType(), currentToken);
         }
         // Make sure token is "True" or "False"
         if (!(currentToken.getToken().equals("True")) && !(currentToken.getToken().equals("False"))){
-            throw new SyntaxError("BooleanNode Error: Token is not 'True' or 'False'", currentToken);
+            throw new SyntaxError("Expected 'True' or 'False' got " + currentToken.getToken(), currentToken);
         }
 
         Token bool = tokens.remove(0);

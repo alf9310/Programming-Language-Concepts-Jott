@@ -1,6 +1,7 @@
 package nodes;
 
 import java.util.ArrayList;
+import provided.JottParser;
 import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
@@ -21,13 +22,13 @@ public class ParamsTNode implements JottTree {
 
         // Check if there is tokens
         if(tokens.isEmpty()){
-            throw new SyntaxError("ParamsTNode Error: Empty token list for ParamsT");
+            throw new SyntaxError("Expected comma , got " + JottParser.finalToken.getToken(), JottParser.finalToken);
         }
 
         Token currentToken = tokens.get(0);
         // Make sure token is type COMMA ,
         if(!(currentToken.getTokenType() == TokenType.COMMA)){
-            throw new SyntaxError("ParamsTNode Error: Missing comma", currentToken); 
+            throw new SyntaxError("Expected comma , got " + currentToken.getToken(), currentToken);
         }
         tokens.remove(0);
 

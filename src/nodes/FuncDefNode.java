@@ -1,6 +1,7 @@
 package nodes;
 
 import java.util.ArrayList;
+import provided.JottParser;
 import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
@@ -25,21 +26,23 @@ public class FuncDefNode implements JottTree{
     }                    
     
     public static FuncDefNode parse(ArrayList <Token> tokens) throws Exception{
+        if(tokens.isEmpty()){
+            throw new SyntaxError("Expected Def got " + JottParser.finalToken.getToken(), JottParser.finalToken);
+        }       
+        
         Token lastToken = tokens.get(0);
 
-        if(tokens.isEmpty() || !tokens.get(0).getToken().equals("Def")){
-            throw new SyntaxError(
-                    "FuncDefNode Error: Function definition does not start with the correct keyword: Got " + lastToken.getToken() + "\n" +
-                            lastToken.getFilename() + ":" + lastToken.getLineNum());
+        if (!tokens.get(0).getToken().equals("Def")){
+            throw new SyntaxError("Expected Def got " + lastToken.getToken(), lastToken);
         }
+
         lastToken = tokens.remove(0);
 
         IDNode name = IDNode.parse(tokens);
 
         if(tokens.isEmpty() || tokens.get(0).getTokenType() != TokenType.L_BRACKET){
             throw new SyntaxError(
-                    "FuncDefNode Error: Function definition missing left bracket: Got " + lastToken.getToken() + "\n" +
-                            lastToken.getFilename() + ":" + lastToken.getLineNum());
+                    "Function definition missing left bracket [ got " + lastToken.getToken(), lastToken);
         }
         lastToken = tokens.remove(0);
 
@@ -55,25 +58,20 @@ public class FuncDefNode implements JottTree{
         }
 
         if(tokens.isEmpty() || tokens.get(0).getTokenType() != TokenType.R_BRACKET){
-            throw new SyntaxError(
-                    "FuncDefNode Error: Function definition missing right bracket: Got " + lastToken.getToken() + "\n" +
-                            lastToken.getFilename() + ":" + lastToken.getLineNum());
-
+            throw new SyntaxError( "Function definition missing right bracket ] got " + lastToken.getToken(), lastToken);
         }
         lastToken = tokens.remove(0);
 
         if(tokens.isEmpty() || tokens.get(0).getTokenType() != TokenType.COLON){
-            throw new SyntaxError(
-                    "FuncDefNode Error: Function definition missing left colon: Got " + lastToken.getToken() + "\n" +
-                            lastToken.getFilename() + ":" + lastToken.getLineNum());        }
+            throw new SyntaxError("Function definition missing colon : got " + lastToken.getToken(), lastToken);        
+        }
         lastToken = tokens.remove(0);
 
         TypeNode returnType = TypeNode.parse(tokens, true);
 
         if(tokens.isEmpty() || tokens.get(0).getTokenType() != TokenType.L_BRACE){
             throw new SyntaxError(
-                    "FuncDefNode Error: Function definition missing left brace: Got " + lastToken.getToken() + "\n" +
-                            lastToken.getFilename() + ":" + lastToken.getLineNum());
+                    "Function definition missing left brace ] got " + lastToken.getToken(), lastToken);
         }
         lastToken = tokens.remove(0);
 
@@ -86,10 +84,10 @@ public class FuncDefNode implements JottTree{
         }
 
         if(tokens.isEmpty() || tokens.get(0).getTokenType() != TokenType.R_BRACE){
-            throw new SyntaxError("Expected '}' at end of function definition but found: " + lastToken.getToken() + "\n"+
-                    lastToken.getFilename() + ":" + lastToken.getLineNum());
+            throw new SyntaxError("Expected '}' at end of function definition but found " + lastToken.getToken(), lastToken);
         }
-        lastToken = tokens.remove(0);
+        
+        tokens.remove(0);
 
         return new FuncDefNode(name, params, returnType, body);
     }

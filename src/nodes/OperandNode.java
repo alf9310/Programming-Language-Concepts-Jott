@@ -1,6 +1,7 @@
 package nodes;
 
 import java.util.ArrayList;
+import provided.JottParser;
 import provided.Token;
 import provided.TokenType;
 
@@ -16,7 +17,7 @@ public interface OperandNode extends ExpressionNode {
 
         // Check if there is tokens
         if(tokens.isEmpty()){
-            throw new SyntaxError("OperandNode Error: Empty token list for operand");        
+            throw new SyntaxError("Expected id, num, function call or - num got " + JottParser.finalToken.getToken(), JottParser.finalToken);
         }
 
         Token currentToken = tokens.get(0);
@@ -36,7 +37,7 @@ public interface OperandNode extends ExpressionNode {
             return NumberNode.parse(tokens); // Negation is handled in NumberNode's parse method
         }
 
-        throw new SyntaxError("OperandNodeError: TokenType is not ID_KEYWORD, (-)NUMBER or FC_HEADER for Operand", currentToken);
+        throw new SyntaxError("Expected ID_KEYWORD, (-)NUMBER or FC_HEADER for Operand got " + currentToken.getToken(), currentToken);
     }
 
     public static void main(String[] args) {

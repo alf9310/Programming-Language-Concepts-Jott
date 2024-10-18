@@ -1,13 +1,14 @@
 package nodes;
 
 import java.util.ArrayList;
-
+import provided.JottParser;
 import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
 
 /*
  * Variable Declaration Node
+ * < type > < id >;
  */
 public class VarDecNode implements JottTree {
 
@@ -17,14 +18,13 @@ public class VarDecNode implements JottTree {
     public VarDecNode(TypeNode type, IDNode id) {
         this.type = type;
         this.id = id;
-
     }
 
     // Parsing
     public static VarDecNode parse(ArrayList<Token> tokens) throws Exception {
         // Check if there is tokens
         if (tokens.isEmpty()) {
-            throw new SyntaxError("VarDecNode Error: Empty token list for VarDeclaration");
+            throw new SyntaxError("Expected type got " + JottParser.finalToken.getToken(), JottParser.finalToken);
         }
         // Parse the type
         TypeNode type = TypeNode.parse(tokens);
@@ -32,7 +32,7 @@ public class VarDecNode implements JottTree {
         IDNode id = IDNode.parse(tokens);
         // Parse semicolon
         if (tokens.isEmpty() || tokens.remove(0).getTokenType() != TokenType.SEMICOLON) {
-            throw new SyntaxError("VarDecNode Error: Invalid. Expected semicolon");
+            throw new SyntaxError("Variable Declaration missing closing semicolon ; got " + JottParser.finalToken.getToken(), JottParser.finalToken);
         }
         return new VarDecNode(type, id);
     }

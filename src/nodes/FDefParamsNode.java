@@ -1,13 +1,13 @@
 package nodes;
 
 import java.util.ArrayList;
-
 import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
 
 /*
  * Function Definition Parameters Node
+ * <id >: < type > < function_def_params_t >⋆ | ε
  */
 public class FDefParamsNode implements JottTree {
     IDNode id;
@@ -39,7 +39,7 @@ public class FDefParamsNode implements JottTree {
         // Parse colon
         Token colon = tokens.remove(0);
         if (colon.getTokenType() != TokenType.COLON) {
-            throw new SyntaxError("FDefParamNode Error: Invalid. Expected colon", colon);
+            throw new SyntaxError("Expected colon : got " + colon.getToken(), colon);
         }
 
         // Parse the type
