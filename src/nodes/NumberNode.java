@@ -1,6 +1,7 @@
 package nodes;
 
 import java.util.ArrayList;
+import provided.JottParser;
 import provided.Token;
 import provided.TokenType;
 
@@ -29,7 +30,7 @@ public class NumberNode implements OperandNode {
     public static NumberNode parse(ArrayList <Token> tokens) throws Exception{
         // Check if there is tokens
         if(tokens.isEmpty()){
-		    throw new SyntaxError("NumberNode Error: Empty token list"); 
+            throw new SyntaxError("Expected Number got " + JottParser.finalToken.getToken(), JottParser.finalToken);
         }
         boolean isNegative = false;
 
@@ -43,7 +44,7 @@ public class NumberNode implements OperandNode {
         // Make sure the next token is a NUMBER
         currentToken = tokens.get(0);
         if (!(currentToken.getTokenType() == TokenType.NUMBER)) {
-            throw new SyntaxError("NumberNode Error: token type is not number", currentToken);
+            throw new SyntaxError("Expected Number got " + currentToken.getToken(), currentToken);
         }
 
         Token number = tokens.remove(0);

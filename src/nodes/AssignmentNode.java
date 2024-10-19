@@ -1,11 +1,13 @@
 package nodes;
 
 import java.util.ArrayList;
+import provided.JottParser;
 import provided.Token;
 import provided.TokenType;
 
 /*
  * Assignment Node
+ * <id> = <expr>;
  */
 public class AssignmentNode implements BodyStmtNode {
 
@@ -21,11 +23,11 @@ public class AssignmentNode implements BodyStmtNode {
     public static AssignmentNode parse(ArrayList<Token> tokens) throws Exception {
         // Check if there is tokens
         if (tokens.isEmpty()) {
-            throw new SyntaxError("Invalid. Empty token list for Assignment");
+            throw new SyntaxError("Expected " + TokenType.ID_KEYWORD + " got " + JottParser.finalToken.getToken(), JottParser.finalToken);
         }
         // Check that there are at least 4 tokens
         if (tokens.size() < 4) {
-            throw new SyntaxError("Invalid. Expected at least 4 tokens for Assignment");
+            throw new SyntaxError("Expected at least 4 tokens for Assignment", JottParser.finalToken);
         }
 
         // Parse the ID
@@ -33,14 +35,14 @@ public class AssignmentNode implements BodyStmtNode {
         // Parse assignment operator
         Token assignment = tokens.remove(0);
         if (assignment.getTokenType() != TokenType.ASSIGN) {
-            throw new SyntaxError("Invalid. Expected assignment", assignment);
+            throw new SyntaxError("Expected " + TokenType.ASSIGN + " got " + assignment.getTokenType(), assignment);
         }
         // Parse the expression
         ExpressionNode expression = ExpressionNode.parse(tokens);
         // Parse semicolon
         Token semicolon = tokens.remove(0);
         if (semicolon.getTokenType() != TokenType.SEMICOLON) {
-            throw new SyntaxError("Invalid. Expected semicolon", semicolon);
+            throw new SyntaxError("Expected " + TokenType.SEMICOLON + " got " + semicolon.getTokenType(), semicolon);
         }
         return new AssignmentNode(id, expression);
     }
@@ -110,7 +112,7 @@ public class AssignmentNode implements BodyStmtNode {
                 System.err.println(e.getMessage()); // Expected error: Invalid token
             }
 
-            // Test Case 3: var = 4+ -5; Valid
+            // Test Case 4: var = 4+ -5; Valid
             ArrayList<Token> tokens4 = new ArrayList<>();
             // type token
             tokens4.add(new Token("var", "testFile.jott", 1, TokenType.ID_KEYWORD));
@@ -122,6 +124,11 @@ public class AssignmentNode implements BodyStmtNode {
             tokens4.add(new Token(";", "testFile.jott", 1, TokenType.SEMICOLON));
             AssignmentNode AssignmentNode4 = AssignmentNode.parse(tokens4);
             System.out.println("Parsed AssignmentNode 'var=4+-5;' :   " + AssignmentNode4.convertToJott());
+
+            // Test Case 5: No tokens, Invalid
+            ArrayList<Token> tokens5 = new ArrayList<>();
+            AssignmentNode AssignmentNode5 = AssignmentNode.parse(tokens5);
+            System.out.println("Parsed AssignmentNode '' :   " + AssignmentNode5.convertToJott());
 
         } catch (Exception e) {
             // Catch and print any exceptions

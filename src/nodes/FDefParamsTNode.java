@@ -1,16 +1,16 @@
 package nodes;
 
 import java.util.ArrayList;
-
+import provided.JottParser;
 import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
 
 /*
  * Function Definition Parameters T Node
+ * ,<id >: < type >
  */
 public class FDefParamsTNode implements JottTree {
-
     
     IDNode id;
     TypeNode type;
@@ -25,17 +25,17 @@ public class FDefParamsTNode implements JottTree {
     public static FDefParamsTNode parse(ArrayList<Token> tokens) throws Exception {
         // Check if there is tokens
         if (tokens.isEmpty()) {
-            throw new SyntaxError("FDefParams Error: Empty token list for Function Definition Parameters T");
+            throw new SyntaxError("Expected comma , got " + JottParser.finalToken.getToken(), JottParser.finalToken);            
         }
         // Check that there are at least 4 tokens
         if (tokens.size() < 4) {
-            throw new SyntaxError("FDefParams Error: Invalid. Expected at least 4 tokens for Function Definition Parameters T");
+            throw new SyntaxError("Expected at least 4 tokens for Function Definition Parameters T", JottParser.finalToken);
         }
 
         // Parse comma
         Token comma = tokens.remove(0);
         if (comma.getTokenType() != TokenType.COMMA) {
-            throw new SyntaxError("FDefParams Error: Invalid. Expected semicolon", comma);
+            throw new SyntaxError("Expected comma , got " + comma.getToken(), comma);
         }
 
         // Parse the ID
@@ -44,7 +44,7 @@ public class FDefParamsTNode implements JottTree {
         // Parse colon
         Token colon = tokens.remove(0);
         if (colon.getTokenType() != TokenType.COLON) {
-            throw new SyntaxError("FDefParams Error: Invalid. Expected semicolon", colon);
+            throw new SyntaxError("Expected colon : got " + colon.getToken(), colon);
         }
 
         // Parse the type

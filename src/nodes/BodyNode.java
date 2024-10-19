@@ -1,10 +1,16 @@
 package nodes;
 
 import java.util.ArrayList;
+import provided.JottParser;
 import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
 
+/*
+ * Body Node
+ * Can either be a boolean equation or a mathmatical equation
+ * < body_stmt >⋆ < return_stmt >
+ */
 public class BodyNode implements JottTree {
     ArrayList<BodyStmtNode> bodyStmts;
     ReturnStmtNode returnStmt;
@@ -17,7 +23,7 @@ public class BodyNode implements JottTree {
     // parse
     public static BodyNode parse(ArrayList<Token> tokens) throws Exception {
         if(tokens.isEmpty()){
-            throw new SyntaxError("BodyNode Error: Empty token list for body statement");        
+            throw new SyntaxError("Expected return statement got " + JottParser.finalToken.getToken(), JottParser.finalToken);            
         }
 
         ArrayList<BodyStmtNode> bodyStmts = new ArrayList<>();
