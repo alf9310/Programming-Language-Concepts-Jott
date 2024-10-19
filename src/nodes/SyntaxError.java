@@ -17,9 +17,9 @@ public class SyntaxError extends Exception {
     // Helper method to format the error message
     private static String formatErrorMessage(String message, Token token) {
         if (token != null) {
-            return "\nSyntax Error:\n" + message + "\n" + token.getFilename() + ":" + token.getLineNum();
+            return "\nSyntax Error\n" + message + "\n" + token.getFilename() + ":" + token.getLineNum();
         } else {
-            return "\nSyntax Error:\n" + message;
+            return "\nSyntax Error\n" + message;
         }
     }
 }
