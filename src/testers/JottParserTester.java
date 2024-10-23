@@ -1,18 +1,10 @@
 package testers;
-import provided.*;
-
-/*
-  Jott parser tester. This will test the parsing phase of the Jott
-  project.
-
-  This tester assumes a working and valid tokenizer.
- */
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import provided.*;
 
 public class JottParserTester {
     ArrayList<TestCase> testCases;
@@ -63,7 +55,7 @@ public class JottParserTester {
         testCases.add(new TestCase("while is keyword, cannot be used as id", "whileKeyword.jott", false ));
         testCases.add(new TestCase("expr by itself (error)", "loneExpr.jott", true ));
         testCases.add(new TestCase("code after return (error)", "codeAfterReturn.jott", true ));
-        //testCases.add(new TestCase("lone minus (error)", "loneMinus.jott", true ));
+        testCases.add(new TestCase("lone minus (error)", "loneMinus.jott", true ));
         testCases.add(new TestCase("else without if (error)", "elseNoIf.jott", true ));
         testCases.add(new TestCase("missing closing } (error)", "missingClosing.jott", true ));
         testCases.add(new TestCase("valid if with return", "validIfReturn.jott", false));
