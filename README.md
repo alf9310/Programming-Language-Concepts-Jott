@@ -26,6 +26,7 @@ Defined by the execute function in Jott.java. Interprets the code.
 
 ## Library Structure
 - `src`: contains the working code
+    - `nodes`       - Contains the implementations of token parsing, semantic analysis and execusion
     - `provided`    - Where the helper classes are defined for interpreting the Jott Language
     - `testers`     - Testers for the various phases of the project
 - `test-cases`: contains the test inputs and outputs, as used by the testers
