@@ -3,6 +3,8 @@ package nodes;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import errors.SyntaxError;
 import provided.JottParser;
 import provided.Token;
 import provided.TokenType;
