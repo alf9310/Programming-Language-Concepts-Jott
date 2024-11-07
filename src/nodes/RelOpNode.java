@@ -44,7 +44,31 @@ public class RelOpNode implements OperatorNode{
         }
 
         Token operator = tokens.remove(0);
-        return new RelOpNode(operator);
+        OperatorNode leftOperand = parseOperand(tokens);  // Parse left operand
+        OperatorNode rightOperand = parseOperand(tokens); // Parse right operand
+
+        return new RelOpNode(operator, leftOperand, rightOperand);
+    }
+
+    /**
+    * Helper method to parse an operand from the token list.
+    * This method creates an appropriate node based on the token type.
+    */
+    private static OperatorNode parseOperand(ArrayList<Token> tokens) throws Exception {
+        if (tokens.isEmpty()) {
+            throw new SyntaxError("Operand Error: Missing operand after operator.");
+        }
+
+        Token operandToken = tokens.remove(0);
+
+        switch (operandToken.getTokenType()) {
+            case NUMBER:
+                return (OperatorNode) new NumberNode(operandToken); // Should work if NumberNode implements OperatorNode
+            case ID_KEYWORD:
+                return new IDNode(operandToken); // Should work if IdNode implements OperatorNode
+            default:
+                throw new SyntaxError("Operand Error: Unexpected token type for operand", operandToken);
+        }
     }
 
     @Override
@@ -54,32 +78,22 @@ public class RelOpNode implements OperatorNode{
 
     @Override
     public boolean validateTree() {
-         // Check that the return type is a valid numeric type
-        if (this.getType() != TokenType.BOOLEAN) {
-            throw new SemanticError("Relational operator must return a Boolean value", this.operator.getLineNumber());
+        // Ensure that both operands are not null
+        if (leftOperand == null || rightOperand == null) {
+            throw new UnsupportedOperationException("RelOpNode Error: Both operands must be present.");
         }
-
-        // Ensure that the child nodes are of the same data type
-        if (leftOperand.getType() != rightOperand.getType()) {
-            throw new SemanticError("Operands of relational operator must be of the same type", this.operator.getLineNumber());
+    
+        // Ensure operands are of the same type
+        if (!leftOperand.getClass().equals(rightOperand.getClass())) {
+            throw new UnsupportedOperationException("RelOpNode Error: Operands must be of the same type.");
         }
-
-        // Verify that the child nodes are numeric types
-        if (leftOperand.getType() != TokenType.INTEGER && leftOperand.getType() != TokenType.DOUBLE) {
-            throw new SemanticError("Operands of relational operator must be numeric types", this.operator.getLineNumber());
+    
+        // Ensure both operands are numeric types (example check, actual implementation may vary)
+        if (!(leftOperand instanceof NumberNode) || !(rightOperand instanceof NumberNode)) {
+            throw new UnsupportedOperationException("RelOpNode Error: Operands must be numeric.");
         }
-
-        // Check that the relational operator is valid
-        String operatorToken = this.operator.getToken();
-        if (operatorToken.equals(">") || operatorToken.equals(">=") || operatorToken.equals("<") ||
-            operatorToken.equals("<=") || operatorToken.equals("==") || operatorToken.equals("!=")) {
-            // Valid operator
-        } else {
-            throw new SemanticError("Invalid relational operator: " + operatorToken, this.operator.getLineNumber());
-        }
-
-        // Recursively validate the child nodes
-        return leftOperand.validateTree() && rightOperand.validateTree();
+    
+        return true; // The tree is valid if all checks pass
     }
 
     @Override

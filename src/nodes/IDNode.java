@@ -11,7 +11,7 @@ import provided.TokenType;
  * ID Node
  * An identifier
  */
-public class IDNode implements OperandNode {
+public class IDNode implements OperandNode, OperatorNode {
 
     Token id;
 
