@@ -48,8 +48,11 @@ public class MathOpNode implements OperatorNode{
 
     @Override
     public boolean validateTree() {
-        // To be implemented in phase 3
-        throw new UnsupportedOperationException("Validation not supported yet.");
+        // Check if the math operator token is a valid operator
+        return operator.getToken().equals("+")
+                || operator.getToken().equals("-")
+                || operator.getToken().equals("*")
+                || operator.getToken().equals("/");
     }
 
     @Override
