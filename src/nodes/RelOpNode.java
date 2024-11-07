@@ -11,9 +11,13 @@ import provided.TokenType;
 public class RelOpNode implements OperatorNode{
 
     Token operator;
+    OperatorNode leftOperand;
+    OperatorNode rightOperand;
 
-    public RelOpNode(Token operator) {
+    public RelOpNode(Token operator, OperatorNode leftOperand, OperatorNode rightOperand) {
         this.operator = operator;
+        this.leftOperand = leftOperand;
+        this.rightOperand = rightOperand;
     }
 
     // Returns Relational Operator Node if a valid relop
@@ -50,8 +54,32 @@ public class RelOpNode implements OperatorNode{
 
     @Override
     public boolean validateTree() {
-        // To be implemented in phase 3
-        throw new UnsupportedOperationException("Validation not supported yet.");
+         // Check that the return type is a valid numeric type
+        if (this.getType() != TokenType.BOOLEAN) {
+            throw new SemanticError("Relational operator must return a Boolean value", this.operator.getLineNumber());
+        }
+
+        // Ensure that the child nodes are of the same data type
+        if (leftOperand.getType() != rightOperand.getType()) {
+            throw new SemanticError("Operands of relational operator must be of the same type", this.operator.getLineNumber());
+        }
+
+        // Verify that the child nodes are numeric types
+        if (leftOperand.getType() != TokenType.INTEGER && leftOperand.getType() != TokenType.DOUBLE) {
+            throw new SemanticError("Operands of relational operator must be numeric types", this.operator.getLineNumber());
+        }
+
+        // Check that the relational operator is valid
+        String operatorToken = this.operator.getToken();
+        if (operatorToken.equals(">") || operatorToken.equals(">=") || operatorToken.equals("<") ||
+            operatorToken.equals("<=") || operatorToken.equals("==") || operatorToken.equals("!=")) {
+            // Valid operator
+        } else {
+            throw new SemanticError("Invalid relational operator: " + operatorToken, this.operator.getLineNumber());
+        }
+
+        // Recursively validate the child nodes
+        return leftOperand.validateTree() && rightOperand.validateTree();
     }
 
     @Override
