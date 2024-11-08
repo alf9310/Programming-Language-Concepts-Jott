@@ -95,6 +95,9 @@ public interface ExpressionNode extends JottTree {
         return false;
     }
 
+    @Override
+    public boolean validateTree() throws Exception;
+
     public static void main(String[] args) {
         System.out.println("Testing ExpressionNode Main Method");
 

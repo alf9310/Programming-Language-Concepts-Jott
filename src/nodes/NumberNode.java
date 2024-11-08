@@ -68,9 +68,11 @@ public class NumberNode implements OperandNode {
 
     @Override
     public DataType getType() {
-        if(this.number.getToken().contains(".")){
+        if(number.getToken().contains(".")){
+            //System.out.println(number.getToken() + " is a double");
             return DataType.DOUBLE;
         } 
+        //System.out.println(number.getToken() + " is an integer");
         return DataType.INTEGER;
     }
 

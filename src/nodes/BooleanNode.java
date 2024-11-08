@@ -1,8 +1,7 @@
 package nodes;
 
-import java.util.ArrayList;
-
 import errors.SyntaxError;
+import java.util.ArrayList;
 import provided.JottParser;
 import provided.Token;
 import provided.TokenType;
@@ -52,7 +51,7 @@ public class BooleanNode implements ExpressionNode{
 
     @Override
     public boolean validateTree() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return true;
     }
 
     @Override

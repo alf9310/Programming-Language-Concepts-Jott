@@ -62,8 +62,7 @@ public class RelOpNode implements OperatorNode{
 
     @Override
     public boolean validateTree() {
-        // To be implemented in phase 3
-        throw new UnsupportedOperationException("Validation not supported yet.");
+        return true;
     }
 
     @Override

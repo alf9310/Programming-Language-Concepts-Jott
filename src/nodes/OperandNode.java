@@ -45,6 +45,9 @@ public interface OperandNode extends ExpressionNode {
 
     public Token getToken();
 
+    @Override
+    public boolean validateTree() throws Exception;
+
     public static void main(String[] args) {
         System.out.println("Testing Operand Node Main Method");
         try {
