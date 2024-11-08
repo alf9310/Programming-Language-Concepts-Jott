@@ -1,5 +1,6 @@
 package nodes;
 
+import errors.SyntaxError;
 import java.util.ArrayList;
 import provided.JottParser;
 import provided.Token;
@@ -46,7 +47,7 @@ public class StringLiteralNode implements ExpressionNode{
 
     @Override
     public boolean validateTree() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return true;
     }
 
     @Override

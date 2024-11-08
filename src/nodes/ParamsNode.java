@@ -70,9 +70,19 @@ public class ParamsNode implements JottTree {
         return str.toString();
     }
 
+    /*
+     * Expression is valid
+     * ParamsT is valid
+     * Call to function using incorrect params (wrong number or types)
+     */
     @Override
-    public boolean validateTree() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public boolean validateTree() throws Exception{
+        //TODO Check symbol table to make sure function is using correct param types & number
+        expr.validateTree();
+        for (ParamsTNode paramt : paramst) {
+            paramt.validateTree();
+        }
+        return true;
     }
 
     @Override

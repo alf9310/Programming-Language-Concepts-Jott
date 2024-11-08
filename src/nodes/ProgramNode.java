@@ -1,5 +1,6 @@
 package nodes;
 
+import errors.SyntaxError;
 import java.util.ArrayList;
 import provided.JottTree;
 import provided.Token;

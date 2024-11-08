@@ -1,6 +1,8 @@
 package nodes;
 
+import errors.SyntaxError;
 import java.util.ArrayList;
+import msc.DataType;
 import provided.JottParser;
 import provided.Token;
 import provided.TokenType;
@@ -82,8 +84,31 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
     }
 
     @Override
-    public boolean validateTree() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public DataType getType(){
+        //TODO reference scope table to get this 
+        return DataType.VOID;
+    }
+
+    @Override
+    public Token getToken(){
+        return id.getToken();
+    }
+
+    /*
+     * ID is valid
+     * Params are valid
+     * Call to unknown (not yet defined) function
+     * Call to function using incorrect params (wrong number or types)
+     */
+    @Override
+    public boolean validateTree() throws Exception{
+        id.validateTree();
+        params.validateTree();
+
+        //TODO Check symbol table to make sure function is defined 
+        //TODO Check symbol table to make sure function is using correct param types & number
+
+        return true;
     }
 
     @Override

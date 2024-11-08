@@ -1,5 +1,6 @@
 package nodes;
 
+import errors.SyntaxError;
 import java.util.ArrayList;
 import provided.JottParser;
 import provided.JottTree;
@@ -93,6 +94,9 @@ public interface ExpressionNode extends JottTree {
         }
         return false;
     }
+
+    @Override
+    public boolean validateTree() throws Exception;
 
     public static void main(String[] args) {
         System.out.println("Testing ExpressionNode Main Method");

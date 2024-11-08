@@ -1,5 +1,6 @@
 package nodes;
 
+import errors.SyntaxError;
 import java.util.ArrayList;
 import provided.JottParser;
 import provided.JottTree;
@@ -47,9 +48,13 @@ public class ParamsTNode implements JottTree {
         return "," + expr.convertToJott();
     }
 
+    /*
+     * Call to function using incorrect params (wrong number or types)
+     */
     @Override
     public boolean validateTree() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        //TODO Check symbol table to make sure function is using correct param types & number
+        return true;
     }
 
     @Override

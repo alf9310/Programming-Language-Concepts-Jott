@@ -1,5 +1,6 @@
 package nodes;
 
+import errors.SyntaxError;
 import java.util.ArrayList;
 import provided.JottParser;
 import provided.Token;
@@ -48,9 +49,18 @@ public class MathOpNode implements OperatorNode{
     }
 
     @Override
+    public TokenType getTokenType(){
+        return operator.getTokenType();
+    }
+
+    @Override
+    public Token getToken(){
+        return operator;
+    }
+
+    @Override
     public boolean validateTree() {
-        // To be implemented in phase 3
-        throw new UnsupportedOperationException("Validation not supported yet.");
+        return true;
     }
 
     @Override
