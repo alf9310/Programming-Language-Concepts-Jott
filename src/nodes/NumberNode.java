@@ -1,8 +1,8 @@
 package nodes;
 
-import java.util.ArrayList;
-
 import errors.SyntaxError;
+import java.util.ArrayList;
+import msc.DataType;
 import provided.JottParser;
 import provided.Token;
 import provided.TokenType;
@@ -67,8 +67,21 @@ public class NumberNode implements OperandNode {
     }
 
     @Override
+    public DataType getType() {
+        if(this.number.getToken().contains(".")){
+            return DataType.DOUBLE;
+        } 
+        return DataType.INTEGER;
+    }
+
+    @Override
+    public Token getToken(){
+        return number;
+    }
+
+    @Override
     public boolean validateTree() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return true;
     }
 
     @Override

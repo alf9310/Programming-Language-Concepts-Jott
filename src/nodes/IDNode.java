@@ -1,10 +1,10 @@
 package nodes;
 
+import errors.SyntaxError;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import errors.SyntaxError;
+import msc.DataType;
 import provided.JottParser;
 import provided.Token;
 import provided.TokenType;
@@ -57,8 +57,19 @@ public class IDNode implements OperandNode {
     }
 
     @Override
+    public DataType getType(){
+        //TODO reference scope table to get this 
+        return DataType.VOID;
+    }
+
+    @Override
+    public Token getToken(){
+        return id;
+    }
+
+    @Override
     public boolean validateTree() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return true;
     }
 
     @Override

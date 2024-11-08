@@ -18,7 +18,7 @@ public interface JottTree {
 	 * Errors validating will be reported to System.err
      * @return true if valid Jott code; false otherwise
      */
-    public boolean validateTree();
+    public boolean validateTree() throws Exception;
 	
 	/**
 	 * This will execute the Jott code represented by this JottTree node.

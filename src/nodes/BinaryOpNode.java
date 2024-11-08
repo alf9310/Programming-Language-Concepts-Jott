@@ -1,8 +1,9 @@
 package nodes;
 
-import java.util.ArrayList;
-
+import errors.SemanticError;
 import errors.SyntaxError;
+import java.util.ArrayList;
+import msc.DataType;
 import provided.JottParser;
 import provided.Token;
 import provided.TokenType;
@@ -56,10 +57,41 @@ public class BinaryOpNode implements ExpressionNode {
         return leftOperand.convertToJott() + " " + operator.convertToJott() + " " + rightOperand.convertToJott();
     }
 
+    public DataType getType() {
+        return DataType.BOOLEAN;
+    }
+
+    /*
+     * Operands must be valid 
+     * Operator must be valid
+     * For RelOp:
+     *      Operands on either side of the operator must be of the same data type
+     * For Math Op:
+     *      Operands on either side of the operator must be either both Integers or both Doubles
+     *      Division by 0 is not allowed
+     *      No chaining of mathematical operations. For example 3+2*3 is not allowed.
+     */
     @Override
-    public boolean validateTree() {
-        // To be implemented in phase 3
-        throw new UnsupportedOperationException("Validation not supported yet.");
+    public boolean validateTree() throws Exception {
+        leftOperand.validateTree();
+        operator.validateTree();
+        rightOperand.validateTree();
+
+        if(operator.getTokenType() == TokenType.REL_OP){
+            if(leftOperand.getType() != rightOperand.getType()){
+                throw new SemanticError("Operands on either side of the operator must be of the same data type", leftOperand.getToken());
+            }
+        } else if(operator.getTokenType() == TokenType.MATH_OP){
+            if((leftOperand.getType() == DataType.INTEGER && leftOperand.getType() != DataType.INTEGER) ||
+                (leftOperand.getType() == DataType.DOUBLE && leftOperand.getType() != DataType.DOUBLE)){
+                throw new SemanticError("Operands on either side of the operator must be either both INTEGERS or DOUBLES", leftOperand.getToken());
+            }
+            if(operator.convertToJott().equals("/") && 
+                (rightOperand.convertToJott().equals("0") || rightOperand.convertToJott().equals("0.0"))){
+                throw new SemanticError("Division by 0 error", leftOperand.getToken());
+            }
+        }
+        return true;
     }
 
     @Override

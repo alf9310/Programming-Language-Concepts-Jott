@@ -1,8 +1,7 @@
 package nodes;
 
-import java.util.ArrayList;
-
 import errors.SyntaxError;
+import java.util.ArrayList;
 import provided.JottParser;
 import provided.Token;
 import provided.TokenType;
@@ -47,6 +46,16 @@ public class MathOpNode implements OperatorNode{
     @Override
     public String convertToJott() {
         return operator.getToken();
+    }
+
+    @Override
+    public TokenType getTokenType(){
+        return operator.getTokenType();
+    }
+
+    @Override
+    public Token getToken(){
+        return operator;
     }
 
     @Override

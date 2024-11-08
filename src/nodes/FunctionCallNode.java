@@ -2,6 +2,7 @@ package nodes;
 
 import errors.SyntaxError;
 import java.util.ArrayList;
+import msc.DataType;
 import provided.JottParser;
 import provided.Token;
 import provided.TokenType;
@@ -80,6 +81,17 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
     @Override
     public String convertToJott() {
         return "::" + id.convertToJott() + "[" + params.convertToJott() + "]"; 
+    }
+
+    @Override
+    public DataType getType(){
+        //TODO reference scope table to get this 
+        return DataType.VOID;
+    }
+
+    @Override
+    public Token getToken(){
+        return id.getToken();
     }
 
     @Override

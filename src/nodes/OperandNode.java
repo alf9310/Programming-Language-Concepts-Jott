@@ -1,8 +1,8 @@
 package nodes;
 
-import java.util.ArrayList;
-
 import errors.SyntaxError;
+import java.util.ArrayList;
+import msc.DataType;
 import provided.JottParser;
 import provided.Token;
 import provided.TokenType;
@@ -38,9 +38,12 @@ public interface OperandNode extends ExpressionNode {
         && tokens.size() > 1 && tokens.get(1).getTokenType() == TokenType.NUMBER) {
             return NumberNode.parse(tokens); // Negation is handled in NumberNode's parse method
         }
-
         throw new SyntaxError("Expected ID_KEYWORD, (-)NUMBER or FC_HEADER for Operand got " + currentToken.getToken(), currentToken);
     }
+
+    public DataType getType();
+
+    public Token getToken();
 
     public static void main(String[] args) {
         System.out.println("Testing Operand Node Main Method");
