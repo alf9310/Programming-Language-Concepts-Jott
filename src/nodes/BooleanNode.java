@@ -2,6 +2,7 @@ package nodes;
 
 import errors.SyntaxError;
 import java.util.ArrayList;
+import msc.DataType;
 import provided.JottParser;
 import provided.Token;
 import provided.TokenType;
@@ -47,6 +48,11 @@ public class BooleanNode implements ExpressionNode{
     @Override
     public String convertToJott() {
         return bool.getToken();
+    }
+
+    @Override
+    public DataType getType() {
+        return DataType.BOOLEAN;
     }
 
     @Override

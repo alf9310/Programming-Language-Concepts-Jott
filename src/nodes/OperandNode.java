@@ -41,6 +41,7 @@ public interface OperandNode extends ExpressionNode {
         throw new SyntaxError("Expected ID_KEYWORD, (-)NUMBER or FC_HEADER for Operand got " + currentToken.getToken(), currentToken);
     }
 
+    @Override
     public DataType getType();
 
     public Token getToken();
