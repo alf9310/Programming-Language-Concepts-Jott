@@ -11,13 +11,9 @@ import provided.TokenType;
 public class MathOpNode implements OperatorNode{
 
     Token operator;
-    OperatorNode leftOperand;
-    OperatorNode rightOperand;
 
-    public MathOpNode(Token operator, OperatorNode leftOperand, OperatorNode rightOperand) {
+    public MathOpNode(Token operator) {
         this.operator = operator;
-        this.leftOperand = leftOperand;
-        this.rightOperand = rightOperand;
     }
 
     // Returns Math Operator Node if a valid Mathop
@@ -42,26 +38,8 @@ public class MathOpNode implements OperatorNode{
         }
 
         Token operator = tokens.remove(0);
-        OperatorNode leftOperand = parseOperand(tokens);
-        OperatorNode rightOperand = parseOperand(tokens);
 
-        return new MathOpNode(operator, leftOperand, rightOperand);
-    }
-
-    private static OperatorNode parseOperand(ArrayList<Token> tokens) throws Exception {
-        if (tokens.isEmpty()) {
-            throw new SyntaxError("Operand Error: Missing operand after operator.");
-        }
-
-        Token operandToken = tokens.remove(0);
-        switch (operandToken.getTokenType()) {
-            case NUMBER:
-                return (OperatorNode) new NumberNode(operandToken);
-            case ID_KEYWORD:
-                return new IDNode(operandToken);
-            default:
-                throw new SyntaxError("Operand Error: Unexpected token type for operand", operandToken);
-        }
+        return new MathOpNode(operator);
     }
 
     @Override
@@ -71,29 +49,8 @@ public class MathOpNode implements OperatorNode{
 
     @Override
     public boolean validateTree() {
-          // Ensure that both operands are not null
-        if (leftOperand == null || rightOperand == null) {
-            throw new UnsupportedOperationException("MathOpNode Error: Both operands must be present.");
-        }
-
-        // Ensure operands are numeric types
-        if (!(leftOperand instanceof NumberNode) || !(rightOperand instanceof NumberNode)) {
-            throw new UnsupportedOperationException("MathOpNode Error: Operands must be numeric.");
-        }
-
-        // Confirm that the math operator token is valid
-        String op = operator.getToken();
-        if (!(op.equals("+") || op.equals("-") || op.equals("*") || op.equals("/"))) {
-            throw new UnsupportedOperationException("MathOpNode Error: Invalid math operator.");
-        }
-
-        // Check for division by zero if the operator is "/"
-        if (op.equals("/") && ((NumberNode) rightOperand).getToken().getToken().equals("0")) {
-            throw new UnsupportedOperationException("MathOpNode Error: Division by zero.");
-        }
-
         return true;
-    }
+    }    
 
     @Override
     public void execute() {

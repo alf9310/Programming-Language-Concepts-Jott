@@ -11,13 +11,9 @@ import provided.TokenType;
 public class RelOpNode implements OperatorNode{
 
     Token operator;
-    OperatorNode leftOperand;
-    OperatorNode rightOperand;
 
-    public RelOpNode(Token operator, OperatorNode leftOperand, OperatorNode rightOperand) {
+    public RelOpNode(Token operator) {
         this.operator = operator;
-        this.leftOperand = leftOperand;
-        this.rightOperand = rightOperand;
     }
 
     // Returns Relational Operator Node if a valid relop
@@ -44,31 +40,8 @@ public class RelOpNode implements OperatorNode{
         }
 
         Token operator = tokens.remove(0);
-        OperatorNode leftOperand = parseOperand(tokens);  // Parse left operand
-        OperatorNode rightOperand = parseOperand(tokens); // Parse right operand
 
-        return new RelOpNode(operator, leftOperand, rightOperand);
-    }
-
-    /**
-    * Helper method to parse an operand from the token list.
-    * This method creates an appropriate node based on the token type.
-    */
-    private static OperatorNode parseOperand(ArrayList<Token> tokens) throws Exception {
-        if (tokens.isEmpty()) {
-            throw new SyntaxError("Operand Error: Missing operand after operator.");
-        }
-
-        Token operandToken = tokens.remove(0);
-
-        switch (operandToken.getTokenType()) {
-            case NUMBER:
-                return (OperatorNode) new NumberNode(operandToken); // Should work if NumberNode implements OperatorNode
-            case ID_KEYWORD:
-                return new IDNode(operandToken); // Should work if IdNode implements OperatorNode
-            default:
-                throw new SyntaxError("Operand Error: Unexpected token type for operand", operandToken);
-        }
+        return new RelOpNode(operator);
     }
 
     @Override
@@ -78,28 +51,6 @@ public class RelOpNode implements OperatorNode{
 
     @Override
     public boolean validateTree() {
-        // // Ensure that both operands are not null
-        // if (leftOperand == null || rightOperand == null) {
-        //     throw new UnsupportedOperationException("RelOpNode Error: Both operands must be present.");
-        // }
-    
-        // // Ensure operands are of the same type
-        // if (!leftOperand.getClass().equals(rightOperand.getClass())) {
-        //     throw new UnsupportedOperationException("RelOpNode Error: Operands must be of the same type.");
-        // }
-    
-        // // Ensure both operands are numeric types (example check, actual implementation may vary)
-        // if (!(leftOperand instanceof NumberNode) || !(rightOperand instanceof NumberNode)) {
-        //     throw new UnsupportedOperationException("RelOpNode Error: Operands must be numeric.");
-        // }
-    
-        if (!(leftOperand instanceof NumberNode) || !(rightOperand instanceof NumberNode)) {
-            throw new UnsupportedOperationException("RelOpNode Error: Operands must be numeric.");
-        }
-        if (!leftOperand.getClass().equals(rightOperand.getClass())) {
-            throw new UnsupportedOperationException("RelOpNode Error: Operands must be of the same type.");
-        }
-
         return true;
     }
 

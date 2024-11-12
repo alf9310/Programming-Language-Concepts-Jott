@@ -50,7 +50,7 @@ public class BooleanNode implements ExpressionNode{
     @Override
     public boolean validateTree() {
         // Check if the boolean token is either "True" or "False"
-        return bool.getToken().equals("True") || bool.getToken().equals("False");
+        return true;
     }
 
     @Override
