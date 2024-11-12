@@ -78,22 +78,29 @@ public class RelOpNode implements OperatorNode{
 
     @Override
     public boolean validateTree() {
-        // Ensure that both operands are not null
-        if (leftOperand == null || rightOperand == null) {
-            throw new UnsupportedOperationException("RelOpNode Error: Both operands must be present.");
-        }
+        // // Ensure that both operands are not null
+        // if (leftOperand == null || rightOperand == null) {
+        //     throw new UnsupportedOperationException("RelOpNode Error: Both operands must be present.");
+        // }
     
-        // Ensure operands are of the same type
-        if (!leftOperand.getClass().equals(rightOperand.getClass())) {
-            throw new UnsupportedOperationException("RelOpNode Error: Operands must be of the same type.");
-        }
+        // // Ensure operands are of the same type
+        // if (!leftOperand.getClass().equals(rightOperand.getClass())) {
+        //     throw new UnsupportedOperationException("RelOpNode Error: Operands must be of the same type.");
+        // }
     
-        // Ensure both operands are numeric types (example check, actual implementation may vary)
+        // // Ensure both operands are numeric types (example check, actual implementation may vary)
+        // if (!(leftOperand instanceof NumberNode) || !(rightOperand instanceof NumberNode)) {
+        //     throw new UnsupportedOperationException("RelOpNode Error: Operands must be numeric.");
+        // }
+    
         if (!(leftOperand instanceof NumberNode) || !(rightOperand instanceof NumberNode)) {
             throw new UnsupportedOperationException("RelOpNode Error: Operands must be numeric.");
         }
-    
-        return true; // The tree is valid if all checks pass
+        if (!leftOperand.getClass().equals(rightOperand.getClass())) {
+            throw new UnsupportedOperationException("RelOpNode Error: Operands must be of the same type.");
+        }
+
+        return true;
     }
 
     @Override
