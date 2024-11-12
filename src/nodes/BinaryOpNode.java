@@ -62,8 +62,15 @@ public class BinaryOpNode implements ExpressionNode {
         return leftOperand.convertToJott() + " " + operator.convertToJott() + " " + rightOperand.convertToJott();
     }
 
+    @Override
     public DataType getType() {
-        return DataType.BOOLEAN;
+        if(operator.getTokenType() == TokenType.REL_OP){
+            // For Relational Operator, returns a Boolean
+            return DataType.BOOLEAN;
+        } 
+        // For Math Operator, returns either a INTEGER or DOUBLE
+        DataType leftType = leftOperand.getType();
+        return leftType;
     }
 
     /*
@@ -111,47 +118,7 @@ public class BinaryOpNode implements ExpressionNode {
     }
 
     public static void main(String[] args) {
-        //test_parse();
         test_validate();
-
-    }
-
-    private static void test_parse(){
-        try {
-
-            System.out.println("Testing BinaryOpNode Main Method");
-
-            // Test Case 1: "5 + 3"
-            ArrayList<Token> tokens1 = new ArrayList<>();
-            tokens1.add(new Token("5", "testFile.jott", 1, TokenType.NUMBER));
-            tokens1.add(new Token("+", "testFile.jott", 1, TokenType.MATH_OP));
-            tokens1.add(new Token("3", "testFile.jott", 1, TokenType.NUMBER));
-
-            BinaryOpNode binaryOpNode1 = BinaryOpNode.parse(tokens1);
-            System.out.println("Parsed BinaryOpNode (5 + 3): " + binaryOpNode1.convertToJott());
-
-            // Test Case 2: "10 - 4"
-            ArrayList<Token> tokens2 = new ArrayList<>();
-            tokens2.add(new Token("10", "testFile.jott", 2, TokenType.NUMBER));
-            tokens2.add(new Token(">", "testFile.jott", 2, TokenType.REL_OP));
-            tokens2.add(new Token("4", "testFile.jott", 2, TokenType.NUMBER));
-
-            BinaryOpNode binaryOpNode2 = BinaryOpNode.parse(tokens2);
-            System.out.println("Parsed BinaryOpNode (10 > 4): " + binaryOpNode2.convertToJott());
-
-            // Test Case 3: "2 ** 8", invalid operator
-            ArrayList<Token> tokens3 = new ArrayList<>();
-            tokens3.add(new Token("2", "testFile.jott", 3, TokenType.NUMBER));
-            tokens3.add(new Token("**", "testFile.jott", 3, TokenType.MATH_OP));
-            tokens3.add(new Token("8", "testFile.jott", 3, TokenType.NUMBER));
-
-            BinaryOpNode binaryOpNode3 = BinaryOpNode.parse(tokens3);
-            System.out.println("Parsed BinaryOpNode (2 ** 8): " + binaryOpNode3.convertToJott());
-
-        } catch (Exception e) {
-            // Catch and print any exceptions
-            System.err.println("Error: " + e.getMessage());
-        }
     }
 
     private static void test_validate(){

@@ -2,6 +2,7 @@ package nodes;
 
 import errors.SyntaxError;
 import java.util.ArrayList;
+import msc.DataType;
 import provided.JottParser;
 import provided.JottTree;
 import provided.Token;
@@ -97,6 +98,8 @@ public interface ExpressionNode extends JottTree {
 
     @Override
     public boolean validateTree() throws Exception;
+
+    public DataType getType() throws Exception;
 
     public static void main(String[] args) {
         System.out.println("Testing ExpressionNode Main Method");

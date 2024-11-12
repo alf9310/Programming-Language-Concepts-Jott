@@ -2,6 +2,7 @@ package nodes;
 
 import errors.SyntaxError;
 import java.util.ArrayList;
+import msc.DataType;
 import provided.JottParser;
 import provided.Token;
 import provided.TokenType;
@@ -43,6 +44,11 @@ public class StringLiteralNode implements ExpressionNode{
     @Override
     public String convertToJott() {
         return string.getToken();
+    }
+
+    @Override
+    public DataType getType() {
+        return DataType.STRING;
     }
 
     @Override
