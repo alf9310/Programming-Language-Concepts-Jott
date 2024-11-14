@@ -7,24 +7,26 @@ import provided.*;
 public class Main {
     //TODO check docs for how file name should be passed to be compatible with testers
     // Also how to throw user errors
-    JottTree root;
+    static JottTree root;
+    static SymbolTable symbolTable = new SymbolTable();
+    
+        public static void main(String[] args) {
+            if (args.length != 1) {
+                System.err.println("Provide a single file name");
+                return;
+            }
+            String filename = args[0];
+    
+            ArrayList<Token> tokens = JottTokenizer.tokenize(filename);
+            if (tokens == null) {
+                System.err.println("\t\tExpected a list of tokens, but got null");
+                return;
+            }
 
-    public void main(String[] args) {
-        if (args.length != 1) {
-            System.err.println("Provide a single file name");
-            return;
-        }
-        String filename = args[0];
-
-        ArrayList<Token> tokens = JottTokenizer.tokenize(filename);
-        if (tokens == null) {
-            System.err.println("\t\tExpected a list of tokens, but got null");
-            return;
-        }
-        System.out.println(tokenListString(tokens));
-
-        try {
-            root = JottParser.parse(tokens);
+            System.out.println(tokenListString(tokens));
+    
+            try {
+                root = JottParser.parse(tokens);
         } catch (Exception e) {
             System.err.println(e.getMessage());
             return;
@@ -35,6 +37,7 @@ public class Main {
             return;
         }
 
+        System.err.println(symbolTable);
         try {
             root.validateTree();
         } catch (Exception e) {
@@ -48,7 +51,7 @@ public class Main {
             System.err.println(e.getMessage());
             return;
         }
-        System.out.printf("Interpreter succeeded for " + filename);
+        System.out.printf("Interpreter succeeded for " + filename + "!!!");
     }
 
 

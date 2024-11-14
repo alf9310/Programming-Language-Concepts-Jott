@@ -79,4 +79,9 @@ public class SymbolTable {
         return var;
     }
 
+    @Override
+    public String toString() {
+        return functionMap.toString();
+    }
+
 }
