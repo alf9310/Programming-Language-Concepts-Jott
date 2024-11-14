@@ -1,6 +1,8 @@
 package nodes;
 
 import errors.SyntaxError;
+import msc.SymbolTable;
+
 import java.util.ArrayList;
 import provided.JottTree;
 import provided.Token;
@@ -56,8 +58,14 @@ public class ProgramNode implements JottTree{
     }
 
     @Override
-    public boolean validateTree() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public boolean validateTree(SymbolTable symbolTable) {
+        for (FuncDefNode fDefNode : fDefNodes) {
+            if (fDefNode.validateTree(symbolTable)) {
+                System.err.println(("Function definition " + fDefNode + " child of ProgramNode is invalid"));
+                return false;
+            }
+        }  
+        return true; 
     }
 
     @Override

@@ -39,7 +39,7 @@ public class Main {
 
         System.err.println(symbolTable);
         try {
-            root.validateTree();
+            root.validateTree(symbolTable);
         } catch (Exception e) {
             System.err.println(e.getMessage());
             return;
