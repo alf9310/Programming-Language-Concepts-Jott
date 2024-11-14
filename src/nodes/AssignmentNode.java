@@ -3,10 +3,10 @@ package nodes;
 import errors.SemanticError;
 import errors.SyntaxError;
 import java.util.ArrayList;
+import msc.*;
 import provided.JottParser;
 import provided.Token;
 import provided.TokenType;
-import msc.*;
 
 /*
  * Assignment Node
@@ -79,6 +79,11 @@ public class AssignmentNode implements BodyStmtNode {
     public void execute() {
         // To be implemented in phase 4
         throw new UnsupportedOperationException("Execution not supported yet.");
+    }
+
+    @Override
+    public Token getToken() {
+        return this.id.getToken();
     }
 
     // public static void main(String[] args) {

@@ -3,11 +3,10 @@ package nodes;
 import errors.SemanticError;
 import errors.SyntaxError;
 import java.util.ArrayList;
-import msc.DataType;
+import msc.*;
 import provided.JottParser;
 import provided.Token;
 import provided.TokenType;
-import msc.*;
 
 /*
  * Binary Operation Node
@@ -76,6 +75,11 @@ public class BinaryOpNode implements ExpressionNode {
         // For Math Operator, returns either a INTEGER or DOUBLE
         DataType leftType = leftOperand.getType();
         return leftType;
+    }
+
+    @Override
+    public Token getToken() {
+        return this.leftOperand.getToken();
     }
 
     /*

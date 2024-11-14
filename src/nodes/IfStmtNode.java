@@ -1,12 +1,11 @@
 package nodes;
 
-import java.util.ArrayList;
-
 import errors.SyntaxError;
+import java.util.ArrayList;
+import msc.*;
 import provided.JottParser;
 import provided.Token;
 import provided.TokenType;
-import msc.*;
 
 /*
  * If Statement Node
@@ -94,6 +93,11 @@ public class IfStmtNode implements BodyStmtNode {
         ElseNode elseNode = ElseNode.parse(tokens);
 
         return new IfStmtNode(expr, body, elseIfNodes, elseNode); // edit later
+    }
+
+    @Override
+    public Token getToken() {
+        return this.expr.getToken();
     }
 
     @Override

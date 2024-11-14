@@ -1,13 +1,12 @@
 package nodes;
 
-import java.util.ArrayList;
-
 import errors.SyntaxError;
+import java.util.ArrayList;
+import msc.*;
 import provided.JottParser;
 import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
-import msc.*;
 
 /*
  * Body Node
