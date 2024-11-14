@@ -2,11 +2,10 @@ package nodes;
 
 import errors.SyntaxError;
 import java.util.ArrayList;
-import msc.DataType;
+import msc.*;
 import provided.JottParser;
 import provided.Token;
 import provided.TokenType;
-import msc.*;
 
 /**
  * RelOpNode
@@ -65,7 +64,7 @@ public class RelOpNode implements OperatorNode {
     }
 
     @Override
-    public DataType getType() {
+    public DataType getType(SymbolTable symbolTable) {
         return DataType.BOOLEAN;
     }
 

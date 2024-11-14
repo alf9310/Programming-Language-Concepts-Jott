@@ -2,11 +2,10 @@ package nodes;
 
 import errors.SyntaxError;
 import java.util.ArrayList;
-import msc.DataType;
+import msc.*;
 import provided.JottParser;
 import provided.Token;
 import provided.TokenType;
-import msc.*;
 
 /*
  * Boolean Node
@@ -55,7 +54,7 @@ public class BooleanNode implements ExpressionNode {
     }
 
     @Override
-    public DataType getType() {
+    public DataType getType(SymbolTable symbolTable) {
         return DataType.BOOLEAN;
     }
 

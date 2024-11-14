@@ -2,7 +2,7 @@ package nodes;
 
 import errors.SyntaxError;
 import java.util.ArrayList;
-import msc.DataType;
+
 import provided.JottParser;
 import provided.Token;
 import provided.TokenType;
@@ -45,7 +45,7 @@ public interface OperandNode extends ExpressionNode {
     }
 
     @Override
-    public DataType getType();
+    public DataType getType(SymbolTable symbolTable);
 
     public Token getToken();
 

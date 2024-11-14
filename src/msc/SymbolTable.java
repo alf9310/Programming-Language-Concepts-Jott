@@ -1,5 +1,4 @@
 package msc;
-import provided.*;
 import java.util.HashMap;
 
 /**
@@ -18,7 +17,7 @@ public class SymbolTable {
 
     private HashMap<String, FunctionInfo> functionMap;
     // private HashMap<String, HashMap<String, VarInfo>> variableMap;
-    private String current_scope = null;
+    public String current_scope = null;
 
     // constructor
     public SymbolTable() {

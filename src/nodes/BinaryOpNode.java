@@ -3,11 +3,10 @@ package nodes;
 import errors.SemanticError;
 import errors.SyntaxError;
 import java.util.ArrayList;
-import msc.DataType;
+import msc.*;
 import provided.JottParser;
 import provided.Token;
 import provided.TokenType;
-import msc.*;
 
 /*
  * Binary Operation Node
@@ -68,13 +67,13 @@ public class BinaryOpNode implements ExpressionNode {
     }
 
     @Override
-    public DataType getType() {
+    public DataType getType(SymbolTable symbolTable) {
         if (operator.getTokenType() == TokenType.REL_OP) {
             // For Relational Operator, returns a Boolean
             return DataType.BOOLEAN;
         }
         // For Math Operator, returns either a INTEGER or DOUBLE
-        DataType leftType = leftOperand.getType();
+        DataType leftType = leftOperand.getType(symbolTable);
         return leftType;
     }
 
@@ -96,14 +95,14 @@ public class BinaryOpNode implements ExpressionNode {
 
         if (operator.getTokenType() == TokenType.REL_OP) {
             // For Relational Operator checks
-            if (leftOperand.getType() != rightOperand.getType()) {
+            if (leftOperand.getType(symbolTable) != rightOperand.getType(symbolTable)) {
                 throw new SemanticError("Operands on either side of the operator must be of the same data type",
                         leftOperand.getToken());
             }
         } else if (operator.getTokenType() == TokenType.MATH_OP) {
             // For Mathematical Operator checks
-            DataType leftType = leftOperand.getType();
-            DataType rightType = rightOperand.getType();
+            DataType leftType = leftOperand.getType(symbolTable);
+            DataType rightType = rightOperand.getType(symbolTable);
 
             if ((leftType == DataType.INTEGER && rightType != DataType.INTEGER) ||
                     (leftType == DataType.DOUBLE && rightType != DataType.DOUBLE)) {
@@ -126,40 +125,43 @@ public class BinaryOpNode implements ExpressionNode {
         throw new UnsupportedOperationException("Execution not supported yet.");
     }
 
-    // public static void main(String[] args) {
-    //     test_validate();
-    // }
+    public static void main(String[] args) {
+        test_validate();
+    }
 
-    // private static void test_validate() {
-    //     try {
-    //         System.out.println("-----Testing BinaryOpNode Main Method-----");
+    private static void test_validate() {
+        try {
+            System.out.println("-----Testing BinaryOpNode Main Method-----");
 
-    //         // Test Case 1: Valid expression "5 + 3"
-    //         ArrayList<Token> tokens1 = new ArrayList<>();
-    //         tokens1.add(new Token("5", "testFile.jott", 1, TokenType.NUMBER));
-    //         tokens1.add(new Token("+", "testFile.jott", 1, TokenType.MATH_OP));
-    //         tokens1.add(new Token("3", "testFile.jott", 1, TokenType.NUMBER));
+            // Test Case 1: Valid expression "5 + 3"
+            ArrayList<Token> tokens1 = new ArrayList<>();
+            tokens1.add(new Token("5", "testFile.jott", 1, TokenType.NUMBER));
+            tokens1.add(new Token("+", "testFile.jott", 1, TokenType.MATH_OP));
+            tokens1.add(new Token("3", "testFile.jott", 1, TokenType.NUMBER));
 
-    //         BinaryOpNode binaryOpNode1 = BinaryOpNode.parse(tokens1);
-    //         System.out.println("Parsing BinaryOpNode (5 + 3): " + binaryOpNode1.convertToJott());
-    //         binaryOpNode1.validateTree(symbolTable); // Should pass without error
-    //         System.out.println("Validation passed for (5 + 3)");
+            BinaryOpNode binaryOpNode1 = BinaryOpNode.parse(tokens1);
+            System.out.println("Parsing BinaryOpNode (5 + 3): " + binaryOpNode1.convertToJott());
+            SymbolTable symbolTable = new SymbolTable();
+            binaryOpNode1.validateTree(symbolTable); // Should pass without error
+            System.out.println("Validation passed for (5 + 3)");
 
-    //         // Test Case 2: Relational operator with mismatched operand types "5 > id"
-    //         ArrayList<Token> tokens2 = new ArrayList<>();
-    //         tokens2.add(new Token("5", "testFile.jott", 2, TokenType.NUMBER));
-    //         tokens2.add(new Token(">", "testFile.jott", 2, TokenType.REL_OP));
-    //         tokens2.add(new Token("id", "testFile.jott", 2, TokenType.ID_KEYWORD));
+            // Test Case 2: Relational operator with mismatched operand types "5 > id"
+            ArrayList<Token> tokens2 = new ArrayList<>();
+            tokens2.add(new Token("5", "testFile.jott", 2, TokenType.NUMBER));
+            tokens2.add(new Token(">", "testFile.jott", 2, TokenType.REL_OP));
+            tokens2.add(new Token("id", "testFile.jott", 2, TokenType.ID_KEYWORD));
 
-    //         BinaryOpNode binaryOpNode2 = BinaryOpNode.parse(tokens2);
-    //         System.out.println("Parsing BinaryOpNode (5 > id)");
-    //         binaryOpNode2.validateTree(symbolTable); // Should throw a SemanticError for undefined id_keyword type
-    //         System.out.println("Validation passed for (5 > id)");
+            BinaryOpNode binaryOpNode2 = BinaryOpNode.parse(tokens2);
+            System.out.println("Parsing BinaryOpNode (5 > id)");
+            binaryOpNode2.validateTree(symbolTable); // Should throw a SemanticError for undefined id_keyword type
+            System.out.println("Validation passed for (5 > id)");
 
-    //     } catch (Exception e) {
-    //         // Catch and print any exceptions
-    //         System.err.println(e.getMessage());
-    //     }
+        } catch (Exception e) {
+            // Catch and print any exceptions
+            System.err.println(e.getMessage());
+        }
+    }
+}
 
     //     try {
     //         // Test Case 3: Math operator with division by zero "10 / 0"
@@ -214,4 +216,3 @@ public class BinaryOpNode implements ExpressionNode {
     //     }
     //     System.out.println("-----Finished testing BinaryOpNode.-----");
     // }
-}

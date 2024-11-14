@@ -3,10 +3,10 @@ package nodes;
 import errors.SemanticError;
 import errors.SyntaxError;
 import java.util.ArrayList;
+import msc.*;
 import provided.JottParser;
 import provided.Token;
 import provided.TokenType;
-import msc.*;
 
 /*
  * Assignment Node
@@ -68,7 +68,7 @@ public class AssignmentNode implements BodyStmtNode {
         // System.out.println("id type: " + id.getType() + ", expression type: " +
         // expression.getType());
 
-        if (id.getType() != expression.getType()) {
+        if (id.getType(symbolTable) != expression.getType(symbolTable)) {
             throw new SemanticError("Id and Expression must be of the same data type", id.getToken());
         }
 

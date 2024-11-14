@@ -10,9 +10,9 @@ package msc;
 // name, type, value
 //getVariableType, getVariableValue
 public class VarInfo {
-    String name;
-    DataType type;
-    String value;
+    public String name;
+    public DataType type;
+    public String value;
 
     public VarInfo(String name, DataType type, String value) {
         this.name = name;

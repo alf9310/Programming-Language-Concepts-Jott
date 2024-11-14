@@ -2,11 +2,10 @@ package nodes;
 
 import errors.SyntaxError;
 import java.util.ArrayList;
-import msc.DataType;
+import msc.*;
 import provided.JottParser;
 import provided.Token;
 import provided.TokenType;
-import msc.*;
 
 /*
  * Function Call Node
@@ -88,7 +87,7 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
     }
 
     @Override
-    public DataType getType() {
+    public DataType getType(SymbolTable symbolTable) {
         // TODO reference scope table to get this
         return DataType.VOID;
     }
