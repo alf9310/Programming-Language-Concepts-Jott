@@ -6,12 +6,13 @@ import msc.DataType;
 import provided.JottParser;
 import provided.Token;
 import provided.TokenType;
+import msc.*;
 
 /**
  * MathOpNode
  * Math operation like +, -, *, or /
  */
-public class MathOpNode implements OperatorNode{
+public class MathOpNode implements OperatorNode {
 
     Token operator;
 
@@ -21,22 +22,23 @@ public class MathOpNode implements OperatorNode{
 
     // Returns Math Operator Node if a valid Mathop
     // Otherwise Throws SyntaxError Exception
-    public static MathOpNode parse(ArrayList <Token> tokens) throws Exception{
+    public static MathOpNode parse(ArrayList<Token> tokens) throws Exception {
 
         // Check if there is tokens
-        if(tokens.isEmpty()){
-            throw new SyntaxError("Expected Math Operator got " + JottParser.finalToken.getToken(), JottParser.finalToken);
+        if (tokens.isEmpty()) {
+            throw new SyntaxError("Expected Math Operator got " + JottParser.finalToken.getToken(),
+                    JottParser.finalToken);
         }
         Token currentToken = tokens.get(0);
         // Make sure token is type Math_OP
-        if(currentToken.getTokenType() != TokenType.MATH_OP){
+        if (currentToken.getTokenType() != TokenType.MATH_OP) {
             throw new SyntaxError("Expected Math Operator got " + currentToken.getToken(), currentToken);
         }
         // Make sure token is a valid operator character
-        if(!(currentToken.getToken().equals("+") || 
-        currentToken.getToken().equals("-") || 
-        currentToken.getToken().equals("*") || 
-        currentToken.getToken().equals("/"))){
+        if (!(currentToken.getToken().equals("+") ||
+                currentToken.getToken().equals("-") ||
+                currentToken.getToken().equals("*") ||
+                currentToken.getToken().equals("/"))) {
             throw new SyntaxError("Expected Math Operator +, - * or / got " + currentToken.getToken(), currentToken);
         }
 
@@ -50,22 +52,22 @@ public class MathOpNode implements OperatorNode{
     }
 
     @Override
-    public TokenType getTokenType(){
+    public TokenType getTokenType() {
         return operator.getTokenType();
     }
 
     @Override
-    public Token getToken(){
+    public Token getToken() {
         return operator;
     }
 
     @Override
-    public DataType getType(){
+    public DataType getType() {
         return DataType.INTEGER;
     }
 
     @Override
-    public boolean validateTree() {
+    public boolean validateTree(SymbolTable symbolTable) {
         return true;
     }
 

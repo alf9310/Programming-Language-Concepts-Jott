@@ -6,12 +6,13 @@ import msc.DataType;
 import provided.JottParser;
 import provided.Token;
 import provided.TokenType;
+import msc.*;
 
 /*
  * String Literal Node
  * A string
  */
-public class StringLiteralNode implements ExpressionNode{
+public class StringLiteralNode implements ExpressionNode {
 
     Token string;
 
@@ -21,15 +22,16 @@ public class StringLiteralNode implements ExpressionNode{
 
     // Returns String Literal Node if a string
     // Otherwise Throws SyntaxError Exception
-    public static StringLiteralNode parse(ArrayList <Token> tokens) throws Exception{
+    public static StringLiteralNode parse(ArrayList<Token> tokens) throws Exception {
 
         // Check if there is tokens
-        if(tokens.isEmpty()){
-            throw new SyntaxError("Expected string literal got " + JottParser.finalToken.getToken(), JottParser.finalToken);
+        if (tokens.isEmpty()) {
+            throw new SyntaxError("Expected string literal got " + JottParser.finalToken.getToken(),
+                    JottParser.finalToken);
         }
         Token currentToken = tokens.get(0);
         // Make sure token is type STRING
-        if(currentToken.getTokenType() != TokenType.STRING){
+        if (currentToken.getTokenType() != TokenType.STRING) {
             throw new SyntaxError("Expected string literal got " + currentToken.getToken(), currentToken);
         }
 
@@ -39,6 +41,7 @@ public class StringLiteralNode implements ExpressionNode{
 
     /**
      * Will output a string of this tree in Jott
+     * 
      * @return a string representing the Jott code of this tree
      */
     @Override
@@ -52,7 +55,7 @@ public class StringLiteralNode implements ExpressionNode{
     }
 
     @Override
-    public boolean validateTree() {
+    public boolean validateTree(SymbolTable symbolTable) {
         return true;
     }
 
@@ -69,7 +72,7 @@ public class StringLiteralNode implements ExpressionNode{
         tokens1.add(new Token("\"Hello, World!\"", "test.jott", 1, TokenType.STRING));
         try {
             StringLiteralNode node1 = StringLiteralNode.parse(tokens1);
-            System.out.println("Parsed StringLiteralNode: " + node1.convertToJott());  // Expected: "Hello, World!"
+            System.out.println("Parsed StringLiteralNode: " + node1.convertToJott()); // Expected: "Hello, World!"
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
@@ -79,18 +82,18 @@ public class StringLiteralNode implements ExpressionNode{
         tokens2.add(new Token("123", "test.jott", 2, TokenType.NUMBER));
         try {
             StringLiteralNode node2 = StringLiteralNode.parse(tokens2);
-            System.out.println("Parsed StringLiteralNode: " + node2.convertToJott());  // Should throw an error
+            System.out.println("Parsed StringLiteralNode: " + node2.convertToJott()); // Should throw an error
         } catch (Exception e) {
-            System.err.println(e.getMessage());  // Expected error: TokenType is not STRING for string literal
+            System.err.println(e.getMessage()); // Expected error: TokenType is not STRING for string literal
         }
 
         // Test Case 3: Empty Token List
         ArrayList<Token> tokens3 = new ArrayList<>();
         try {
             StringLiteralNode node3 = StringLiteralNode.parse(tokens3);
-            System.out.println("Parsed StringLiteralNode: " + node3.convertToJott());  // Should throw an error
+            System.out.println("Parsed StringLiteralNode: " + node3.convertToJott()); // Should throw an error
         } catch (Exception e) {
-            System.err.println(e.getMessage());  // Expected error: Empty token list for string literal
+            System.err.println(e.getMessage()); // Expected error: Empty token list for string literal
         }
 
         // Test Case 4: Valid String with escaped characters
@@ -98,7 +101,8 @@ public class StringLiteralNode implements ExpressionNode{
         tokens4.add(new Token("\"This is a \\\"test\\\" string\"", "test.jott", 3, TokenType.STRING));
         try {
             StringLiteralNode node4 = StringLiteralNode.parse(tokens4);
-            System.out.println("Parsed StringLiteralNode: " + node4.convertToJott());  // Expected: "This is a \"test\" string"
+            System.out.println("Parsed StringLiteralNode: " + node4.convertToJott()); // Expected: "This is a \"test\"
+                                                                                      // string"
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }

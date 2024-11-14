@@ -12,13 +12,15 @@ import java.util.HashMap;
 
 public class FunctionInfo {
     public String name;
-    public DataType returnType;
+    public String returnType;
     //NOTE there is a seperate parameter list to validate correct types passed in
     // also check number to params
-    public HashMap<String, DataType> parameterTypes;
+    public HashMap<String, String> parameterTypes;
+    
+
     public HashMap<String, HashMap<String, VarInfo>> variableMap;
 
-    public FunctionInfo(String name, DataType returnType, HashMap<String, DataType> parameterTypes) {
+    public FunctionInfo(String name, String returnType, HashMap<String, String> parameterTypes) {
         this.name = name;
         this.returnType = returnType;
         this.parameterTypes = parameterTypes;
@@ -29,11 +31,11 @@ public class FunctionInfo {
     public String getName() {
         return name;
     }
-    public DataType getReturnType() {
+    public String getReturnType() {
         return returnType;
     }
 
-    public HashMap<String, DataType> getParameterTypes() {
+    public HashMap<String, String> getParameterTypes() {
         return parameterTypes;
     }
     public HashMap<String, VarInfo> getVars(String scope) {

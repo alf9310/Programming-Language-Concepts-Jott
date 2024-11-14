@@ -1,13 +1,15 @@
 package nodes;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import errors.SemanticError;
 import errors.SyntaxError;
-import msc.SymbolTable;
 import provided.JottParser;
 import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
+import msc.*;
 
 /*
  * Function Definition Node
@@ -129,19 +131,28 @@ public class FuncDefNode implements JottTree{
     }
 
     @Override
-    public boolean validateTree(SymbolTable symbolTable) {
+    public boolean validateTree(SymbolTable symbolTable) throws SemanticError {
 
-        String funcName = this.funcName.getToken().getToken();
-        //Return error if func already defined in symbol table
+        String _name = this.funcName.getToken().getToken();
+        String _returnType = this.returnType.type.getToken();
+
+        //NOTE the parameters will be filled in by the FDefParamsNode
+        FunctionInfo info = new FunctionInfo(_name, _returnType, new HashMap<>());
+
+        // Return error if func already defined in symbol table
+        if (symbolTable.getFunction(_name) != null) {
+            throw new SemanticError("Function " + _name + " already defined in symbol table", this.funcName.getToken());
+        }
+
+        // Add function to symbol table
+        symbolTable.addFunction(_name, info);
 
         //Valid kids
-        
+        this.funcName.validateTree(symbolTable);
+        this.params.validateTree(symbolTable);
+        this.returnType.validateTree(symbolTable);
+        this.body.validateTree(symbolTable);
 
-        // Body can not have funcdef inside it
-
-        // Has return
-
-        // Return type matches return statement
 
         return true;
     }

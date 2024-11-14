@@ -6,6 +6,7 @@ import msc.DataType;
 import provided.JottParser;
 import provided.Token;
 import provided.TokenType;
+import msc.*;
 
 /*
  * Number Node
@@ -18,7 +19,7 @@ public class NumberNode implements OperandNode {
 
     public NumberNode(Token number) {
         this.number = number;
-        this.negative = false;  // Default to positive
+        this.negative = false; // Default to positive
     }
 
     // Constructor with explicit positive/negative control
@@ -29,9 +30,9 @@ public class NumberNode implements OperandNode {
 
     // Returns Number Node if a number, supports negatives
     // Otherwise Throws SyntaxError Exception
-    public static NumberNode parse(ArrayList <Token> tokens) throws Exception{
+    public static NumberNode parse(ArrayList<Token> tokens) throws Exception {
         // Check if there is tokens
-        if(tokens.isEmpty()){
+        if (tokens.isEmpty()) {
             throw new SyntaxError("Expected Number got " + JottParser.finalToken.getToken(), JottParser.finalToken);
         }
         boolean isNegative = false;
@@ -40,7 +41,7 @@ public class NumberNode implements OperandNode {
         Token currentToken = tokens.get(0);
         if (currentToken.getTokenType() == TokenType.MATH_OP && currentToken.getToken().equals("-")) {
             isNegative = true;
-            tokens.remove(0); 
+            tokens.remove(0);
         }
 
         // Make sure the next token is a NUMBER
@@ -60,7 +61,7 @@ public class NumberNode implements OperandNode {
      */
     @Override
     public String convertToJott() {
-        if( negative ){
+        if (negative) {
             return "-" + number.getToken();
         }
         return number.getToken();
@@ -68,21 +69,21 @@ public class NumberNode implements OperandNode {
 
     @Override
     public DataType getType() {
-        if(number.getToken().contains(".")){
-            //System.out.println(number.getToken() + " is a double");
+        if (number.getToken().contains(".")) {
+            // System.out.println(number.getToken() + " is a double");
             return DataType.DOUBLE;
-        } 
-        //System.out.println(number.getToken() + " is an integer");
+        }
+        // System.out.println(number.getToken() + " is an integer");
         return DataType.INTEGER;
     }
 
     @Override
-    public Token getToken(){
+    public Token getToken() {
         return number;
     }
 
     @Override
-    public boolean validateTree() {
+    public boolean validateTree(SymbolTable symbolTable) {
         return true;
     }
 

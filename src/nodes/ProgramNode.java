@@ -1,12 +1,13 @@
 package nodes;
 
+import errors.SemanticError;
 import errors.SyntaxError;
-import msc.SymbolTable;
 
 import java.util.ArrayList;
 import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
+import msc.*;
 
 /*
  * Program Node
@@ -58,14 +59,11 @@ public class ProgramNode implements JottTree{
     }
 
     @Override
-    public boolean validateTree(SymbolTable symbolTable) {
+    public boolean validateTree(SymbolTable symbolTable) throws SemanticError {
         for (FuncDefNode fDefNode : fDefNodes) {
-            if (fDefNode.validateTree(symbolTable)) {
-                System.err.println(("Function definition " + fDefNode + " child of ProgramNode is invalid"));
-                return false;
-            }
+            fDefNode.validateTree(symbolTable);
         }  
-        return true; 
+        return true;
     }
 
     @Override
