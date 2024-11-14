@@ -2,11 +2,10 @@ package nodes;
 
 import errors.SyntaxError;
 import java.util.ArrayList;
-import msc.DataType;
+import msc.*;
 import provided.JottParser;
 import provided.Token;
 import provided.TokenType;
-import msc.*;
 
 /*
  * String Literal Node
@@ -52,6 +51,11 @@ public class StringLiteralNode implements ExpressionNode {
     @Override
     public DataType getType() {
         return DataType.STRING;
+    }
+
+    @Override
+    public Token getToken() {
+        return this.string;
     }
 
     @Override
