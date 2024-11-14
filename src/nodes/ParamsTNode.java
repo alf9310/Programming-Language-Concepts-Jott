@@ -60,12 +60,12 @@ public class ParamsTNode implements JottTree {
         ArrayList<String> paramTypes = symbolTable.getFunctionParamTypes(currentFunctionName);
 
         if (paramIndex >= paramTypes.size()) {
-            throw new SyntaxError("Too many parameters in function call: " + currentFunctionName);
+            throw new SemanticError("Too many parameters in function call: " + currentFunctionName);
         }
 
         String expectedType = paramTypes.get(paramIndex);
         if (!expr.validateTree(symbolTable) || !expr.getType(symbolTable).equals(expectedType)) {
-            throw new SyntaxError("Parameter type mismatch for parameter " + (paramIndex + 1) + " in function call: " + currentFunctionName);
+            throw new SemanticError("Parameter type mismatch for parameter " + (paramIndex + 1) + " in function call: " + currentFunctionName);
         }
         return true;
     }

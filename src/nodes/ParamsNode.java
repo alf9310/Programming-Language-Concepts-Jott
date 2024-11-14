@@ -84,13 +84,13 @@ public class ParamsNode implements JottTree {
         ArrayList<String> paramTypes = symbolTable.getFunctionParamTypes(currentFunctionName);
 
         if (params.size() != paramTypes.size()) {
-            throw new SyntaxError("Incorrect number of parameters in function call: " + currentFunctionName);
+            throw new SemanticError("Incorrect number of parameters in function call: " + currentFunctionName);
         }
 
         for (int i = 0; i < params.size(); i++) {
             String expectedType = paramTypes.get(i);
             if (!params.get(i).validateTree(symbolTable) || !params.get(i).getType(symbolTable).equals(expectedType)) {
-                throw new SyntaxError("Parameter type mismatch in function call: " + currentFunctionName);
+                throw new SemanticError("Parameter type mismatch in function call: " + currentFunctionName);
             }
         }
         return true;
