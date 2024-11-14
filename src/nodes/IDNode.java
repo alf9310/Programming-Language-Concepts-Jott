@@ -61,7 +61,7 @@ public class IDNode implements OperandNode, OperatorNode {
 
     @Override
     public boolean validateTree() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return true;
     }
 
     @Override
