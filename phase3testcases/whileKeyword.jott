@@ -1,4 +1,5 @@
 #should pass phase 2 but fail phase 3
+#^ This is what was written down before, but var starts with a lowercase so it should fail phase 2
 #while is a keyword and starts with an uppercase letter
 
 Def foo[]:Void{
