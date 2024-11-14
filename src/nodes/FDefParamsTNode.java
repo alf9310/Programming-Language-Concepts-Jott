@@ -1,6 +1,6 @@
 package nodes;
 
-import errors.SyntaxError;
+import errors.*;
 import java.util.ArrayList;
 import provided.JottParser;
 import provided.JottTree;
@@ -61,9 +61,18 @@ public class FDefParamsTNode implements JottTree {
     }
 
     @Override
-    public boolean validateTree(SymbolTable symbolTable) {
-        // To be implemented in phase 3
-        throw new UnsupportedOperationException("Validation not supported yet.");
+    public boolean validateTree(SymbolTable symbolTable) throws SemanticError {
+        // Validate the identifier using IDNode's validateTree method
+        if (!id.validateTree(symbolTable)) {
+            throw new SemanticError("Invalid identifier in function parameter definition: " + id.convertToJott(), null);
+        }
+    
+        // Validate the type using TypeNode's validateTree method
+        if (!type.validateTree(symbolTable)) {
+            throw new SemanticError("Invalid type in function parameter definition: " + type.convertToJott(), null);
+        }
+    
+        return true;
     }
 
     @Override
