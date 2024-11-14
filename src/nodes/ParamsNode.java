@@ -3,6 +3,7 @@ package nodes;
 import java.util.ArrayList;
 import java.util.List;
 
+import errors.*;
 import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
@@ -81,16 +82,16 @@ public class ParamsNode implements JottTree {
      */
     @Override
     public boolean validateTree(SymbolTable symbolTable, String currentFunctionName) {
-        ArrayList<String> paramTypes = symbolTable.getFunctionParamTypes(currentFunctionName);
+        ArrayList<String> paramTypes = symbolTable.getFunction(currentFunctionName);
 
-        if (params.size() != paramTypes.size()) {
-            throw new SemanticError("Incorrect number of parameters in function call: " + currentFunctionName);
+        if (paramst.size() != paramTypes.size()) {
+            throw new SemanticError("Incorrect number of parameters in function call: " + currentFunctionName, null);
         }
 
-        for (int i = 0; i < params.size(); i++) {
+        for (int i = 0; i < paramst.size(); i++) {
             String expectedType = paramTypes.get(i);
-            if (!params.get(i).validateTree(symbolTable) || !params.get(i).getType(symbolTable).equals(expectedType)) {
-                throw new SemanticError("Parameter type mismatch in function call: " + currentFunctionName);
+            if (!paramst.get(i).validateTree(symbolTable) || !paramst.get(i).getType(symbolTable).equals(expectedType)) {
+                throw new SemanticError("Parameter type mismatch in function call: " + currentFunctionName, null);
             }
         }
         return true;

@@ -1,6 +1,6 @@
 package nodes;
 
-import errors.SyntaxError;
+import errors.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,15 +57,15 @@ public class ParamsTNode implements JottTree {
      */
     @Override
     public boolean validateTree(SymbolTable symbolTable, String currentFunctionName, int paramIndex) {
-        ArrayList<String> paramTypes = symbolTable.getFunctionParamTypes(currentFunctionName);
+        ArrayList<String> paramTypes = symbolTable.getFunction(currentFunctionName);
 
         if (paramIndex >= paramTypes.size()) {
-            throw new SemanticError("Too many parameters in function call: " + currentFunctionName);
+            throw new SemanticError("Too many parameters in function call: " + currentFunctionName, null);
         }
 
         String expectedType = paramTypes.get(paramIndex);
         if (!expr.validateTree(symbolTable) || !expr.getType(symbolTable).equals(expectedType)) {
-            throw new SemanticError("Parameter type mismatch for parameter " + (paramIndex + 1) + " in function call: " + currentFunctionName);
+            throw new SemanticError("Parameter type mismatch for parameter " + (paramIndex + 1) + " in function call: " + currentFunctionName, null);
         }
         return true;
     }
