@@ -7,6 +7,7 @@ import provided.JottParser;
 import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
+import msc.*;
 
 /*
  * Variable Declaration Node
@@ -34,7 +35,9 @@ public class VarDecNode implements JottTree {
         IDNode id = IDNode.parse(tokens);
         // Parse semicolon
         if (tokens.isEmpty() || tokens.remove(0).getTokenType() != TokenType.SEMICOLON) {
-            throw new SyntaxError("Variable Declaration missing closing semicolon ; got " + JottParser.finalToken.getToken(), JottParser.finalToken);
+            throw new SyntaxError(
+                    "Variable Declaration missing closing semicolon ; got " + JottParser.finalToken.getToken(),
+                    JottParser.finalToken);
         }
         return new VarDecNode(type, id);
     }
@@ -45,7 +48,7 @@ public class VarDecNode implements JottTree {
     }
 
     @Override
-    public boolean validateTree() {
+    public boolean validateTree(SymbolTable symbolTable) {
         // To be implemented in phase 3
         throw new UnsupportedOperationException("Validation not supported yet.");
     }
@@ -78,7 +81,10 @@ public class VarDecNode implements JottTree {
             tokens2.add(new Token(";", "testFile.jott", 1, TokenType.SEMICOLON));
             try {
                 VarDecNode VarDecNode2 = VarDecNode.parse(tokens2);
-                System.out.println("Parsed VarDecNode (ProfJohnson var;):   " + VarDecNode2.convertToJott()); // Should throw an error
+                System.out.println("Parsed VarDecNode (ProfJohnson var;):   " + VarDecNode2.convertToJott()); // Should
+                                                                                                              // throw
+                                                                                                              // an
+                                                                                                              // error
             } catch (Exception e) {
                 System.err.println(e.getMessage()); // Expected error: ProfJohnson is not a valid type
             }

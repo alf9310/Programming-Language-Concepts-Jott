@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import provided.JottParser;
 import provided.Token;
 import provided.TokenType;
+import msc.*;
 
 /*
  * Assignment Node
@@ -25,7 +26,8 @@ public class AssignmentNode implements BodyStmtNode {
     public static AssignmentNode parse(ArrayList<Token> tokens) throws Exception {
         // Check if there is tokens
         if (tokens.isEmpty()) {
-            throw new SyntaxError("Expected " + TokenType.ID_KEYWORD + " got " + JottParser.finalToken.getToken(), JottParser.finalToken);
+            throw new SyntaxError("Expected " + TokenType.ID_KEYWORD + " got " + JottParser.finalToken.getToken(),
+                    JottParser.finalToken);
         }
         // Check that there are at least 4 tokens
         if (tokens.size() < 4) {
@@ -59,13 +61,14 @@ public class AssignmentNode implements BodyStmtNode {
      * Data types of left and right side of = should match
      */
     @Override
-    public boolean validateTree() throws Exception {
-        id.validateTree();
-        expression.validateTree();
+    public boolean validateTree(SymbolTable symbolTable) throws Exception {
+        id.validateTree(symbolTable);
+        expression.validateTree(symbolTable);
 
-        // System.out.println("id type: " + id.getType() + ", expression type: " + expression.getType());
+        // System.out.println("id type: " + id.getType() + ", expression type: " +
+        // expression.getType());
 
-        if(id.getType() != expression.getType()){
+        if (id.getType() != expression.getType()) {
             throw new SemanticError("Id and Expression must be of the same data type", id.getToken());
         }
 
@@ -78,84 +81,87 @@ public class AssignmentNode implements BodyStmtNode {
         throw new UnsupportedOperationException("Execution not supported yet.");
     }
 
-    public static void main(String[] args) {
-        System.out.println("Testing AssignmentNode Main Method");
-        try {
-            // Test Case 1: Valid assignment, var = 4;
-            ArrayList<Token> tokens1 = new ArrayList<>();
-            tokens1.add(new Token("var", "testFile.jott", 1, TokenType.ID_KEYWORD));
-            tokens1.add(new Token("=", "testFile.jott", 1, TokenType.ASSIGN));
-            tokens1.add(new Token("4", "testFile.jott", 1, TokenType.NUMBER));
-            tokens1.add(new Token(";", "testFile.jott", 1, TokenType.SEMICOLON));
-    
-            AssignmentNode assignmentNode1 = AssignmentNode.parse(tokens1);
-            System.out.println("Parsed AssignmentNode 'var=4;': " + assignmentNode1.convertToJott());
-            System.out.println("Validation Result: " + assignmentNode1.validateTree()); // Expected: true
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
-        try{
-            // Test Case 2: Valid expression with addition, var = 4 + 5;
-            ArrayList<Token> tokens2 = new ArrayList<>();
-            tokens2.add(new Token("var", "testFile.jott", 2, TokenType.ID_KEYWORD));
-            tokens2.add(new Token("=", "testFile.jott", 2, TokenType.ASSIGN));
-            tokens2.add(new Token("4", "testFile.jott", 2, TokenType.NUMBER));
-            tokens2.add(new Token("+", "testFile.jott", 2, TokenType.MATH_OP));
-            tokens2.add(new Token("5", "testFile.jott", 2, TokenType.NUMBER));
-            tokens2.add(new Token(";", "testFile.jott", 2, TokenType.SEMICOLON));
-    
-            AssignmentNode assignmentNode2 = AssignmentNode.parse(tokens2);
-            System.out.println("Parsed AssignmentNode 'var=4+5;': " + assignmentNode2.convertToJott());
-            System.out.println("Validation Result: " + assignmentNode2.validateTree()); // Expected: true
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
-        try {
-            // Test Case 3: Invalid chained operations, var = 4 ++ 5;
-            ArrayList<Token> tokens3 = new ArrayList<>();
-            tokens3.add(new Token("var", "testFile.jott", 3, TokenType.ID_KEYWORD));
-            tokens3.add(new Token("=", "testFile.jott", 3, TokenType.ASSIGN));
-            tokens3.add(new Token("4", "testFile.jott", 3, TokenType.NUMBER));
-            tokens3.add(new Token("+", "testFile.jott", 3, TokenType.MATH_OP));
-            tokens3.add(new Token("+", "testFile.jott", 3, TokenType.MATH_OP));
-            tokens3.add(new Token("5", "testFile.jott", 3, TokenType.NUMBER));
-            tokens3.add(new Token(";", "testFile.jott", 3, TokenType.SEMICOLON));
-            AssignmentNode assignmentNode3 = AssignmentNode.parse(tokens3);
-            System.out.println("Parsed AssignmentNode 'var=4++5;': " + assignmentNode3.convertToJott());
-            System.out.println("Validation Result: " + assignmentNode3.validateTree()); // Expected: throws SemanticError
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
-        try{
-            // Test Case 4: Mismatched types, var = "hello";
-            ArrayList<Token> tokens4 = new ArrayList<>();
-            tokens4.add(new Token("var", "testFile.jott", 4, TokenType.ID_KEYWORD));
-            tokens4.add(new Token("=", "testFile.jott", 4, TokenType.ASSIGN));
-            tokens4.add(new Token("\"hello\"", "testFile.jott", 4, TokenType.STRING));
-            tokens4.add(new Token(";", "testFile.jott", 4, TokenType.SEMICOLON));
-            
-            AssignmentNode assignmentNode4 = AssignmentNode.parse(tokens4);
-            System.out.println("Parsed AssignmentNode 'var=\"hello\";': " + assignmentNode4.convertToJott());
-            System.out.println("Validation Result: " + assignmentNode4.validateTree()); // Expected: throws SemanticError for type mismatch
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
-        try{
-            // Test Case 5: Valid expression with negative number, var = 4.5 + -5.0;
-            ArrayList<Token> tokens5 = new ArrayList<>();
-            tokens5.add(new Token("var", "testFile.jott", 5, TokenType.ID_KEYWORD));
-            tokens5.add(new Token("=", "testFile.jott", 5, TokenType.ASSIGN));
-            tokens5.add(new Token("4.5", "testFile.jott", 5, TokenType.NUMBER));
-            tokens5.add(new Token("+", "testFile.jott", 5, TokenType.MATH_OP));
-            tokens5.add(new Token("-", "testFile.jott", 5, TokenType.MATH_OP));
-            tokens5.add(new Token("5.0", "testFile.jott", 5, TokenType.NUMBER));
-            tokens5.add(new Token(";", "testFile.jott", 5, TokenType.SEMICOLON));
-    
-            AssignmentNode assignmentNode5 = AssignmentNode.parse(tokens5);
-            System.out.println("Parsed AssignmentNode 'var=4.5+-5.0;': " + assignmentNode5.convertToJott());
-            System.out.println("Validation Result: " + assignmentNode5.validateTree()); // Expected: true
-        }catch(Exception e){
-            System.err.println(e.getMessage());
-        }
-    }
+    // public static void main(String[] args) {
+    //     System.out.println("Testing AssignmentNode Main Method");
+    //     try {
+    //         // Test Case 1: Valid assignment, var = 4;
+    //         ArrayList<Token> tokens1 = new ArrayList<>();
+    //         tokens1.add(new Token("var", "testFile.jott", 1, TokenType.ID_KEYWORD));
+    //         tokens1.add(new Token("=", "testFile.jott", 1, TokenType.ASSIGN));
+    //         tokens1.add(new Token("4", "testFile.jott", 1, TokenType.NUMBER));
+    //         tokens1.add(new Token(";", "testFile.jott", 1, TokenType.SEMICOLON));
+
+    //         AssignmentNode assignmentNode1 = AssignmentNode.parse(tokens1);
+    //         System.out.println("Parsed AssignmentNode 'var=4;': " + assignmentNode1.convertToJott());
+    //         System.out.println("Validation Result: " + assignmentNode1.validateTree(symbolTable)); // Expected: true
+    //     } catch (Exception e) {
+    //         System.err.println(e.getMessage());
+    //     }
+    //     try {
+    //         // Test Case 2: Valid expression with addition, var = 4 + 5;
+    //         ArrayList<Token> tokens2 = new ArrayList<>();
+    //         tokens2.add(new Token("var", "testFile.jott", 2, TokenType.ID_KEYWORD));
+    //         tokens2.add(new Token("=", "testFile.jott", 2, TokenType.ASSIGN));
+    //         tokens2.add(new Token("4", "testFile.jott", 2, TokenType.NUMBER));
+    //         tokens2.add(new Token("+", "testFile.jott", 2, TokenType.MATH_OP));
+    //         tokens2.add(new Token("5", "testFile.jott", 2, TokenType.NUMBER));
+    //         tokens2.add(new Token(";", "testFile.jott", 2, TokenType.SEMICOLON));
+
+    //         AssignmentNode assignmentNode2 = AssignmentNode.parse(tokens2);
+    //         System.out.println("Parsed AssignmentNode 'var=4+5;': " + assignmentNode2.convertToJott());
+    //         System.out.println("Validation Result: " + assignmentNode2.validateTree(symbolTable)); // Expected: true
+    //     } catch (Exception e) {
+    //         System.err.println(e.getMessage());
+    //     }
+    //     try {
+    //         // Test Case 3: Invalid chained operations, var = 4 ++ 5;
+    //         ArrayList<Token> tokens3 = new ArrayList<>();
+    //         tokens3.add(new Token("var", "testFile.jott", 3, TokenType.ID_KEYWORD));
+    //         tokens3.add(new Token("=", "testFile.jott", 3, TokenType.ASSIGN));
+    //         tokens3.add(new Token("4", "testFile.jott", 3, TokenType.NUMBER));
+    //         tokens3.add(new Token("+", "testFile.jott", 3, TokenType.MATH_OP));
+    //         tokens3.add(new Token("+", "testFile.jott", 3, TokenType.MATH_OP));
+    //         tokens3.add(new Token("5", "testFile.jott", 3, TokenType.NUMBER));
+    //         tokens3.add(new Token(";", "testFile.jott", 3, TokenType.SEMICOLON));
+    //         AssignmentNode assignmentNode3 = AssignmentNode.parse(tokens3);
+    //         System.out.println("Parsed AssignmentNode 'var=4++5;': " + assignmentNode3.convertToJott());
+    //         System.out.println("Validation Result: " + assignmentNode3.validateTree(symbolTable)); // Expected: throws
+    //         // SemanticError
+    //     } catch (Exception e) {
+    //         System.err.println(e.getMessage());
+    //     }
+    //     try {
+    //         // Test Case 4: Mismatched types, var = "hello";
+    //         ArrayList<Token> tokens4 = new ArrayList<>();
+    //         tokens4.add(new Token("var", "testFile.jott", 4, TokenType.ID_KEYWORD));
+    //         tokens4.add(new Token("=", "testFile.jott", 4, TokenType.ASSIGN));
+    //         tokens4.add(new Token("\"hello\"", "testFile.jott", 4, TokenType.STRING));
+    //         tokens4.add(new Token(";", "testFile.jott", 4, TokenType.SEMICOLON));
+
+    //         AssignmentNode assignmentNode4 = AssignmentNode.parse(tokens4);
+    //         System.out.println("Parsed AssignmentNode 'var=\"hello\";': " + assignmentNode4.convertToJott());
+    //         System.out.println("Validation Result: " + assignmentNode4.validateTree(symbolTable)); // Expected: throws
+    //         // SemanticError for type
+    //         // mismatch
+    //     } catch (Exception e) {
+    //         System.err.println(e.getMessage());
+    //     }
+    //     try {
+    //         // Test Case 5: Valid expression with negative number, var = 4.5 + -5.0;
+    //         ArrayList<Token> tokens5 = new ArrayList<>();
+    //         tokens5.add(new Token("var", "testFile.jott", 5, TokenType.ID_KEYWORD));
+    //         tokens5.add(new Token("=", "testFile.jott", 5, TokenType.ASSIGN));
+    //         tokens5.add(new Token("4.5", "testFile.jott", 5, TokenType.NUMBER));
+    //         tokens5.add(new Token("+", "testFile.jott", 5, TokenType.MATH_OP));
+    //         tokens5.add(new Token("-", "testFile.jott", 5, TokenType.MATH_OP));
+    //         tokens5.add(new Token("5.0", "testFile.jott", 5, TokenType.NUMBER));
+    //         tokens5.add(new Token(";", "testFile.jott", 5, TokenType.SEMICOLON));
+
+    //         AssignmentNode assignmentNode5 = AssignmentNode.parse(tokens5);
+    //         System.out.println("Parsed AssignmentNode 'var=4.5+-5.0;': " + assignmentNode5.convertToJott());
+    //         System.out.println("Validation Result: " + assignmentNode5.validateTree(symbolTable)); // Expected: true
+    //     } catch (Exception e) {
+    //         System.err.println(e.getMessage());
+    //     }
+    // }
 }

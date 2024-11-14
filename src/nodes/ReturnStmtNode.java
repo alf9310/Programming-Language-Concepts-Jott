@@ -6,6 +6,7 @@ import provided.JottParser;
 import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
+import msc.*;
 
 /*
  * Return Statement Node
@@ -24,12 +25,12 @@ public class ReturnStmtNode implements JottTree {
 
     // parse
     public static ReturnStmtNode parse(ArrayList<Token> tokens) throws Exception {
-        if(tokens.isEmpty()){
-            return new ReturnStmtNode();     
+        if (tokens.isEmpty()) {
+            return new ReturnStmtNode();
         }
 
         Token currentToken = tokens.get(0);
-        if(currentToken.getTokenType() != TokenType.ID_KEYWORD || !currentToken.getToken().equals("Return")) {
+        if (currentToken.getTokenType() != TokenType.ID_KEYWORD || !currentToken.getToken().equals("Return")) {
             return null;
         }
         tokens.remove(0);
@@ -37,7 +38,8 @@ public class ReturnStmtNode implements JottTree {
         ExpressionNode expr = ExpressionNode.parse(tokens);
 
         if (tokens.isEmpty()) {
-            throw new SyntaxError("Expected semicolon ; after return got " + JottParser.finalToken.getToken(), JottParser.finalToken);
+            throw new SyntaxError("Expected semicolon ; after return got " + JottParser.finalToken.getToken(),
+                    JottParser.finalToken);
         }
         currentToken = tokens.get(0);
         if (currentToken.getTokenType() != TokenType.SEMICOLON) {
@@ -50,7 +52,7 @@ public class ReturnStmtNode implements JottTree {
 
     @Override
     public String convertToJott() {
-        if(this.expr != null) {
+        if (this.expr != null) {
             return "Return " + this.expr.convertToJott() + " ;";
         } else {
             return "";
@@ -58,8 +60,8 @@ public class ReturnStmtNode implements JottTree {
     }
 
     @Override
-    public boolean validateTree() {
-        // To be implemented in phase 3
+    public boolean validateTree(SymbolTable symbolTable) {
+        // Return type matches return statement
         throw new UnsupportedOperationException("Validation not supported yet.");
     }
 

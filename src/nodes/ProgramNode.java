@@ -1,10 +1,13 @@
 package nodes;
 
+import errors.SemanticError;
 import errors.SyntaxError;
+
 import java.util.ArrayList;
 import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
+import msc.*;
 
 /*
  * Program Node
@@ -56,8 +59,11 @@ public class ProgramNode implements JottTree{
     }
 
     @Override
-    public boolean validateTree() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public boolean validateTree(SymbolTable symbolTable) throws SemanticError {
+        for (FuncDefNode fDefNode : fDefNodes) {
+            fDefNode.validateTree(symbolTable);
+        }  
+        return true;
     }
 
     @Override

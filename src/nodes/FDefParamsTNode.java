@@ -6,13 +6,14 @@ import provided.JottParser;
 import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
+import msc.*;
 
 /*
  * Function Definition Parameters T Node
  * ,<id >: < type >
  */
 public class FDefParamsTNode implements JottTree {
-    
+
     IDNode id;
     TypeNode type;
 
@@ -26,11 +27,12 @@ public class FDefParamsTNode implements JottTree {
     public static FDefParamsTNode parse(ArrayList<Token> tokens) throws Exception {
         // Check if there is tokens
         if (tokens.isEmpty()) {
-            throw new SyntaxError("Expected comma , got " + JottParser.finalToken.getToken(), JottParser.finalToken);            
+            throw new SyntaxError("Expected comma , got " + JottParser.finalToken.getToken(), JottParser.finalToken);
         }
         // Check that there are at least 4 tokens
         if (tokens.size() < 4) {
-            throw new SyntaxError("Expected at least 4 tokens for Function Definition Parameters T", JottParser.finalToken);
+            throw new SyntaxError("Expected at least 4 tokens for Function Definition Parameters T",
+                    JottParser.finalToken);
         }
 
         // Parse comma
@@ -59,7 +61,7 @@ public class FDefParamsTNode implements JottTree {
     }
 
     @Override
-    public boolean validateTree() {
+    public boolean validateTree(SymbolTable symbolTable) {
         // To be implemented in phase 3
         throw new UnsupportedOperationException("Validation not supported yet.");
     }
@@ -100,11 +102,11 @@ public class FDefParamsTNode implements JottTree {
             tokens3.add(new Token(":", "testFile.jott", 1, TokenType.COLON));
             try {
                 FDefParamsTNode FDefParamsTNode3 = FDefParamsTNode.parse(tokens3);
-                System.out.println("Parsed FDefParamsTNode ',var:':   " + FDefParamsTNode3.convertToJott()); // Should fail
+                System.out.println("Parsed FDefParamsTNode ',var:':   " + FDefParamsTNode3.convertToJott()); // Should
+                                                                                                             // fail
             } catch (SyntaxError e) {
                 System.err.println(e.getMessage());
             }
-            
 
         } catch (Exception e) {
             // Catch and print any exceptions

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
+import msc.*;
 
 /*
  * Function Definition Parameters Node
@@ -15,13 +16,13 @@ public class FDefParamsNode implements JottTree {
     TypeNode type;
     ArrayList<FDefParamsTNode> fDefParamsTNode;
 
-
     public FDefParamsNode() {
         this.type = null;
         this.id = null;
-        this.fDefParamsTNode =  null;
+        this.fDefParamsTNode = null;
 
     }
+
     public FDefParamsNode(TypeNode type, IDNode id, ArrayList<FDefParamsTNode> fDefParamsTNode) {
         this.type = type;
         this.id = id;
@@ -30,8 +31,8 @@ public class FDefParamsNode implements JottTree {
 
     // Parsing
     public static FDefParamsNode parse(ArrayList<Token> tokens) throws Exception {
-        if(tokens.isEmpty()){
-            return new FDefParamsNode();    
+        if (tokens.isEmpty()) {
+            return new FDefParamsNode();
         }
 
         // Parse the ID
@@ -78,7 +79,7 @@ public class FDefParamsNode implements JottTree {
     }
 
     @Override
-    public boolean validateTree() {
+    public boolean validateTree(SymbolTable symbolTable) {
         // To be implemented in phase 3
         throw new UnsupportedOperationException("Validation not supported yet.");
     }
@@ -101,7 +102,7 @@ public class FDefParamsNode implements JottTree {
             tokens1.add(new Token("Integer", "testFile.jott", 1, TokenType.ID_KEYWORD));
             FDefParamsNode FDefParamsNode1 = FDefParamsNode.parse(tokens1);
             System.out.println("Parsed FDefParamsNode 'x:Integer':   " + FDefParamsNode1.convertToJott());
-            
+
             // Test Case 2: 'x:Integer, y:Double'
             ArrayList<Token> tokens2 = new ArrayList<>();
             tokens2.add(new Token("x", "testFile.jott", 1, TokenType.ID_KEYWORD));

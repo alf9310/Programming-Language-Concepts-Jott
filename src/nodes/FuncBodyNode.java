@@ -7,6 +7,7 @@ import provided.JottParser;
 import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
+import msc.*;
 
 /*
  * Function Body Node
@@ -24,7 +25,8 @@ public class FuncBodyNode implements JottTree {
     // parse
     public static FuncBodyNode parse(ArrayList<Token> tokens) throws Exception {
         if (tokens.isEmpty()) {
-            throw new SyntaxError("Expected variable description or body got " + JottParser.finalToken.getToken(), JottParser.finalToken);            
+            throw new SyntaxError("Expected variable description or body got " + JottParser.finalToken.getToken(),
+                    JottParser.finalToken);
         }
         ArrayList<VarDecNode> varDecs = new ArrayList<>();
 
@@ -65,8 +67,10 @@ public class FuncBodyNode implements JottTree {
     }
 
     @Override
-    public boolean validateTree() {
+    public boolean validateTree(SymbolTable symbolTable) {
         // To be implemented in phase 3
+        // Body can not have funcdef inside it
+
         throw new UnsupportedOperationException("Validation not supported yet.");
     }
 

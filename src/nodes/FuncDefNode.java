@@ -1,12 +1,15 @@
 package nodes;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import errors.SemanticError;
 import errors.SyntaxError;
 import provided.JottParser;
 import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
+import msc.*;
 
 /*
  * Function Definition Node
@@ -128,8 +131,30 @@ public class FuncDefNode implements JottTree{
     }
 
     @Override
-    public boolean validateTree() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public boolean validateTree(SymbolTable symbolTable) throws SemanticError {
+
+        String _name = this.funcName.getToken().getToken();
+        String _returnType = this.returnType.type.getToken();
+
+        //NOTE the parameters will be filled in by the FDefParamsNode
+        FunctionInfo info = new FunctionInfo(_name, _returnType, new HashMap<>());
+
+        // Return error if func already defined in symbol table
+        if (symbolTable.getFunction(_name) != null) {
+            throw new SemanticError("Function " + _name + " already defined in symbol table", this.funcName.getToken());
+        }
+
+        // Add function to symbol table
+        symbolTable.addFunction(_name, info);
+
+        //Valid kids
+        this.funcName.validateTree(symbolTable);
+        this.params.validateTree(symbolTable);
+        this.returnType.validateTree(symbolTable);
+        this.body.validateTree(symbolTable);
+
+
+        return true;
     }
 
     @Override
@@ -140,6 +165,7 @@ public class FuncDefNode implements JottTree{
     public static void main(String[] args) {
         System.out.println("Testing FuncDefNode Main Method");
 
+        
         try {
             // Sample tokens for function definition:
             // Def main[]:Void { 
