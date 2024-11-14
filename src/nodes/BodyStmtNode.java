@@ -1,13 +1,11 @@
 package nodes;
 
-import java.util.ArrayList;
-
 import errors.SyntaxError;
+import java.util.ArrayList;
 import provided.JottParser;
 import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
-import msc.*;
 
 /*
  * Body Statement Node
@@ -49,5 +47,7 @@ public interface BodyStmtNode extends JottTree {
             }
         }
     }
+
+    public Token getToken();
 
 }

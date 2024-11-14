@@ -105,6 +105,8 @@ public interface ExpressionNode extends JottTree {
 
     public DataType getType(SymbolTable symbolTable) throws Exception;
 
+    public Token getToken();
+
     public static void main(String[] args) {
         System.out.println("Testing ExpressionNode Main Method");
 

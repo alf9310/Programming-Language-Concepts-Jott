@@ -54,6 +54,11 @@ public class StringLiteralNode implements ExpressionNode {
     }
 
     @Override
+    public Token getToken() {
+        return this.string;
+    }
+
+    @Override
     public boolean validateTree(SymbolTable symbolTable) {
         return true;
     }

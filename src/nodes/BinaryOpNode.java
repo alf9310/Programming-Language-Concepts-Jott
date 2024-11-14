@@ -77,6 +77,11 @@ public class BinaryOpNode implements ExpressionNode {
         return leftType;
     }
 
+    @Override
+    public Token getToken() {
+        return this.leftOperand.getToken();
+    }
+
     /*
      * Operands must be valid
      * Operator must be valid

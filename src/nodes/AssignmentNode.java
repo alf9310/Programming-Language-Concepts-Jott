@@ -81,6 +81,11 @@ public class AssignmentNode implements BodyStmtNode {
         throw new UnsupportedOperationException("Execution not supported yet.");
     }
 
+    @Override
+    public Token getToken() {
+        return this.id.getToken();
+    }
+
     // public static void main(String[] args) {
     //     System.out.println("Testing AssignmentNode Main Method");
     //     try {

@@ -59,6 +59,11 @@ public class BooleanNode implements ExpressionNode {
     }
 
     @Override
+    public Token getToken() {
+        return this.bool;
+    }
+
+    @Override
     public boolean validateTree(SymbolTable symbolTable) {
         return true;
     }
