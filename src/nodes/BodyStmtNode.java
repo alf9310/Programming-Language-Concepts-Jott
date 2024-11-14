@@ -2,6 +2,7 @@ package nodes;
 
 import errors.SyntaxError;
 import java.util.ArrayList;
+import msc.DataType;
 import provided.JottParser;
 import provided.JottTree;
 import provided.Token;
@@ -49,5 +50,9 @@ public interface BodyStmtNode extends JottTree {
     }
 
     public Token getToken();
+
+    public boolean allReturn();
+
+    public DataType getReturnType() throws Exception;
 
 }
