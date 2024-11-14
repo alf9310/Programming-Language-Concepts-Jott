@@ -1,6 +1,8 @@
 package nodes;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
@@ -78,13 +80,50 @@ public class ParamsNode implements JottTree {
      * Call to function using incorrect params (wrong number or types)
      */
     @Override
-    public boolean validateTree(SymbolTable symbolTable) throws Exception {
-        // TODO Check symbol table to make sure function is using correct param types &
-        // number
-        expr.validateTree(symbolTable);
+    public boolean validateTree(SymbolTable symbolTable, String currentFunctionName) throws Exception {
+        if (expr != null) {
+            expr.validateTree(symbolTable);
+        }
         for (ParamsTNode paramt : paramst) {
             paramt.validateTree(symbolTable);
         }
+
+        // Retrieve the function's expected parameters
+        FunctionInfo functionInfo = symbolTable.getFunction(currentFunctionName);
+        if (functionInfo == null) {
+            throw new RuntimeException("Semantic Error: Function " + currentFunctionName + " not defined.");
+        }
+
+        int expectedParamCount = functionInfo.getParameterTypes().size();
+        int actualParamCount = (expr != null ? 1 : 0) + paramst.size();
+
+        // Check parameter count
+        if (expectedParamCount != actualParamCount) {
+            throw new RuntimeException("Semantic Error: Incorrect number of parameters for function " 
+                                       + currentFunctionName + ". Expected: " + expectedParamCount 
+                                       + ", Actual: " + actualParamCount);
+        }
+
+        // Check parameter types
+        List<String> expectedTypes = new ArrayList<>(functionInfo.getParameterTypes().values());
+        List<String> actualTypes = new ArrayList<>();
+
+        if (expr != null) {
+            actualTypes.add(expr.getType(symbolTable));
+        }
+
+        for (ParamsTNode paramt : paramst) {
+            actualTypes.add(paramt.getType(symbolTable));
+        }
+
+        for (int i = 0; i < expectedTypes.size(); i++) {
+            if (!expectedTypes.get(i).equals(actualTypes.get(i))) {
+                throw new RuntimeException("Semantic Error: Parameter type mismatch for function " 
+                                           + currentFunctionName + ". Expected: " + expectedTypes.get(i) 
+                                           + ", Actual: " + actualTypes.get(i) + " at parameter position " + (i + 1));
+            }
+        }
+
         return true;
     }
 

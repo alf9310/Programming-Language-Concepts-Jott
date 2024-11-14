@@ -2,6 +2,8 @@ package nodes;
 
 import errors.SyntaxError;
 import java.util.ArrayList;
+import java.util.List;
+
 import provided.JottParser;
 import provided.JottTree;
 import provided.Token;
@@ -54,10 +56,36 @@ public class ParamsTNode implements JottTree {
      * Call to function using incorrect params (wrong number or types)
      */
     @Override
-    public boolean validateTree(SymbolTable symbolTable) {
-        // TODO Check symbol table to make sure function is using correct param types &
-        // number
-        return true;
+    public boolean validateTree(SymbolTable symbolTable) throws Exception {
+    // Check that the expression is valid
+    if (expr != null) {
+        expr.validateTree(symbolTable);
+
+        // Get the type of this parameter from the expression node
+        String actualType = expr.getType(symbolTable); // Assumes getType method is implemented in ExpressionNode
+
+        // Retrieve the expected parameter type for this position in the function
+        FunctionInfo functionInfo = symbolTable.getFunction(JottParser.currentFunctionName); // Get function being validated
+        if (functionInfo == null) {
+            throw new RuntimeException("Semantic Error: Function " + JottParser.currentFunctionName + " not defined.");
+        }
+
+        int paramIndex = JottParser.paramIndex++; // Keeps track of parameter index in function call
+        List<String> expectedParamTypes = new ArrayList<>(functionInfo.getParameterTypes().values());
+        
+        // Check if parameter index is within bounds
+        if (paramIndex >= expectedParamTypes.size()) {
+            throw new RuntimeException("Semantic Error: Too many parameters for function " + JottParser.currentFunctionName);
+        }
+
+        String expectedType = expectedParamTypes.get(paramIndex);
+
+        // Compare actual parameter type with the expected type
+        if (!actualType.equals(expectedType)) {
+            throw new RuntimeException("Semantic Error: Parameter type mismatch for function " + JottParser.currentFunctionName + 
+                                       ". Expected: " + expectedType + ", Actual: " + actualType + 
+                                       " at parameter position " + (paramIndex + 1));
+        }
     }
 
     @Override
