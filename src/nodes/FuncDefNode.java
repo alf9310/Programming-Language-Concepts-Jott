@@ -3,6 +3,7 @@ package nodes;
 import java.util.ArrayList;
 
 import errors.SyntaxError;
+import msc.SymbolTable;
 import provided.JottParser;
 import provided.JottTree;
 import provided.Token;
@@ -128,8 +129,21 @@ public class FuncDefNode implements JottTree{
     }
 
     @Override
-    public boolean validateTree() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public boolean validateTree(SymbolTable symbolTable) {
+
+        String funcName = this.funcName.getToken().getToken();
+        //Return error if func already defined in symbol table
+
+        //Valid kids
+        
+
+        // Body can not have funcdef inside it
+
+        // Has return
+
+        // Return type matches return statement
+
+        return true;
     }
 
     @Override
@@ -140,6 +154,7 @@ public class FuncDefNode implements JottTree{
     public static void main(String[] args) {
         System.out.println("Testing FuncDefNode Main Method");
 
+        
         try {
             // Sample tokens for function definition:
             // Def main[]:Void { 
