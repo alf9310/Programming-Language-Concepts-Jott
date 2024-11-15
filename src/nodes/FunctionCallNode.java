@@ -3,6 +3,7 @@ package nodes;
 import errors.SemanticError;
 import errors.SyntaxError;
 import java.util.ArrayList;
+import java.util.HashMap;
 import msc.*;
 import provided.JottParser;
 import provided.Token;
@@ -98,9 +99,13 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
     }
 
     @Override
-    public DataType getType(SymbolTable symbolTable) {
-        // TODO reference scope table to get this
-        return DataType.VOID;
+    public DataType getType(SymbolTable symbolTable) throws Exception {
+        if(symbolTable.current_scope == null) {
+            throw new SemanticError("Function call out of scope", this.id.getToken());
+        }
+        FunctionInfo func = symbolTable.getFunction(symbolTable.current_scope);
+
+        return func.getReturnDataType();
     }
 
     @Override
@@ -124,6 +129,29 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
         }
         
         params.validateTree(symbolTable);   // this should validate number and types
+        
+        HashMap<String, DataType> params = func.getParameterDataTypes();
+        int len = 0;
+        if(this.params != null) {
+            // first param plus number of other params (paramst)
+            len = 1 + this.params.paramst.size();
+        }
+        if(len != params.size()) {
+            throw new SemanticError(this.id.getToken().getToken() + " should take " + params.size() + " parameters, provided " + len + " instead", this.id.getToken());
+        }
+        Object[] pTypes = params.values().toArray();
+        if(len > 0) {
+            // check first param type matches
+            if(pTypes[0] != this.params.expr.getType(symbolTable)) {
+                throw new SemanticError(this.params.expr.getToken().getToken() + " should be type " + pTypes[0], this.params.expr.getToken());
+            }
+            // check all other param types match
+            for(int i = 1; i < len; i++) {
+                if(pTypes[i] != this.params.paramst.get(i - 1)) {
+                    throw new SemanticError("Parameter " + (i + 1) + " of " + this.id.getToken().getToken() + " should be type " + pTypes[i], this.id.getToken());
+                }
+            }
+        }
 
         return true;
     }

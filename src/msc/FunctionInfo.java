@@ -53,6 +53,27 @@ public class FunctionInfo {
     public HashMap<String, String> getParameterTypes() {
         return parameterTypes;
     }
+    public HashMap<String, DataType> getParameterDataTypes() {
+        HashMap<String, DataType> paramTypes = new HashMap<>();
+
+        for(String key: parameterTypes.keySet()) {
+            DataType value = null;
+            if(this.returnType.equals("Boolean")) {
+                value = DataType.BOOLEAN;
+            } else if(this.returnType.equals("String")) {
+                value =DataType.STRING;
+            } else if(this.returnType.equals("Integer")) {
+                value = DataType.INTEGER;
+            } else if(this.returnType.equals("Double")) {
+                value = DataType.DOUBLE;
+            } else if(this.returnType.equals("Void")) {
+                value = DataType.VOID;
+            }
+            paramTypes.put(key, value);
+        }
+
+        return paramTypes;
+    }
     public HashMap<String, VarInfo> getVars(String scope) {
         return variableMap.get(scope);
     }
