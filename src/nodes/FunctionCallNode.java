@@ -1,5 +1,6 @@
 package nodes;
 
+import errors.SemanticError;
 import errors.SyntaxError;
 import java.util.ArrayList;
 import msc.*;
@@ -116,11 +117,13 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
     @Override
     public boolean validateTree(SymbolTable symbolTable) throws Exception {
         id.validateTree(symbolTable);
-        params.validateTree(symbolTable);
 
-        // TODO Check symbol table to make sure function is defined
-        // TODO Check symbol table to make sure function is using correct param types &
-        // number
+        FunctionInfo func = symbolTable.getFunction(this.id.getToken().getToken());
+        if(func == null) {
+            throw new SemanticError("Call to undefined function", this.id.getToken());
+        }
+        
+        params.validateTree(symbolTable);   // this should validate number and types
 
         return true;
     }
