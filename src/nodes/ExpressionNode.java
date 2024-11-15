@@ -2,6 +2,7 @@ package nodes;
 
 import errors.SyntaxError;
 import java.util.ArrayList;
+import java.util.HashMap;
 import msc.*;
 import provided.JottParser;
 import provided.JottTree;
@@ -107,97 +108,104 @@ public interface ExpressionNode extends JottTree {
 
     public static void main(String[] args) {
         System.out.println("Testing ExpressionNode Main Method");
-
-        // Test case 1: Simple operand
-        testSingleOperand();
-        // Test case 2: Simple mathematical operation
-        testSimpleMathOperation();
-        // Test case 3: Simple relational operation
-        testSimpleRelationalOperation();
-        // Test case 4: Invalid expression (invalid operator)
-        testInvalidOperator();
-        // Test case 5: Boolean literal
-        testBooleanLiteral();
-        // Test case 6: String literal
-        testStringLiteral();
+        // Validate tree tests
+        testValidateTreeSimpleOperand();
+        testValidateTreeInvalidOperand();
+        testValidateTreeMathOperation();
+        testValidateTreeUndefinedVariable();
+        testValidateTreeBooleanLiteral();
     }
-
-    private static void testSingleOperand() {
+    
+    private static void testValidateTreeSimpleOperand() {
         try {
             ArrayList<Token> tokens = new ArrayList<>();
-            tokens.add(new Token("42", "testFile.jott", 1, TokenType.NUMBER));
-
+            tokens.add(new Token("x", "testFile.jott", 1, TokenType.ID_KEYWORD));
+    
+            SymbolTable symbolTable = new SymbolTable();
+            symbolTable.addFunction("main", new FunctionInfo("main", "void", new HashMap<>()));
+            symbolTable.enterScope("main");
+            symbolTable.addVar(new VarInfo("x", DataType.INTEGER, null));
+    
             ExpressionNode result = ExpressionNode.parse(tokens);
-            System.out.println("Test 1 (Single Operand): " + result.convertToJott());
+            boolean isValid = result.validateTree(symbolTable);
+            System.out.println("Test Validate Tree 1 (Simple Operand): " + isValid);
         } catch (Exception e) {
-            System.err.println("Test 1 Failed: " + e.getMessage());
+            System.err.println("!FAILED TEST! Test Validate Tree 1 Failed: " + e.getMessage());
         }
     }
-
-    private static void testSimpleMathOperation() {
+    
+    private static void testValidateTreeInvalidOperand() {
         try {
             ArrayList<Token> tokens = new ArrayList<>();
-            tokens.add(new Token("5", "testFile.jott", 2, TokenType.NUMBER));
-            tokens.add(new Token("+", "testFile.jott", 2, TokenType.MATH_OP));
-            tokens.add(new Token("3", "testFile.jott", 2, TokenType.NUMBER));
-
+            tokens.add(new Token("y", "testFile.jott", 2, TokenType.ID_KEYWORD));
+    
+            SymbolTable symbolTable = new SymbolTable();
+            symbolTable.addFunction("main", new FunctionInfo("main", "void", new HashMap<>()));
+            symbolTable.enterScope("main");
+            // "y" is not added to the symbol table intentionally (it's not declared)
+    
             ExpressionNode result = ExpressionNode.parse(tokens);
-            System.out.println("Test 2 (Simple Math Operation): " + result.convertToJott());
+            boolean isValid = result.validateTree(symbolTable);
+            System.out.println("!FAILED TEST! Test Validate Tree 2 (Invalid Operand): " + isValid);
         } catch (Exception e) {
-            System.err.println("Test 2 Failed: " + e.getMessage());
+            System.err.println("Test Validate Tree 2 Passed (Expected Error): " + e.getMessage());
         }
     }
-
-    private static void testSimpleRelationalOperation() {
+    
+    private static void testValidateTreeMathOperation() {
         try {
             ArrayList<Token> tokens = new ArrayList<>();
-            // tokens.add(new Token("-", "testFile.jott", 3, TokenType.MATH_OP));
-            tokens.add(new Token("10", "testFile.jott", 3, TokenType.NUMBER));
-            tokens.add(new Token(">", "testFile.jott", 3, TokenType.REL_OP));
-            tokens.add(new Token("4", "testFile.jott", 3, TokenType.NUMBER));
-
+            tokens.add(new Token("x", "testFile.jott", 3, TokenType.ID_KEYWORD));
+            tokens.add(new Token("+", "testFile.jott", 3, TokenType.MATH_OP));
+            tokens.add(new Token("3", "testFile.jott", 3, TokenType.NUMBER));
+    
+            SymbolTable symbolTable = new SymbolTable();
+            symbolTable.addFunction("main", new FunctionInfo("main", "void", new HashMap<>()));
+            symbolTable.enterScope("main");
+            symbolTable.addVar(new VarInfo("x", DataType.INTEGER, null));
+    
             ExpressionNode result = ExpressionNode.parse(tokens);
-            System.out.println("Test 3 (Simple Relational Operation): " + result.convertToJott());
+            boolean isValid = result.validateTree(symbolTable);
+            System.out.println("Test Validate Tree 3 (Math Operation): " + isValid);
         } catch (Exception e) {
-            System.err.println("Test 3 Failed: " + e.getMessage());
+            System.err.println("!FAILED TEST! Test Validate Tree 3 Failed: " + e.getMessage());
         }
     }
-
-    private static void testInvalidOperator() {
+    
+    private static void testValidateTreeUndefinedVariable() {
         try {
             ArrayList<Token> tokens = new ArrayList<>();
-            tokens.add(new Token("2", "testFile.jott", 4, TokenType.NUMBER));
-            tokens.add(new Token("**", "testFile.jott", 4, TokenType.MATH_OP));
-            tokens.add(new Token("8", "testFile.jott", 4, TokenType.NUMBER));
-
+            tokens.add(new Token("y", "testFile.jott", 4, TokenType.ID_KEYWORD));
+            tokens.add(new Token("-", "testFile.jott", 4, TokenType.MATH_OP));
+            tokens.add(new Token("3", "testFile.jott", 4, TokenType.NUMBER));
+    
+            SymbolTable symbolTable = new SymbolTable();
+            symbolTable.addFunction("main", new FunctionInfo("main", "void", new HashMap<>()));
+            symbolTable.enterScope("main");
+            // "y" is not added to the symbol table intentionally
+    
             ExpressionNode result = ExpressionNode.parse(tokens);
-            System.out.println("Test 4 (Invalid Operator): " + result.convertToJott());
+            boolean isValid = result.validateTree(symbolTable);
+            System.out.println("!FAILED TEST! Test Validate Tree 4 (Undefined Variable): " + isValid);
         } catch (Exception e) {
-            System.err.println("Test 4 Passed (Expected Error): " + e.getMessage());
+            System.err.println("Test Validate Tree 4 Passed (Expected Error): " + e.getMessage());
         }
     }
-
-    private static void testBooleanLiteral() {
+    
+    private static void testValidateTreeBooleanLiteral() {
         try {
             ArrayList<Token> tokens = new ArrayList<>();
             tokens.add(new Token("True", "testFile.jott", 5, TokenType.ID_KEYWORD));
-
+    
+            SymbolTable symbolTable = new SymbolTable();
+            symbolTable.addFunction("main", new FunctionInfo("main", "void", new HashMap<>()));
+            symbolTable.enterScope("main");
+    
             ExpressionNode result = ExpressionNode.parse(tokens);
-            System.out.println("Test 5 (Boolean Literal): " + result.convertToJott());
+            boolean isValid = result.validateTree(symbolTable);
+            System.out.println("Test Validate Tree 5 (Boolean Literal): " + isValid);
         } catch (Exception e) {
-            System.err.println("Test 5 Failed: " + e.getMessage());
-        }
-    }
-
-    private static void testStringLiteral() {
-        try {
-            ArrayList<Token> tokens = new ArrayList<>();
-            tokens.add(new Token("\"Hello, World!\"", "testFile.jott", 6, TokenType.STRING));
-
-            ExpressionNode result = ExpressionNode.parse(tokens);
-            System.out.println("Test 6 (String Literal): " + result.convertToJott());
-        } catch (Exception e) {
-            System.err.println("Test 6 Failed: " + e.getMessage());
+            System.err.println("!FAILED TEST! Test Validate Tree 5 Failed: " + e.getMessage());
         }
     }
 }

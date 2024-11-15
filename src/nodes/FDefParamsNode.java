@@ -1,15 +1,11 @@
 package nodes;
 
 import errors.*;
-
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-
+import msc.*;
 import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
-import msc.*;
 
 /*
  * Function Definition Parameters Node
@@ -83,7 +79,7 @@ public class FDefParamsNode implements JottTree {
     }
 
     @Override
-    public boolean validateTree(SymbolTable symbolTable) throws SemanticError {
+    public boolean validateTree(SymbolTable symbolTable) throws Exception {
         // Validate the main parameter (id and type), if present
         if (id != null && type != null) {
             id.validateTree(symbolTable);

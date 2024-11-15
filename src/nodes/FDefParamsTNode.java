@@ -61,7 +61,7 @@ public class FDefParamsTNode implements JottTree {
     }
 
     @Override
-    public boolean validateTree(SymbolTable symbolTable) throws SemanticError {
+    public boolean validateTree(SymbolTable symbolTable) throws Exception {
         // Validate the identifier using IDNode's validateTree method
         id.validateTree(symbolTable);
 

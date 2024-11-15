@@ -54,7 +54,7 @@ public class VarDecNode implements JottTree {
     Also store type in scope to validate that type matches the expression where it’s being used
     */
     @Override
-    public boolean validateTree(SymbolTable symbolTable) {
+    public boolean validateTree(SymbolTable symbolTable) throws Exception {
         type.validateTree(symbolTable);
         id.validateTree(symbolTable);
 
