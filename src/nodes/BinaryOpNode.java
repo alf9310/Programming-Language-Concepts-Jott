@@ -7,6 +7,7 @@ import msc.*;
 import provided.JottParser;
 import provided.Token;
 import provided.TokenType;
+import java.util.HashMap;
 
 /*
  * Binary Operation Node
@@ -131,93 +132,101 @@ public class BinaryOpNode implements ExpressionNode {
     }
 
     public static void main(String[] args) {
-        test_validate();
-    }
-
-    private static void test_validate() {
         try {
             System.out.println("-----Testing BinaryOpNode Main Method-----");
-
-            // Test Case 1: Valid expression "5 + 3"
+   
+            // Initialize the SymbolTable
+            SymbolTable symbolTable = new SymbolTable();
+            symbolTable.addFunction("main", new FunctionInfo("main", "void", new HashMap<>()));
+            symbolTable.enterScope("main");
+   
+            // Add a test variable to the SymbolTable
+            symbolTable.addVar(new VarInfo("id", DataType.INTEGER, "5")); // Define "id" as an integer in the SymbolTable
+            symbolTable.addVar(new VarInfo("x", DataType.DOUBLE, "10.5")); // Define "x" as a double in the SymbolTable
+   
+            // Test Case 1: Valid mathematical operation "5 + 3"
             ArrayList<Token> tokens1 = new ArrayList<>();
             tokens1.add(new Token("5", "testFile.jott", 1, TokenType.NUMBER));
             tokens1.add(new Token("+", "testFile.jott", 1, TokenType.MATH_OP));
             tokens1.add(new Token("3", "testFile.jott", 1, TokenType.NUMBER));
-
+   
             BinaryOpNode binaryOpNode1 = BinaryOpNode.parse(tokens1);
             System.out.println("Parsing BinaryOpNode (5 + 3): " + binaryOpNode1.convertToJott());
-            SymbolTable symbolTable = new SymbolTable();
             binaryOpNode1.validateTree(symbolTable); // Should pass without error
             System.out.println("Validation passed for (5 + 3)");
-
-            // Test Case 2: Relational operator with mismatched operand types "5 > id"
+   
+            // Test Case 2: Valid relational operator "5 > id"
             ArrayList<Token> tokens2 = new ArrayList<>();
             tokens2.add(new Token("5", "testFile.jott", 2, TokenType.NUMBER));
             tokens2.add(new Token(">", "testFile.jott", 2, TokenType.REL_OP));
             tokens2.add(new Token("id", "testFile.jott", 2, TokenType.ID_KEYWORD));
-
+   
             BinaryOpNode binaryOpNode2 = BinaryOpNode.parse(tokens2);
-            System.out.println("Parsing BinaryOpNode (5 > id)");
-            binaryOpNode2.validateTree(symbolTable); // Should throw a SemanticError for undefined id_keyword type
+            System.out.println("Parsing BinaryOpNode (5 > id): " + binaryOpNode2.convertToJott());
+            binaryOpNode2.validateTree(symbolTable); // Should pass without error
             System.out.println("Validation passed for (5 > id)");
-
+   
+            // Test Case 3: Division by zero "5 / 0"
+            ArrayList<Token> tokens3 = new ArrayList<>();
+            tokens3.add(new Token("5", "testFile.jott", 3, TokenType.NUMBER));
+            tokens3.add(new Token("/", "testFile.jott", 3, TokenType.MATH_OP));
+            tokens3.add(new Token("0", "testFile.jott", 3, TokenType.NUMBER));
+   
+            BinaryOpNode binaryOpNode3 = BinaryOpNode.parse(tokens3);
+            System.out.println("Parsing BinaryOpNode (5 / 0): " + binaryOpNode3.convertToJott());
+            try {
+                binaryOpNode3.validateTree(symbolTable); // Should throw a SemanticError
+            } catch (SemanticError e) {
+                System.err.println("Caught SemanticError as expected: " + e.getMessage());
+            }
+   
+            // Test Case 4: Mismatched operand types in mathematical operation "5 + x"
+            ArrayList<Token> tokens4 = new ArrayList<>();
+            tokens4.add(new Token("5", "testFile.jott", 4, TokenType.NUMBER));
+            tokens4.add(new Token("+", "testFile.jott", 4, TokenType.MATH_OP));
+            tokens4.add(new Token("x", "testFile.jott", 4, TokenType.ID_KEYWORD));
+   
+            BinaryOpNode binaryOpNode4 = BinaryOpNode.parse(tokens4);
+            System.out.println("Parsing BinaryOpNode (5 + x): " + binaryOpNode4.convertToJott());
+            try {
+                binaryOpNode4.validateTree(symbolTable); // Should throw a SemanticError
+            } catch (SemanticError e) {
+                System.err.println("Caught SemanticError as expected: " + e.getMessage());
+            }
+   
+            // Test Case 5: Chained math operations "5 + 3 * 2"
+            ArrayList<Token> tokens5 = new ArrayList<>();
+            tokens5.add(new Token("5", "testFile.jott", 5, TokenType.NUMBER));
+            tokens5.add(new Token("+", "testFile.jott", 5, TokenType.MATH_OP));
+            tokens5.add(new Token("3", "testFile.jott", 5, TokenType.NUMBER));
+            tokens5.add(new Token("*", "testFile.jott", 5, TokenType.MATH_OP));
+            tokens5.add(new Token("2", "testFile.jott", 5, TokenType.NUMBER));
+   
+            try {
+                BinaryOpNode binaryOpNode5 = BinaryOpNode.parse(tokens5);
+                System.out.println("Parsing BinaryOpNode (5 + 3 * 2): " + binaryOpNode5.convertToJott());
+                binaryOpNode5.validateTree(symbolTable); // Should throw a SyntaxError
+            } catch (SyntaxError e) {
+                System.err.println("Caught SyntaxError as expected: " + e.getMessage());
+            }
+   
+            // Test Case 6: Undefined identifier "undefined_id + 5"
+            ArrayList<Token> tokens6 = new ArrayList<>();
+            tokens6.add(new Token("undefined_id", "testFile.jott", 6, TokenType.ID_KEYWORD));
+            tokens6.add(new Token("+", "testFile.jott", 6, TokenType.MATH_OP));
+            tokens6.add(new Token("5", "testFile.jott", 6, TokenType.NUMBER));
+   
+            try {
+                BinaryOpNode binaryOpNode6 = BinaryOpNode.parse(tokens6);
+                System.out.println("Parsing BinaryOpNode (undefined_id + 5): " + binaryOpNode6.convertToJott());
+                binaryOpNode6.validateTree(symbolTable); // Should throw a SemanticError
+            } catch (Exception e) {
+                System.err.println("Caught RuntimeError as expected: " + e.getMessage());
+            }
+   
         } catch (Exception e) {
-            // Catch and print any exceptions
-            System.err.println(e.getMessage());
+            // Catch and print any unexpected exceptions
+            System.err.println("Unexpected exception: " + e.getMessage());
         }
     }
 }
-
-    //     try {
-    //         // Test Case 3: Math operator with division by zero "10 / 0"
-    //         ArrayList<Token> tokens3 = new ArrayList<>();
-    //         tokens3.add(new Token("10", "testFile.jott", 3, TokenType.NUMBER));
-    //         tokens3.add(new Token("/", "testFile.jott", 3, TokenType.MATH_OP));
-    //         tokens3.add(new Token("0", "testFile.jott", 3, TokenType.NUMBER));
-
-    //         BinaryOpNode binaryOpNode3 = BinaryOpNode.parse(tokens3);
-    //         System.out.println("Parsing BinaryOpNode (10 / 0)");
-    //         binaryOpNode3.validateTree(symbolTable); // Should throw a SemanticError for division by zero
-    //         System.out.println("Validation passed for (10 / 0)");
-
-    //     } catch (Exception e) {
-    //         System.err.println(e.getMessage());
-    //     }
-
-    //     try {
-    //         // Test Case 4: Chaining of mathematical operations "3 + 2 * 3"
-    //         ArrayList<Token> tokens4 = new ArrayList<>();
-    //         tokens4.add(new Token("3", "testFile.jott", 4, TokenType.NUMBER));
-    //         tokens4.add(new Token("+", "testFile.jott", 4, TokenType.MATH_OP));
-    //         tokens4.add(new Token("2", "testFile.jott", 4, TokenType.NUMBER));
-    //         tokens4.add(new Token("*", "testFile.jott", 4, TokenType.MATH_OP));
-    //         tokens4.add(new Token("3", "testFile.jott", 4, TokenType.NUMBER));
-
-    //         // Parse this chained expression
-    //         System.out.println("Parsing BinaryOpNode (3 + 2 * 3)");
-    //         BinaryOpNode binaryOpNode4 = BinaryOpNode.parse(tokens4); // Should throw a SyntaxError for chained
-    //                                                                   // operations
-    //         binaryOpNode4.validateTree(symbolTable);
-    //         System.out.println("Validation passed for (3 + 2 * 3)");
-
-    //     } catch (Exception e) {
-    //         System.err.println(e.getMessage());
-    //     }
-
-    //     try {
-    //         // Test Case 5: Mismatched types for math operation "5 + 3.0"
-    //         ArrayList<Token> tokens5 = new ArrayList<>();
-    //         tokens5.add(new Token("5", "testFile.jott", 5, TokenType.NUMBER)); // Assume type INTEGER
-    //         tokens5.add(new Token("+", "testFile.jott", 5, TokenType.MATH_OP));
-    //         tokens5.add(new Token("3.0", "testFile.jott", 5, TokenType.NUMBER)); // Assume type DOUBLE
-
-    //         BinaryOpNode binaryOpNode5 = BinaryOpNode.parse(tokens5);
-    //         System.out.println("Parsing BinaryOpNode (5 + 3.0)");
-    //         binaryOpNode5.validateTree(symbolTable); // Should throw a SemanticError for mismatched data types
-    //         System.out.println("Validation passed for (5 + 3.0)");
-
-    //     } catch (Exception e) {
-    //         System.err.println(e.getMessage());
-    //     }
-    //     System.out.println("-----Finished testing BinaryOpNode.-----");
-    // }
