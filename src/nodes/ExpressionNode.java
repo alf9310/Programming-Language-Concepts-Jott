@@ -26,9 +26,13 @@ public interface ExpressionNode extends JottTree {
             throw new SyntaxError("Expected Operand, string literal or boolean got " + JottParser.finalToken.getToken(),
                     JottParser.finalToken);
         }
-
+        
+        // < bool >
+        if (tokens.get(0).getToken().equals("True") || tokens.get(0).getToken().equals("False")) {  
+            return BooleanNode.parse(tokens);
+        }
         // <operand> | <operand> <relop> <operand> | <operand> <mathop> <operand>
-        if (isOperand(tokens.get(0))) {
+         else if (isOperand(tokens.get(0))) {
 
             if (tokens.size() > 1) {
                 // -num operand
@@ -71,12 +75,6 @@ public interface ExpressionNode extends JottTree {
             // < string_literal >
         } else if (tokens.get(0).getTokenType() == TokenType.STRING) {
             return StringLiteralNode.parse(tokens);
-
-            // < bool >
-        } else if (tokens.get(0).getTokenType() == TokenType.ID_KEYWORD) {
-            if (tokens.get(0).getToken().equals("True") || tokens.get(0).getToken().equals("False")) {
-                return BooleanNode.parse(tokens);
-            }
         }
 
         throw new SyntaxError("Unexpected token " + tokens.get(0).getToken() + " after expression", tokens.get(0));
