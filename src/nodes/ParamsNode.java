@@ -83,13 +83,18 @@ public class ParamsNode implements JottTree {
      */
     @Override
     public boolean validateTree(SymbolTable symbolTable) throws Exception {
+
         // TODO Check symbol table to make sure function is using correct param types &
         // number
         expr.validateTree(symbolTable);
         for (ParamsTNode paramt : paramst) {
             paramt.validateTree(symbolTable);
         }
-        return true;
+
+        // Check that the number of parameters matches the function definition
+        // (This is handled at the FunctionCallNode level)
+
+        return true; // All validations passed
     }
 
     @Override
