@@ -1,10 +1,10 @@
 package nodes;
 
 import java.util.ArrayList;
+import msc.*;
 import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
-import msc.*;
 
 /*
  * Parameters Node
@@ -23,6 +23,10 @@ public class ParamsNode implements JottTree {
     public ParamsNode(ExpressionNode expr, ArrayList<ParamsTNode> paramst) {
         this.expr = expr;
         this.paramst = paramst;
+    }
+
+    public DataType getType(SymbolTable symbolTable) throws Exception {
+        return this.expr.getType(symbolTable);
     }
 
     public static ParamsNode parse(ArrayList<Token> tokens) throws Exception {

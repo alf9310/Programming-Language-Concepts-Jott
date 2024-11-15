@@ -67,7 +67,7 @@ public class BinaryOpNode implements ExpressionNode {
     }
 
     @Override
-    public DataType getType(SymbolTable symbolTable) {
+    public DataType getType(SymbolTable symbolTable) throws Exception {
         if (operator.getTokenType() == TokenType.REL_OP) {
             // For Relational Operator, returns a Boolean
             return DataType.BOOLEAN;

@@ -2,12 +2,11 @@ package nodes;
 
 import errors.SemanticError;
 import errors.SyntaxError;
-
 import java.util.ArrayList;
+import msc.*;
 import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
-import msc.*;
 
 /*
  * Program Node
@@ -60,9 +59,26 @@ public class ProgramNode implements JottTree{
 
     @Override
     public boolean validateTree(SymbolTable symbolTable) throws Exception {
+        Token mainToken = null;
         for (FuncDefNode fDefNode : fDefNodes) {
             fDefNode.validateTree(symbolTable);
-        }  
+            if(fDefNode.funcName.getToken().getToken().equals("main")) {
+                mainToken = fDefNode.funcName.getToken();
+            }
+        }
+
+        if(mainToken == null) {
+            Token infoToken = this.fDefNodes.get(0).funcName.getToken();
+            throw new SemanticError("Program does not have a main function", infoToken);
+        }
+        FunctionInfo main = symbolTable.getFunction("main");
+        if(!main.getParameterTypes().isEmpty()) {
+            throw new SemanticError("Main function should not take any parameters", mainToken);
+        }
+        if(main.getReturnDataType() != DataType.VOID) {
+            throw new SemanticError("Main function should have Void return type", mainToken);
+        }
+
         return true;
     }
 
