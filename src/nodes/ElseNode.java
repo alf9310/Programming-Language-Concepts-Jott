@@ -45,7 +45,8 @@ public class ElseNode implements JottTree {
 
         Token currentToken = tokens.get(0);
         if (currentToken.getTokenType() != TokenType.ID_KEYWORD || !currentToken.getToken().equals("Else")) {
-            throw new SyntaxError("Expected Else got " + currentToken.getToken(), currentToken);
+            // throw new SyntaxError("Expected Else got " + currentToken.getToken(), currentToken);
+            return new ElseNode();  // next token probably part of a different body statement
         }
         tokens.remove(0);
 
