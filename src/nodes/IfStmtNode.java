@@ -133,6 +133,32 @@ public class IfStmtNode implements BodyStmtNode {
     public boolean validateTree(SymbolTable symbolTable) throws Exception {
         // To be implemented in phase 3
         this.allReturn = true;
+
+        this.expr.validateTree(symbolTable);
+        if(this.expr.getType(symbolTable) != DataType.BOOLEAN) {
+            throw new SemanticError("Expression in if statement must be a boolean", this.expr.getToken());
+        }
+
+        this.body.validateTree(symbolTable);
+        if(!this.body.allReturn()) {
+            this.allReturn = false;
+        }
+        
+        for(ElseIfNode elseIf: this.elseIfs) {
+            elseIf.validateTree(symbolTable);
+            if(!elseIf.allReturn()) {
+                this.allReturn = false;
+            }
+        }
+
+        this.elseBlock.validateTree(symbolTable);
+        if(!this.elseBlock.allReturn()) {
+            this.allReturn = false;
+        }
+
+        return true;
+        /*
+        this.allReturn = true;
         DataType returnVal = null;
 
         this.expr.validateTree(symbolTable);
@@ -193,6 +219,7 @@ public class IfStmtNode implements BodyStmtNode {
         }
 
         return true;
+        */
     }
 
     @Override

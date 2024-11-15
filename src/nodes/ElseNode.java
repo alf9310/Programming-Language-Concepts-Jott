@@ -30,6 +30,10 @@ public class ElseNode implements JottTree {
         return this.body.getReturnType();
     }
 
+    public boolean allReturn() {
+        return this.body.allReturn();
+    }
+
     public Token getToken() {
         return this.body.getToken();
     }
