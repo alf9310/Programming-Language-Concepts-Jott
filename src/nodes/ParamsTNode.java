@@ -55,9 +55,10 @@ public class ParamsTNode implements JottTree {
      * Call to function using incorrect params (wrong number or types)
      */
     @Override
-    public boolean validateTree(SymbolTable symbolTable) {
-        // TODO Check symbol table to make sure function is using correct param types &
-        // number
+
+    public boolean validateTree(SymbolTable symbolTable) throws Exception {
+        // Validate the expression
+        expr.validateTree(symbolTable);
         return true;
     }
 
