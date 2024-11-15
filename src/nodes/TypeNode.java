@@ -1,13 +1,12 @@
 package nodes;
 
-import java.util.ArrayList;
-
 import errors.SyntaxError;
+import java.util.ArrayList;
+import msc.*;
 import provided.JottParser;
 import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
-import msc.*;
 
 /*
  * Type Node and Function Return
@@ -72,9 +71,20 @@ public class TypeNode implements JottTree {
         return type.getToken();
     }
 
+    public DataType getType(){
+        String str = type.getToken();
+        return switch (str) {
+            case "Double" -> DataType.DOUBLE;
+            case "Integer" -> DataType.INTEGER;
+            case "String" -> DataType.STRING;
+            case "Boolean" -> DataType.BOOLEAN;
+            default -> DataType.VOID;
+        };
+    }
+
     @Override
     public boolean validateTree(SymbolTable symbolTable) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return true;
     }
 
     @Override
