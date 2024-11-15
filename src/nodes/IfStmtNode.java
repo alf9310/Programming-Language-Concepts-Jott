@@ -1,12 +1,12 @@
 package nodes;
 
+import errors.SemanticError;
 import errors.SyntaxError;
 import java.util.ArrayList;
 import msc.*;
 import provided.JottParser;
 import provided.Token;
 import provided.TokenType;
-import errors.SemanticError;
 
 /*
  * If Statement Node
@@ -112,7 +112,11 @@ public class IfStmtNode implements BodyStmtNode {
 
     @Override
     public Token getToken() {
-        return this.expr.getToken();
+        if(this.body.getToken() != null) {
+            return this.body.getToken();
+        } else {
+            return this.expr.getToken();
+        }
     }
 
     @Override
@@ -137,10 +141,7 @@ public class IfStmtNode implements BodyStmtNode {
             throw new SemanticError("Expression in if statement must be a boolean", this.expr.getToken());
         }
 
-        if(!this.body.validateTree(symbolTable)) {
-            this.allReturn = false;
-            return false;
-        }
+        this.body.validateTree(symbolTable);
 
         // handle first return
         if(this.body.returnStmt != null) {
@@ -153,10 +154,7 @@ public class IfStmtNode implements BodyStmtNode {
         }
 
         for(ElseIfNode elseIf : this.elseIfs) {
-            if(!elseIf.validateTree(symbolTable)) {
-                this.allReturn = false;
-                return false;
-            }
+            elseIf.validateTree(symbolTable);
             // check if each else/if block returns
             returnVal = elseIf.getReturnType();
             if(returnVal == null) {
@@ -166,7 +164,8 @@ public class IfStmtNode implements BodyStmtNode {
                     this.returnType = returnVal;
                 } else if(this.returnType != returnVal) {
                     // return types don't match!
-                    throw new SemanticError("Return types throughout if/elif/else block don't match", this.expr.getToken());
+                    
+                    throw new SemanticError("Return types throughout if/elif/else block don't match", elseIf.getToken());
                 }
                 // else, returnType and returnVal match
             }
@@ -184,7 +183,11 @@ public class IfStmtNode implements BodyStmtNode {
             if(this.returnType == null) {
                 this.returnType = returnVal;
             } else if(this.returnType != returnVal) {
-                throw new SemanticError("Return types throughout if/elif/else block don't match", this.expr.getToken());
+                if(this.elseBlock.getToken() != null) {
+                    throw new SemanticError("Return types throughout if/elif/else block don't match", this.elseBlock.getToken());
+                } else {
+                    throw new SemanticError("Return types throughout if/elif/else block don't match", this.expr.getToken());
+                }
             }
             // else, returnType and returnVal match
         }

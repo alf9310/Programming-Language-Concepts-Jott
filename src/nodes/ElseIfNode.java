@@ -28,6 +28,14 @@ public class ElseIfNode implements JottTree {
         return this.body.getReturnType();
     }
 
+    public Token getToken() {
+        if(this.body.getToken() != null) {
+            return this.body.getToken();
+        } else {
+            return this.expr.getToken();
+        }
+    }
+
     // parse
     public static ElseIfNode parse(ArrayList<Token> tokens) throws Exception {
         if (tokens.isEmpty()) {

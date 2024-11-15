@@ -35,6 +35,10 @@ public class BodyNode implements JottTree {
         return this.returns;
     }
 
+    public Token getToken() {
+        return this.returnStmt.getToken();
+    }
+
     // parse
     public static BodyNode parse(ArrayList<Token> tokens) throws Exception {
         if (tokens.isEmpty()) {
@@ -107,6 +111,7 @@ public class BodyNode implements JottTree {
         if(this.returnStmt.getReturnType() == null) {
             if(!this.returns && this.returnType != null) {
                 // not all paths return but at least one does
+                // use first body stmt for token because there's no return token
                 throw new SemanticError("Only some paths of function return", this.bodyStmts.get(0).getToken());
             }
         } else {

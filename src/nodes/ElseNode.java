@@ -30,6 +30,10 @@ public class ElseNode implements JottTree {
         return this.body.getReturnType();
     }
 
+    public Token getToken() {
+        return this.body.getToken();
+    }
+
     public static ElseNode parse(ArrayList<Token> tokens) throws Exception {
         if (tokens.isEmpty()) {
             return new ElseNode();
