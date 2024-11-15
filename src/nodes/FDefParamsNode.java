@@ -1,7 +1,11 @@
 package nodes;
 
-import errors.SyntaxError;
+import errors.*;
+
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
 import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
@@ -79,9 +83,21 @@ public class FDefParamsNode implements JottTree {
     }
 
     @Override
-    public boolean validateTree(SymbolTable symbolTable) {
-        // To be implemented in phase 3
-        throw new UnsupportedOperationException("Validation not supported yet.");
+    public boolean validateTree(SymbolTable symbolTable) throws SemanticError {
+        // Validate the main parameter (id and type), if present
+        if (id != null && type != null) {
+            id.validateTree(symbolTable);
+            type.validateTree(symbolTable);
+        }
+    
+        // Validate each additional parameter in fDefParamsTNode
+        for (FDefParamsTNode paramt : fDefParamsTNode) {
+            if (!paramt.validateTree(symbolTable)) {
+                throw new SemanticError("Invalid additional parameter in function definition.", null);
+            }
+        }
+        
+        return true;
     }
 
     @Override

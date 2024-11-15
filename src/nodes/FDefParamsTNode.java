@@ -1,6 +1,6 @@
 package nodes;
 
-import errors.SyntaxError;
+import errors.*;
 import java.util.ArrayList;
 import provided.JottParser;
 import provided.JottTree;
@@ -61,9 +61,14 @@ public class FDefParamsTNode implements JottTree {
     }
 
     @Override
-    public boolean validateTree(SymbolTable symbolTable) {
-        // To be implemented in phase 3
-        throw new UnsupportedOperationException("Validation not supported yet.");
+    public boolean validateTree(SymbolTable symbolTable) throws SemanticError {
+        // Validate the identifier using IDNode's validateTree method
+        id.validateTree(symbolTable);
+
+        // Validate the type using TypeNode's validateTree method
+        type.validateTree(symbolTable);
+    
+        return true;
     }
 
     @Override

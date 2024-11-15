@@ -1,12 +1,12 @@
 package nodes;
 
+import errors.SemanticError;
 import errors.SyntaxError;
 import java.util.ArrayList;
-import msc.DataType;
+import msc.*;
 import provided.JottParser;
 import provided.Token;
 import provided.TokenType;
-import msc.*;
 
 /*
  * Function Call Node
@@ -20,6 +20,16 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
     public FunctionCallNode(IDNode id, ParamsNode params) {
         this.id = id;
         this.params = params;
+    }
+
+    @Override
+    public boolean allReturn() {
+        return false;
+    }
+
+    @Override
+    public DataType getReturnType() {
+        return null;
     }
 
     public static FunctionCallNode parse(ArrayList<Token> tokens) throws Exception {
@@ -88,7 +98,7 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
     }
 
     @Override
-    public DataType getType() {
+    public DataType getType(SymbolTable symbolTable) {
         // TODO reference scope table to get this
         return DataType.VOID;
     }
@@ -107,11 +117,13 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
     @Override
     public boolean validateTree(SymbolTable symbolTable) throws Exception {
         id.validateTree(symbolTable);
-        params.validateTree(symbolTable);
 
-        // TODO Check symbol table to make sure function is defined
-        // TODO Check symbol table to make sure function is using correct param types &
-        // number
+        FunctionInfo func = symbolTable.getFunction(this.id.getToken().getToken());
+        if(func == null) {
+            throw new SemanticError("Call to undefined function", this.id.getToken());
+        }
+        
+        params.validateTree(symbolTable);   // this should validate number and types
 
         return true;
     }

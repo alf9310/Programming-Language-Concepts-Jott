@@ -1,8 +1,7 @@
 package nodes;
 
-import errors.*;
+import errors.SyntaxError;
 import java.util.ArrayList;
-import java.util.List;
 
 import provided.JottParser;
 import provided.JottTree;
@@ -56,10 +55,10 @@ public class ParamsTNode implements JottTree {
      * Call to function using incorrect params (wrong number or types)
      */
     @Override
+
     public boolean validateTree(SymbolTable symbolTable) throws Exception {
         // Validate the expression
         expr.validateTree(symbolTable);
-
         return true;
     }
 

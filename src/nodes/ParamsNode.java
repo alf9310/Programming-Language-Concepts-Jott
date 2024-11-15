@@ -1,8 +1,6 @@
 package nodes;
 
 import java.util.ArrayList;
-import java.util.List;
-
 import errors.*;
 import provided.JottParser;
 import provided.JottTree;
@@ -83,18 +81,12 @@ public class ParamsNode implements JottTree {
      */
     @Override
     public boolean validateTree(SymbolTable symbolTable) throws Exception {
-        // Validate the expression
-        if (expr != null) {
-            if (!expr.validateTree(symbolTable)) {
-                return false;
-            }
-        }
-        
-        // Validate each parameter
+
+        // TODO Check symbol table to make sure function is using correct param types &
+        // number
+        expr.validateTree(symbolTable);
         for (ParamsTNode paramt : paramst) {
-            if (!paramt.validateTree(symbolTable)) {
-                return false;
-            }
+            paramt.validateTree(symbolTable);
         }
 
         // Check that the number of parameters matches the function definition

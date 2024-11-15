@@ -1,7 +1,5 @@
 package msc;
 import java.util.ArrayList;
-
-
 import provided.*;
 
 public class Main {
@@ -51,7 +49,7 @@ public class Main {
             System.err.println(e.getMessage());
             return;
         }
-        System.out.printf("Interpreter succeeded for " + filename + "!!!");
+        //System.out.printf("Interpreter succeeded for " + filename + "!!!");
     }
 
 

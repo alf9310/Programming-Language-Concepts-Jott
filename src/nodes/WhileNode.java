@@ -1,12 +1,12 @@
 package nodes;
 
-import java.util.ArrayList;
-
+import errors.SemanticError;
 import errors.SyntaxError;
+import java.util.ArrayList;
+import msc.*;
 import provided.JottParser;
 import provided.Token;
 import provided.TokenType;
-import msc.*;
 
 /*
  * While Node
@@ -20,6 +20,16 @@ public class WhileNode implements BodyStmtNode {
     public WhileNode(ExpressionNode exprNode, BodyNode bodyNode) {
         this.expr = exprNode;
         this.body = bodyNode;
+    }
+
+    @Override
+    public boolean allReturn() {
+        return false;
+    }
+
+    @Override
+    public DataType getReturnType() throws Exception {
+        return this.body.getReturnType();
     }
 
     public static WhileNode parse(ArrayList<Token> tokens) throws Exception {
@@ -89,14 +99,24 @@ public class WhileNode implements BodyStmtNode {
     }
 
     @Override
-    public boolean validateTree(SymbolTable symbolTable) {
+    public boolean validateTree(SymbolTable symbolTable) throws Exception {
         // To be implemented in phase 3
-        throw new UnsupportedOperationException("Validation not supported yet.");
+        this.expr.validateTree(symbolTable);
+        this.body.validateTree(symbolTable);
+        if(this.expr.getType(symbolTable) != DataType.BOOLEAN) {
+            throw new SemanticError("Expression in if statement must be a boolean", this.expr.getToken());
+        }
+        return true;
     }
 
     @Override
     public void execute() {
         // To be implemented in phase 4
         throw new UnsupportedOperationException("Execution not supported yet.");
+    }
+
+    @Override
+    public Token getToken() {
+        return this.expr.getToken();
     }
 }

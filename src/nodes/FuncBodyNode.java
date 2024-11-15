@@ -1,13 +1,13 @@
 package nodes;
 
-import java.util.ArrayList;
-
+import errors.SemanticError;
 import errors.SyntaxError;
+import java.util.ArrayList;
+import msc.*;
 import provided.JottParser;
 import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
-import msc.*;
 
 /*
  * Function Body Node
@@ -16,10 +16,22 @@ import msc.*;
 public class FuncBodyNode implements JottTree {
     ArrayList<VarDecNode> varDecs;
     BodyNode body;
+    boolean returns;
+    DataType returnType;
 
     public FuncBodyNode(ArrayList<VarDecNode> varDecs, BodyNode body) {
         this.varDecs = varDecs;
         this.body = body;
+        this.returns = false;
+        this.returnType = null;
+    }
+
+    boolean allReturn() {
+        return this.returns;
+    }
+
+    DataType getReturnType() {
+        return this.returnType;
     }
 
     // parse
@@ -67,11 +79,30 @@ public class FuncBodyNode implements JottTree {
     }
 
     @Override
-    public boolean validateTree(SymbolTable symbolTable) {
+    public boolean validateTree(SymbolTable symbolTable) throws Exception {
         // To be implemented in phase 3
         // Body can not have funcdef inside it
+        for(VarDecNode varDec: this.varDecs) {
+            varDec.validateTree(symbolTable);
+        }
 
-        throw new UnsupportedOperationException("Validation not supported yet.");
+        this.body.validateTree(symbolTable);
+        this.returns = this.body.allReturn();
+        this.returnType = this.body.getReturnType();
+
+        String func = symbolTable.current_scope;
+        FunctionInfo info = symbolTable.getFunction(func);
+        DataType funcReturn = info.getReturnDataType();
+        if(funcReturn == null) {
+            throw new SemanticError("Function return should be one of the data types provided or VOID", this.body.getToken());
+        }
+
+        if(funcReturn != DataType.VOID && !this.returns) {
+            // function should return, but not all paths do
+            throw new SemanticError("Function should return " + funcReturn + ", but not all paths are returnable", this.body.getToken());
+        }
+
+        return true;
     }
 
     @Override

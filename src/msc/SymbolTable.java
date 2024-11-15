@@ -1,13 +1,9 @@
 package msc;
-import provided.*;
 import java.util.HashMap;
 
 /**
  * This class is responsible for maintaining the symbol table
  * The table object is passed between all the nodes
- * 
- *  ????? Do I need a variablemap or a scope stack
- * Trace out valid.jott example on paper
  * 
  * 
  * @author Kaiy Muhammad, Sejal Bhattad, Lauren Kaestle, Audrey Fuller
@@ -16,9 +12,9 @@ import java.util.HashMap;
 
 public class SymbolTable {
 
-    private HashMap<String, FunctionInfo> functionMap;
+    public HashMap<String, FunctionInfo> functionMap;
     // private HashMap<String, HashMap<String, VarInfo>> variableMap;
-    private String current_scope = null;
+    public String current_scope = null;
 
     // constructor
     public SymbolTable() {
@@ -52,14 +48,26 @@ public class SymbolTable {
         return functionMap.get(name);
     }
     
-    //  add variable to current scope
-    //NOTE will need to make a varinfo object
-    public void addVar (VarInfo info) {
-        if (current_scope==null) {
-        throw new RuntimeException("Not in any scope!");
+    // Add variable to current scope
+    public void addVar(VarInfo info) {
+        if (current_scope == null) {
+            throw new RuntimeException("Not in any scope!");
         }
-        // add variable to current scopes variable map
-        functionMap.get(current_scope).variableMap.get(current_scope).put(info.name, info);
+        // Get the function information for the current scope
+        FunctionInfo functionInfo = functionMap.get(current_scope);
+    
+        // Check if functionInfo is null
+        if (functionInfo == null) {
+            throw new RuntimeException("Function information for scope " + current_scope + " does not exist.");
+        }
+    
+        // Initialize the variableMap if it's null
+        if (functionInfo.variableMap.get(current_scope) == null) {
+            functionInfo.variableMap.put(current_scope, new HashMap<>());
+        }
+    
+        // Now add the variable to the current scope's variable map
+        functionInfo.variableMap.get(current_scope).put(info.name, info);
     }
 
     //  get variable from current scope
@@ -77,6 +85,18 @@ public class SymbolTable {
             throw new RuntimeException("Variable "+name+" not found in current scope: '" + current_scope + "'");
         }
         return var;
+    }
+
+    public boolean existsInScope(String varName) {
+        if (current_scope == null) {
+            throw new RuntimeException("Not in any scope!");
+        }
+        // Get current function and check if variable exists in current scope's variable map
+        FunctionInfo currentFunction = functionMap.get(current_scope);
+        if (currentFunction == null || currentFunction.variableMap.get(current_scope) == null) {
+            return false;
+        }
+        return currentFunction.variableMap.get(current_scope).containsKey(varName);
     }
 
     @Override

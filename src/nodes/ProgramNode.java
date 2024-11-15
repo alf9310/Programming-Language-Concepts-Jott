@@ -59,7 +59,7 @@ public class ProgramNode implements JottTree{
     }
 
     @Override
-    public boolean validateTree(SymbolTable symbolTable) throws SemanticError {
+    public boolean validateTree(SymbolTable symbolTable) throws Exception {
         for (FuncDefNode fDefNode : fDefNodes) {
             fDefNode.validateTree(symbolTable);
         }  

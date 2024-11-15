@@ -2,11 +2,10 @@ package nodes;
 
 import errors.SyntaxError;
 import java.util.ArrayList;
-import msc.DataType;
+import msc.*;
 import provided.JottParser;
 import provided.Token;
 import provided.TokenType;
-import msc.*;
 
 /*
  * Number Node
@@ -68,7 +67,7 @@ public class NumberNode implements OperandNode {
     }
 
     @Override
-    public DataType getType() {
+    public DataType getType(SymbolTable symbolTable) {
         if (number.getToken().contains(".")) {
             // System.out.println(number.getToken() + " is a double");
             return DataType.DOUBLE;

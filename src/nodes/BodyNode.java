@@ -1,13 +1,13 @@
 package nodes;
 
-import java.util.ArrayList;
-
+import errors.SemanticError;
 import errors.SyntaxError;
+import java.util.ArrayList;
+import msc.*;
 import provided.JottParser;
 import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
-import msc.*;
 
 /*
  * Body Node
@@ -17,10 +17,26 @@ import msc.*;
 public class BodyNode implements JottTree {
     ArrayList<BodyStmtNode> bodyStmts;
     ReturnStmtNode returnStmt;
+    boolean returns;
+    DataType returnType;
 
     public BodyNode(ArrayList<BodyStmtNode> bodyStmtNodes, ReturnStmtNode returnStmtNode) {
         this.bodyStmts = bodyStmtNodes;
         this.returnStmt = returnStmtNode;
+        this.returns = false;
+        this.returnType = null;
+    }
+
+    public DataType getReturnType() throws Exception {
+        return this.returnType;
+    }
+
+    public boolean allReturn() {
+        return this.returns;
+    }
+
+    public Token getToken() {
+        return this.returnStmt.getToken();
     }
 
     // parse
@@ -65,9 +81,85 @@ public class BodyNode implements JottTree {
     }
 
     @Override
-    public boolean validateTree(SymbolTable symbolTable) {
+    public boolean validateTree(SymbolTable symbolTable) throws Exception {
         // To be implemented in phase 3
-        throw new UnsupportedOperationException("Validation not supported yet.");
+        for(BodyStmtNode bodyStmt: this.bodyStmts) {
+            if(this.returns == true) {
+                throw new SemanticError("Unreachable code after return statement", bodyStmt.getToken());
+            }
+
+            bodyStmt.validateTree(symbolTable); // should check return types match in here
+
+            if(bodyStmt.allReturn()) {
+                this.returns = true;
+            }
+            if(bodyStmt.getReturnType() != null) {
+                this.returnType = bodyStmt.getReturnType();
+            }
+        }
+
+        // handle return at end of body
+        this.returnStmt.validateTree(symbolTable);  // should do return typechecking in here
+
+        if(this.returnStmt.getReturnType() != null) {
+            if(this.returns == true) {
+                // all paths return before the end but another exists
+                throw new SemanticError("Unreachable return at end", this.returnStmt.getToken());
+            }
+
+            this.returns = true;    // all paths return if return is at end of body
+            this.returnType = this.returnStmt.getReturnType();
+        }
+
+        return true;
+
+        /*
+        for(BodyStmtNode bodyStmt: this.bodyStmts) {
+            if(this.returns == true) {
+                throw new SemanticError("Unreachable code after return statement", bodyStmt.getToken());
+            }
+
+            bodyStmt.validateTree(symbolTable);
+
+            DataType returnType = bodyStmt.getReturnType();
+
+            if(returnType != null) {
+                if(this.returnType == null) {
+                    this.returnType = returnType;
+                } else if(this.returnType != returnType) {
+                    // this might print the wrong line number...
+                    throw new SemanticError("Body does not always return same data type", bodyStmt.getToken());
+                }
+            }
+
+            if(bodyStmt.allReturn()) {
+                this.returns = true;
+            }
+        }
+
+        this.returnStmt.validateTree(symbolTable);
+
+        if(this.returnStmt.getReturnType() == null) {
+            if(!this.returns && this.returnType != null) {
+                // not all paths return but at least one does
+                // use first body stmt for token because there's no return token
+                throw new SemanticError("Only some paths of function return", this.bodyStmts.get(0).getToken());
+            }
+        } else {
+            if(this.returns == true) {
+                // all paths return before the end but another
+                throw new SemanticError("Unreachable return at end", this.returnStmt.getToken());
+            } else if(this.returnType == null) {
+                this.returnType = this.returnStmt.getReturnType();
+            } else if (this.returnType != this.returnStmt.getReturnType()) {
+                // return type in loops/if doesn't match one at end
+                throw new SemanticError("Return types do not match", this.returnStmt.getToken());
+            }
+            this.returns = true;
+        }
+
+        return true;
+        */
     }
 
     @Override
