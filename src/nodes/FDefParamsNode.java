@@ -86,12 +86,8 @@ public class FDefParamsNode implements JottTree {
     public boolean validateTree(SymbolTable symbolTable) throws SemanticError {
         // Validate the main parameter (id and type), if present
         if (id != null && type != null) {
-            if (!id.validateTree(symbolTable)) {
-                throw new SemanticError("Invalid parameter name: " + id.convertToJott(), null);
-            }
-            if (!type.validateTree(symbolTable)) {
-                throw new SemanticError("Invalid parameter type: " + type.convertToJott(), null);
-            }
+            id.validateTree(symbolTable);
+            type.validateTree(symbolTable);
         }
     
         // Validate each additional parameter in fDefParamsTNode

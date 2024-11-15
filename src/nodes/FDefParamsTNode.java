@@ -62,14 +62,9 @@ public class FDefParamsTNode implements JottTree {
 
     @Override
     public boolean validateTree(SymbolTable symbolTable) throws SemanticError {
-        // Validate the identifier using IDNode's validateTree method
-        if (!id.validateTree(symbolTable)) {
-            throw new SemanticError("Invalid identifier in function parameter definition: " + id.convertToJott(), null);
-        }
-    
-        // Validate the type using TypeNode's validateTree method
-        if (!type.validateTree(symbolTable)) {
-            throw new SemanticError("Invalid type in function parameter definition: " + type.convertToJott(), null);
+        if (id != null && type != null) {
+            id.validateTree(symbolTable);
+            type.validateTree(symbolTable);
         }
     
         return true;
