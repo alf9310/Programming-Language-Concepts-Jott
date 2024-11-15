@@ -31,10 +31,16 @@ public class ElseNode implements JottTree {
     }
 
     public boolean allReturn() {
+        if(this.body == null) {
+            return false;
+        }
         return this.body.allReturn();
     }
 
     public Token getToken() {
+        if(this.body == null) {
+            return null;
+        }
         return this.body.getToken();
     }
 

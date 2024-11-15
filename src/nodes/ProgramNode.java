@@ -68,6 +68,9 @@ public class ProgramNode implements JottTree{
         }
 
         if(mainToken == null) {
+            if(this.fDefNodes.isEmpty()) {
+                // TODO: throw special error without token (because we don't have a token to use)
+            }
             Token infoToken = this.fDefNodes.get(0).funcName.getToken();
             throw new SemanticError("Program does not have a main function", infoToken);
         }
