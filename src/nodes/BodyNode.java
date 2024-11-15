@@ -88,6 +88,37 @@ public class BodyNode implements JottTree {
                 throw new SemanticError("Unreachable code after return statement", bodyStmt.getToken());
             }
 
+            bodyStmt.validateTree(symbolTable); // should check return types match in here
+
+            if(bodyStmt.allReturn()) {
+                this.returns = true;
+            }
+            if(bodyStmt.getReturnType() != null) {
+                this.returnType = bodyStmt.getReturnType();
+            }
+        }
+
+        // handle return at end of body
+        this.returnStmt.validateTree(symbolTable);  // should do return typechecking in here
+
+        if(this.returnStmt.getReturnType() != null) {
+            if(this.returns == true) {
+                // all paths return before the end but another exists
+                throw new SemanticError("Unreachable return at end", this.returnStmt.getToken());
+            }
+
+            this.returns = true;    // all paths return if return is at end of body
+            this.returnType = this.returnStmt.getReturnType();
+        }
+
+        return true;
+
+        /*
+        for(BodyStmtNode bodyStmt: this.bodyStmts) {
+            if(this.returns == true) {
+                throw new SemanticError("Unreachable code after return statement", bodyStmt.getToken());
+            }
+
             bodyStmt.validateTree(symbolTable);
 
             DataType returnType = bodyStmt.getReturnType();
@@ -128,7 +159,7 @@ public class BodyNode implements JottTree {
         }
 
         return true;
-        
+        */
     }
 
     @Override

@@ -78,14 +78,28 @@ public class ReturnStmtNode implements JottTree {
     public boolean validateTree(SymbolTable symbolTable) throws Exception {
         // Return type matches return statement
         if(this.expr == null) {
-            // body doesn't return
+            // body w/o return is valid
             return true;
         } else {
             this.expr.validateTree(symbolTable);
+
             this.returnType = this.expr.getType(symbolTable);
+
+            String func = symbolTable.current_scope;
+            FunctionInfo info = symbolTable.getFunction(func);
+            DataType funcReturn = info.getReturnDataType();
+            if(funcReturn == null) {
+                throw new SemanticError("Function return should be one of the data types provided or VOID", this.expr.getToken());
+            }
+
             if(this.returnType == null || this.returnType == DataType.VOID) {
                 // should not return null/VOID
                 throw new SemanticError("Functions cannot return VOID", this.expr.getToken());
+            } else if(funcReturn == DataType.VOID) {
+                // function shouldn't return
+                throw new SemanticError("Function with VOID return type shouldn't return", this.expr.getToken());
+            } else if(funcReturn != this.returnType) {
+                throw new SemanticError(func + " should return type " + funcReturn + ", returns " + this.returnType + " instead", this.expr.getToken());
             }
             return true;
         }

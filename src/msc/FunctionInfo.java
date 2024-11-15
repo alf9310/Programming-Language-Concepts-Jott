@@ -34,6 +34,21 @@ public class FunctionInfo {
     public String getReturnType() {
         return returnType;
     }
+    public DataType getReturnDataType() {
+        if(this.returnType.equals("BOOLEAN")) {
+            return DataType.BOOLEAN;
+        } else if(this.returnType.equals("STRING")) {
+            return DataType.STRING;
+        } else if(this.returnType.equals("INTEGER")) {
+            return DataType.INTEGER;
+        } else if(this.returnType.equals("DOUBLE")) {
+            return DataType.DOUBLE;
+        } else if(this.returnType.equals("VOID")) {
+            return DataType.VOID;
+        } else {
+            return null;    // maybe throw exception? this shouldn't be possible tho
+        }
+    }
 
     public HashMap<String, String> getParameterTypes() {
         return parameterTypes;

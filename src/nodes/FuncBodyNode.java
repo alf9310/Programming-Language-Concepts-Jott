@@ -1,13 +1,13 @@
 package nodes;
 
-import java.util.ArrayList;
-
+import errors.SemanticError;
 import errors.SyntaxError;
+import java.util.ArrayList;
+import msc.*;
 import provided.JottParser;
 import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
-import msc.*;
 
 /*
  * Function Body Node
@@ -89,6 +89,18 @@ public class FuncBodyNode implements JottTree {
         this.body.validateTree(symbolTable);
         this.returns = this.body.allReturn();
         this.returnType = this.body.getReturnType();
+
+        String func = symbolTable.current_scope;
+        FunctionInfo info = symbolTable.getFunction(func);
+        DataType funcReturn = info.getReturnDataType();
+        if(funcReturn == null) {
+            throw new SemanticError("Function return should be one of the data types provided or VOID", this.body.getToken());
+        }
+
+        if(funcReturn != DataType.VOID && !this.returns) {
+            // function should return, but not all paths do
+            throw new SemanticError("Function should return " + funcReturn + ", but not all paths are returnable", this.body.getToken());
+        }
 
         return true;
     }

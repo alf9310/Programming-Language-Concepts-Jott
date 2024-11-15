@@ -28,6 +28,10 @@ public class ElseIfNode implements JottTree {
         return this.body.getReturnType();
     }
 
+    public boolean allReturn() {
+        return this.body.allReturn();
+    }
+
     public Token getToken() {
         if(this.body.getToken() != null) {
             return this.body.getToken();
