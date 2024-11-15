@@ -2,6 +2,7 @@ package nodes;
 
 import errors.SyntaxError;
 import java.util.ArrayList;
+
 import provided.JottParser;
 import provided.JottTree;
 import provided.Token;

@@ -1,6 +1,7 @@
 package nodes;
 
 import java.util.ArrayList;
+
 import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
