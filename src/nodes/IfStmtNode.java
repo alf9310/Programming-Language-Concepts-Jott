@@ -1,5 +1,6 @@
 package nodes;
 
+import errors.SemanticError;
 import errors.SyntaxError;
 import java.util.ArrayList;
 import msc.*;
@@ -17,6 +18,8 @@ public class IfStmtNode implements BodyStmtNode {
     BodyNode body;
     ArrayList<ElseIfNode> elseIfs;
     ElseNode elseBlock;
+    boolean allReturn;      // use to check if if/elif/else is "returnable" or if we need another return outside of this
+    DataType returnType;    // use to store type of value being returned by all if/elif/else
 
     public IfStmtNode(ExpressionNode exprNode, BodyNode bodyNode, ArrayList<ElseIfNode> elseIfNodes,
             ElseNode elseNode) {
@@ -24,6 +27,18 @@ public class IfStmtNode implements BodyStmtNode {
         this.body = bodyNode;
         this.elseIfs = elseIfNodes;
         this.elseBlock = elseNode;
+        this.allReturn = false;
+        this.returnType = null;
+    }
+
+    @Override
+    public boolean allReturn() {
+        return this.allReturn;
+    }
+
+    @Override
+    public DataType getReturnType() {
+        return this.returnType;
     }
 
     public static IfStmtNode parse(ArrayList<Token> tokens) throws Exception {
@@ -97,7 +112,11 @@ public class IfStmtNode implements BodyStmtNode {
 
     @Override
     public Token getToken() {
-        return this.expr.getToken();
+        if(this.body.getToken() != null) {
+            return this.body.getToken();
+        } else {
+            return this.expr.getToken();
+        }
     }
 
     @Override
@@ -111,9 +130,69 @@ public class IfStmtNode implements BodyStmtNode {
     }
 
     @Override
-    public boolean validateTree(SymbolTable symbolTable) {
+    public boolean validateTree(SymbolTable symbolTable) throws Exception {
         // To be implemented in phase 3
-        throw new UnsupportedOperationException("Validation not supported yet.");
+        this.allReturn = true;
+        DataType returnVal = null;
+
+        this.expr.validateTree(symbolTable);
+
+        if(this.expr.getType(symbolTable) != DataType.BOOLEAN) {
+            throw new SemanticError("Expression in if statement must be a boolean", this.expr.getToken());
+        }
+
+        this.body.validateTree(symbolTable);
+
+        // handle first return
+        if(this.body.returnStmt != null) {
+            returnVal = this.body.getReturnType();
+            if(returnVal == null) {
+                this.allReturn = false;
+            } else {
+                this.returnType = returnVal;
+            }
+        }
+
+        for(ElseIfNode elseIf : this.elseIfs) {
+            elseIf.validateTree(symbolTable);
+            // check if each else/if block returns
+            returnVal = elseIf.getReturnType();
+            if(returnVal == null) {
+                this.allReturn = false;
+            } else {
+                if(this.returnType == null) {
+                    this.returnType = returnVal;
+                } else if(this.returnType != returnVal) {
+                    // return types don't match!
+                    
+                    throw new SemanticError("Return types throughout if/elif/else block don't match", elseIf.getToken());
+                }
+                // else, returnType and returnVal match
+            }
+        }
+
+        if(!this.elseBlock.validateTree(symbolTable)) {
+            this.allReturn = false;
+            return false;
+        }
+
+        returnVal = this.getReturnType();
+        if(returnVal == null) {
+            this.allReturn = false;
+        } else {
+            if(this.returnType == null) {
+                this.returnType = returnVal;
+            } else if(this.returnType != returnVal) {
+                if(this.elseBlock.getToken() != null) {
+                    throw new SemanticError("Return types throughout if/elif/else block don't match", this.elseBlock.getToken());
+                } else {
+                    throw new SemanticError("Return types throughout if/elif/else block don't match", this.expr.getToken());
+                }
+            }
+            // else, returnType and returnVal match
+        }
+
+        return true;
     }
 
     @Override

@@ -21,6 +21,16 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
         this.params = params;
     }
 
+    @Override
+    public boolean allReturn() {
+        return false;
+    }
+
+    @Override
+    public DataType getReturnType() {
+        return null;
+    }
+
     public static FunctionCallNode parse(ArrayList<Token> tokens) throws Exception {
 
         // Check if there is tokens

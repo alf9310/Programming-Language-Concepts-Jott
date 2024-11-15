@@ -1,13 +1,13 @@
 package nodes;
 
-import java.util.ArrayList;
-
+import errors.SemanticError;
 import errors.SyntaxError;
+import java.util.ArrayList;
+import msc.*;
 import provided.JottParser;
 import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
-import msc.*;
 
 /*
  * Else If Node
@@ -22,6 +22,18 @@ public class ElseIfNode implements JottTree {
     public ElseIfNode(ExpressionNode exprNode, BodyNode bodyNode) {
         this.expr = exprNode;
         this.body = bodyNode;
+    }
+
+    public DataType getReturnType() throws Exception {
+        return this.body.getReturnType();
+    }
+
+    public Token getToken() {
+        if(this.body.getToken() != null) {
+            return this.body.getToken();
+        } else {
+            return this.expr.getToken();
+        }
     }
 
     // parse
@@ -94,9 +106,14 @@ public class ElseIfNode implements JottTree {
     }
 
     @Override
-    public boolean validateTree(SymbolTable symbolTable) {
+    public boolean validateTree(SymbolTable symbolTable) throws Exception {
         // To be implemented in phase 3
-        throw new UnsupportedOperationException("Validation not supported yet.");
+        this.expr.validateTree(symbolTable);
+        this.body.validateTree(symbolTable);
+        if(this.expr.getType(symbolTable) != DataType.BOOLEAN) {
+            throw new SemanticError("Expression in if statement must be a boolean", this.expr.getToken());
+        }
+        return true;
     }
 
     @Override

@@ -2,11 +2,11 @@ package nodes;
 
 import errors.SyntaxError;
 import java.util.ArrayList;
+import msc.*;
 import provided.JottParser;
 import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
-import msc.*;
 
 /*
  * Else Node
@@ -21,6 +21,17 @@ public class ElseNode implements JottTree {
 
     public ElseNode(BodyNode bodyNode) {
         this.body = bodyNode;
+    }
+
+    public DataType getReturnType() throws Exception {
+        if(this.body == null) {
+            return null;
+        }
+        return this.body.getReturnType();
+    }
+
+    public Token getToken() {
+        return this.body.getToken();
     }
 
     public static ElseNode parse(ArrayList<Token> tokens) throws Exception {
@@ -70,9 +81,12 @@ public class ElseNode implements JottTree {
     }
 
     @Override
-    public boolean validateTree(SymbolTable symbolTable) {
+    public boolean validateTree(SymbolTable symbolTable) throws Exception {
         // To be implemented in phase 3
-        throw new UnsupportedOperationException("Validation not supported yet.");
+        if(this.body != null) {
+            return this.body.validateTree(symbolTable);
+        }
+        return true;
     }
 
     @Override

@@ -23,6 +23,16 @@ public class AssignmentNode implements BodyStmtNode {
         this.expression = expression;
     }
 
+    @Override
+    public boolean allReturn() {
+        return false;
+    }
+
+    @Override
+    public DataType getReturnType() {
+        return null;
+    }
+
     // Parsing
     public static AssignmentNode parse(ArrayList<Token> tokens) throws Exception {
         // Check if there is tokens

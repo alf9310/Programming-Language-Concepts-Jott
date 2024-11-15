@@ -131,7 +131,7 @@ public class FuncDefNode implements JottTree{
     }
 
     @Override
-    public boolean validateTree(SymbolTable symbolTable) throws SemanticError {
+    public boolean validateTree(SymbolTable symbolTable) throws Exception {
 
         String _name = this.funcName.getToken().getToken();
         String _returnType = this.returnType.type.getToken();

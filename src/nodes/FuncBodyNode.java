@@ -16,10 +16,22 @@ import msc.*;
 public class FuncBodyNode implements JottTree {
     ArrayList<VarDecNode> varDecs;
     BodyNode body;
+    boolean returns;
+    DataType returnType;
 
     public FuncBodyNode(ArrayList<VarDecNode> varDecs, BodyNode body) {
         this.varDecs = varDecs;
         this.body = body;
+        this.returns = false;
+        this.returnType = null;
+    }
+
+    boolean allReturn() {
+        return this.returns;
+    }
+
+    DataType getReturnType() {
+        return this.returnType;
     }
 
     // parse
@@ -67,11 +79,18 @@ public class FuncBodyNode implements JottTree {
     }
 
     @Override
-    public boolean validateTree(SymbolTable symbolTable) {
+    public boolean validateTree(SymbolTable symbolTable) throws Exception {
         // To be implemented in phase 3
         // Body can not have funcdef inside it
+        for(VarDecNode varDec: this.varDecs) {
+            varDec.validateTree(symbolTable);
+        }
 
-        throw new UnsupportedOperationException("Validation not supported yet.");
+        this.body.validateTree(symbolTable);
+        this.returns = this.body.allReturn();
+        this.returnType = this.body.getReturnType();
+
+        return true;
     }
 
     @Override
