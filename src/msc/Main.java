@@ -43,12 +43,12 @@ public class Main {
             return;
         }
 
-        try {
-            root.execute();
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-            return;
-        }
+        // try {
+        //     // root.execute();
+        // } catch (Exception e) {
+        //     System.err.println(e.getMessage());
+        //     return;
+        // }
         //System.out.printf("Interpreter succeeded for " + filename + "!!!");
     }
 
