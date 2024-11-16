@@ -30,6 +30,12 @@ public interface BodyStmtNode extends JottTree {
                 case "While" -> {
                     return WhileNode.parse(tokens);
                 }
+                case "Elseif" -> {
+                    throw new SyntaxError("Elseif without if", tokens.get(0));
+                }
+                case "Else" -> {
+                    throw new SyntaxError("Else without if", tokens.get(0));
+                }
                 default -> {
                     return AssignmentNode.parse(tokens);
                 }
