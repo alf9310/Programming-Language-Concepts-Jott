@@ -24,7 +24,7 @@ public class Main {
                 return;
             }
 
-            System.out.println(tokenListString(tokens));
+            // System.out.println(tokenListString(tokens));
     
             try {
                 root = JottParser.parse(tokens);
@@ -38,7 +38,7 @@ public class Main {
             return;
         }
 
-        System.err.println(symbolTable);
+        // System.err.println(symbolTable);
         try {
             root.validateTree(symbolTable);
         } catch (Exception e) {

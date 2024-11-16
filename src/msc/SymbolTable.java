@@ -113,11 +113,8 @@ public class SymbolTable {
     }
 
     public boolean existsInScope(String varName) {
-        // System.out.println("VARNAME" + varName);
-        // System.out.println("CURRENT SCOPE" + current_scope);
 
         if (current_scope == null) {
-            // System.out.println("NO SCOPE ");
 
             return false;
             // throw new RuntimeException("Not in any scope!");
@@ -125,7 +122,6 @@ public class SymbolTable {
 
         // function exist in own scope
         if (current_scope == varName) {
-            // System.out.println("IN MY OWN SCOPE " );
             return true;
         }
 
