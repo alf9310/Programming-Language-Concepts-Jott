@@ -86,6 +86,9 @@ public class FDefParamsNode implements JottTree {
             return true;
         }
 
+        // 
+        symbolTable.addVar(new VarInfo(id.convertToJott(), type.getType(), null));
+
         // Validate the main parameter (id and type), if present
         if (id != null && type != null) {
             id.validateTree(symbolTable);
