@@ -3,6 +3,7 @@ package nodes;
 import errors.SemanticError;
 import errors.SyntaxError;
 import java.util.ArrayList;
+import java.util.HashMap;
 import msc.*;
 import provided.JottParser;
 import provided.JottTree;
@@ -87,7 +88,7 @@ public class ElseIfNode implements JottTree {
         }
         tokens.remove(0);
 
-        BodyNode body = BodyNode.parse(tokens);
+        BodyNode body = BodyNode.parse(tokens); 
 
         if (tokens.isEmpty()) {
             throw new SyntaxError("Else if statement is missing a right brace }", JottParser.finalToken);
@@ -112,8 +113,11 @@ public class ElseIfNode implements JottTree {
     @Override
     public boolean validateTree(SymbolTable symbolTable) throws Exception {
         // To be implemented in phase 3
+        //System.out.println("Validating expression");
         this.expr.validateTree(symbolTable);
+        //System.out.println("Validating body");
         this.body.validateTree(symbolTable);
+        //System.out.println("Checking if expression is boolean");
         if(this.expr.getType(symbolTable) != DataType.BOOLEAN) {
             throw new SemanticError("Expression in if statement must be a boolean", this.expr.getToken());
         }
@@ -129,102 +133,74 @@ public class ElseIfNode implements JottTree {
     public static void main(String[] args) {
         System.out.println("Testing ElseIfNode Main Method");
 
+        // Initialize SymbolTable
+        SymbolTable symbolTable = new SymbolTable();
+        symbolTable.addFunction("main", new FunctionInfo("main", "void", new HashMap<>()));
+        symbolTable.enterScope("main");
+        symbolTable.addFunction("func1", new FunctionInfo("func1", "Integer", new HashMap<>()));
+        symbolTable.enterScope("func1");
+    
         // Valid Test Case
         try {
             System.out.println("\nTest Case 1: Valid Elseif");
-            // Add tokens for Elseif[ someExpression ]{ someBody }
             ArrayList<Token> tokens = new ArrayList<>();
             tokens.add(new Token("Elseif", "testFile.jott", 1, TokenType.ID_KEYWORD)); // Elseif
             tokens.add(new Token("[", "testFile.jott", 1, TokenType.L_BRACKET)); // [
-            tokens.add(new Token("someExpression", "testFile.jott", 1, TokenType.ID_KEYWORD)); // someExpression
+            tokens.add(new Token("True", "testFile.jott", 1, TokenType.ID_KEYWORD)); // True
             tokens.add(new Token("]", "testFile.jott", 1, TokenType.R_BRACKET)); // ]
             tokens.add(new Token("{", "testFile.jott", 1, TokenType.L_BRACE)); // {
-            tokens.add(new Token("someBody", "testFile.jott", 1, TokenType.ID_KEYWORD)); // someBody
+            tokens.add(new Token("Return", "testFile.jott", 1, TokenType.ID_KEYWORD)); // Return
+            tokens.add(new Token("42", "testFile.jott", 1, TokenType.NUMBER)); // someBody
+            tokens.add(new Token(";", "testFile.jott", 1, TokenType.SEMICOLON)); // ;
             tokens.add(new Token("}", "testFile.jott", 1, TokenType.R_BRACE)); // }
-
-            // Parse and print result
+    
+            // Parse the ElseIfNode
             ElseIfNode elseIfNode = ElseIfNode.parse(tokens);
-            System.out.println("Parsed ElseIfNode: " + elseIfNode.convertToJott());
+    
+            boolean isValid = elseIfNode.validateTree(symbolTable);
+            System.out.println("Validation Result: " + isValid);
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
         }
-
-        // Failing Test Case 1: Missing "Elseif" keyword
+    
+        // Failing Test Case 1: Non-Boolean Expression
         try {
-            System.out.println("\nTest Case 2: Missing Elseif keyword");
-            ArrayList<Token> tokens = new ArrayList<>();
-            tokens.add(new Token("[", "testFile.jott", 1, TokenType.L_BRACKET)); // Missing Elseif
-            tokens.add(new Token("someExpression", "testFile.jott", 1, TokenType.ID_KEYWORD));
-            tokens.add(new Token("]", "testFile.jott", 1, TokenType.R_BRACKET));
-            tokens.add(new Token("{", "testFile.jott", 1, TokenType.L_BRACE));
-            tokens.add(new Token("someBody", "testFile.jott", 1, TokenType.ID_KEYWORD));
-            tokens.add(new Token("}", "testFile.jott", 1, TokenType.R_BRACE));
-
-            ElseIfNode.parse(tokens);
-        } catch (Exception e) {
-            System.err.println("Expected Error: " + e.getMessage());
-        }
-
-        // Failing Test Case 2: Missing Left Bracket
-        try {
-            System.out.println("\nTest Case 3: Missing Left Bracket");
-            ArrayList<Token> tokens = new ArrayList<>();
-            tokens.add(new Token("Elseif", "testFile.jott", 1, TokenType.ID_KEYWORD)); // Elseif
-            tokens.add(new Token("someExpression", "testFile.jott", 1, TokenType.ID_KEYWORD)); // Missing [
-            tokens.add(new Token("]", "testFile.jott", 1, TokenType.R_BRACKET));
-            tokens.add(new Token("{", "testFile.jott", 1, TokenType.L_BRACE));
-            tokens.add(new Token("someBody", "testFile.jott", 1, TokenType.ID_KEYWORD));
-            tokens.add(new Token("}", "testFile.jott", 1, TokenType.R_BRACE));
-
-            ElseIfNode.parse(tokens);
-        } catch (Exception e) {
-            System.err.println("Expected Error: " + e.getMessage());
-        }
-
-        // Failing Test Case 3: Missing Right Bracket
-        try {
-            System.out.println("\nTest Case 4: Missing Right Bracket");
+            System.out.println("\nTest Case 2: Non-Boolean Expression");
             ArrayList<Token> tokens = new ArrayList<>();
             tokens.add(new Token("Elseif", "testFile.jott", 1, TokenType.ID_KEYWORD)); // Elseif
             tokens.add(new Token("[", "testFile.jott", 1, TokenType.L_BRACKET)); // [
-            tokens.add(new Token("someExpression", "testFile.jott", 1, TokenType.ID_KEYWORD)); // someExpression
-            tokens.add(new Token("{", "testFile.jott", 1, TokenType.L_BRACE));
-            tokens.add(new Token("someBody", "testFile.jott", 1, TokenType.ID_KEYWORD));
-            tokens.add(new Token("}", "testFile.jott", 1, TokenType.R_BRACE));
-
-            ElseIfNode.parse(tokens);
-        } catch (Exception e) {
-            System.err.println("Expected Error: " + e.getMessage());
-        }
-
-        // Failing Test Case 4: Missing Left Brace
-        try {
-            System.out.println("\nTest Case 5: Missing Left Brace");
-            ArrayList<Token> tokens = new ArrayList<>();
-            tokens.add(new Token("Elseif", "testFile.jott", 1, TokenType.ID_KEYWORD)); // Elseif
-            tokens.add(new Token("[", "testFile.jott", 1, TokenType.L_BRACKET)); // [
-            tokens.add(new Token("someExpression", "testFile.jott", 1, TokenType.ID_KEYWORD)); // someExpression
-            tokens.add(new Token("]", "testFile.jott", 1, TokenType.R_BRACKET)); // ]
-            tokens.add(new Token("someBody", "testFile.jott", 1, TokenType.ID_KEYWORD)); // Missing {
-            tokens.add(new Token("}", "testFile.jott", 1, TokenType.R_BRACE));
-
-            ElseIfNode.parse(tokens);
-        } catch (Exception e) {
-            System.err.println("Expected Error: " + e.getMessage());
-        }
-
-        // Failing Test Case 5: Missing Right Brace
-        try {
-            System.out.println("\nTest Case 6: Missing Right Brace");
-            ArrayList<Token> tokens = new ArrayList<>();
-            tokens.add(new Token("Elseif", "testFile.jott", 1, TokenType.ID_KEYWORD)); // Elseif
-            tokens.add(new Token("[", "testFile.jott", 1, TokenType.L_BRACKET)); // [
-            tokens.add(new Token("someExpression", "testFile.jott", 1, TokenType.ID_KEYWORD)); // someExpression
+            tokens.add(new Token("42", "testFile.jott", 1, TokenType.NUMBER)); // 42 (not a boolean)
             tokens.add(new Token("]", "testFile.jott", 1, TokenType.R_BRACKET)); // ]
             tokens.add(new Token("{", "testFile.jott", 1, TokenType.L_BRACE)); // {
-            tokens.add(new Token("someBody", "testFile.jott", 1, TokenType.ID_KEYWORD)); // someBody
+            tokens.add(new Token("Return", "testFile.jott", 1, TokenType.ID_KEYWORD)); // Return
+            tokens.add(new Token("1", "testFile.jott", 1, TokenType.NUMBER)); // someBody
+            tokens.add(new Token(";", "testFile.jott", 1, TokenType.SEMICOLON)); // ;
+            tokens.add(new Token("}", "testFile.jott", 1, TokenType.R_BRACE)); // }
+    
+            ElseIfNode elseIfNode = ElseIfNode.parse(tokens);
 
-            ElseIfNode.parse(tokens); // Missing }
+            elseIfNode.validateTree(symbolTable); // This should throw an error
+        } catch (Exception e) {
+            System.err.println("Expected Error: " + e.getMessage());
+        }
+    
+        // Failing Test Case 2: Invalid Body Return
+        try {
+            System.out.println("\nTest Case 3: Invalid Body Return");
+            ArrayList<Token> tokens = new ArrayList<>();
+            tokens.add(new Token("Elseif", "testFile.jott", 1, TokenType.ID_KEYWORD)); // Elseif
+            tokens.add(new Token("[", "testFile.jott", 1, TokenType.L_BRACKET)); // [
+            tokens.add(new Token("true", "testFile.jott", 1, TokenType.ID_KEYWORD)); // true
+            tokens.add(new Token("]", "testFile.jott", 1, TokenType.R_BRACKET)); // ]
+            tokens.add(new Token("{", "testFile.jott", 1, TokenType.L_BRACE)); // {
+            tokens.add(new Token("Return", "testFile.jott", 1, TokenType.ID_KEYWORD)); // Return
+            tokens.add(new Token("42.5", "testFile.jott", 1, TokenType.NUMBER)); // Invalid type
+            tokens.add(new Token(";", "testFile.jott", 1, TokenType.SEMICOLON)); // ;
+            tokens.add(new Token("}", "testFile.jott", 1, TokenType.R_BRACE)); // }
+    
+            ElseIfNode elseIfNode = ElseIfNode.parse(tokens);
+
+            elseIfNode.validateTree(symbolTable); // This should throw an error
         } catch (Exception e) {
             System.err.println("Expected Error: " + e.getMessage());
         }

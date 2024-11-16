@@ -88,6 +88,7 @@ public class BodyNode implements JottTree {
                 throw new SemanticError("Unreachable code after return statement", bodyStmt.getToken());
             }
 
+            //System.out.println("Handling Body statement(s)");
             bodyStmt.validateTree(symbolTable); // should check return types match in here
 
             if(bodyStmt.allReturn()) {
@@ -98,6 +99,7 @@ public class BodyNode implements JottTree {
             }
         }
 
+        //System.out.println("Handling Return");
         // handle return at end of body
         this.returnStmt.validateTree(symbolTable);  // should do return typechecking in here
 
@@ -203,8 +205,10 @@ public class BodyNode implements JottTree {
         symbolTable.addFunction("func2", new FunctionInfo("func2", "Integer", new HashMap<>()));    
         symbolTable.enterScope("func2");
         symbolTable.addVar(new VarInfo("z", DataType.INTEGER, null)); // Variable z as INTEGER (no initial value)
+        /*
         try {
             // Test Case 2: BodyNode with unreachable code after return
+            // NOTE: Parser already removes unreachable code 
             ArrayList<Token> tokens2 = new ArrayList<>();
             tokens2.add(new Token("z", "testFile.jott", 3, TokenType.ID_KEYWORD)); // z
             tokens2.add(new Token("=", "testFile.jott", 3, TokenType.ASSIGN)); // =
@@ -225,6 +229,7 @@ public class BodyNode implements JottTree {
         } catch (Exception e){
             System.err.println("Expected Error: " + e.getMessage());
         }
+        */
         try{
             // Test Case 3: Invalid return type mismatch
             ArrayList<Token> tokens3 = new ArrayList<>();
@@ -247,6 +252,7 @@ public class BodyNode implements JottTree {
         symbolTable.addVar(new VarInfo("z", DataType.INTEGER, null)); // Variable z as INTEGER (no initial value)
         try {
             // Test Case 4: Missing return statement in non-void function
+            // NOTE: This will be tested in FunctionBodNode, not BodyNode 
             ArrayList<Token> tokens4 = new ArrayList<>();
             tokens4.add(new Token("z", "testFile.jott", 7, TokenType.ID_KEYWORD)); // z
             tokens4.add(new Token("=", "testFile.jott", 7, TokenType.ASSIGN)); // =

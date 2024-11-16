@@ -98,12 +98,19 @@ public class AssignmentNode implements BodyStmtNode {
         System.out.println("Testing AssignmentNode Main Method");
         SymbolTable symbolTable = new SymbolTable();
         symbolTable.addFunction("main", new FunctionInfo("main", "void", new HashMap<>()));
-        symbolTable.enterScope("main");
+        Boolean succeeded = symbolTable.enterScope("main");
+        if (!succeeded) {
+            throw new UnsupportedOperationException("failed to enter scope!");
+        }
+        
     
         try {
             // Declare variable `var` as an integer
             VarInfo varInfo = new VarInfo("var", DataType.INTEGER, null);
-            symbolTable.addVar(varInfo);
+            succeeded = symbolTable.addVar(varInfo);
+            if (!succeeded) {
+                throw new UnsupportedOperationException("failed to add var");
+            }
     
             // Test Case 1: Valid assignment, var = 4;
             ArrayList<Token> tokens1 = new ArrayList<>();
