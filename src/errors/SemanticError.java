@@ -12,4 +12,9 @@ public class SemanticError extends GenericError {
     public SemanticError(String message, Token token) {
         super("Semantic Error", message, token);
     }
+
+    // Constructor that takes just a message
+    public SemanticError(String message) {
+        super("Semantic Error", message);
+    }
 }

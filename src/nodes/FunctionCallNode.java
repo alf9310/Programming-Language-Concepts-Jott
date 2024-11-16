@@ -134,7 +134,7 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
         int len = 0;
         if(this.params != null) {
             // first param plus number of other params (paramst)
-            len = 1 + this.params.paramst.size();
+            len = this.params.paramst.size();
         }
         if(len != params.size()) {
             throw new SemanticError(this.id.getToken().getToken() + " should take " + params.size() + " parameters, provided " + len + " instead", this.id.getToken());

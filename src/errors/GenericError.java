@@ -11,4 +11,9 @@ public abstract class GenericError extends Exception{
         super("\n" + errorType + ":\n" + message + "\n" + token.getFilename() + ":" + token.getLineNum());
     }
 
+    // Constructor that takes just a message
+    public GenericError(String errorType, String message) {
+        super("\n" + errorType + ":\n" + message + "\n");
+    }
+
 }

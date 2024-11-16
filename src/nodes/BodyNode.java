@@ -101,7 +101,15 @@ public class BodyNode implements JottTree {
 
         System.out.println("Handling Return");
 
+
         // Handle the return statement, if it exists
+
+        // Don't need to return for main
+        if(symbolTable.current_scope.equals("main")){
+            return true;
+        }
+
+
         if (this.returnStmt != null) {
             this.returnStmt.validateTree(symbolTable);
 
@@ -121,7 +129,7 @@ public class BodyNode implements JottTree {
         }
 
         if (!this.returns) {
-            throw new SemanticError("Not all code paths return a value", getToken());
+            throw new SemanticError("Not all code paths return a value");
         }
         /*
         if(this.returnStmt.getReturnType() != null) {
