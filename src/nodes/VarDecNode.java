@@ -56,7 +56,6 @@ public class VarDecNode implements JottTree {
     @Override
     public boolean validateTree(SymbolTable symbolTable) throws Exception {
         type.validateTree(symbolTable);
-        id.validateTree(symbolTable);
 
         // Ensure variable is unique in the current scope
         if (symbolTable.existsInScope(id.convertToJott())) {
@@ -67,6 +66,8 @@ public class VarDecNode implements JottTree {
         DataType dataType = type.getType();
         VarInfo variable = new VarInfo(id.convertToJott(), dataType, null);
         symbolTable.addVar(variable);
+
+        id.validateTree(symbolTable);
 
         return true;
     }
