@@ -19,6 +19,23 @@ public class SymbolTable {
     // constructor
     public SymbolTable() {
         functionMap = new HashMap<>();
+
+        // builtin print, concat, length
+        HashMap<String, String> str_param = new HashMap<>();
+        str_param.put("str", "String");
+        FunctionInfo printInfo = new FunctionInfo("print", "void", str_param);
+        this.addFunction("print", printInfo);
+
+        HashMap<String, String> concat_param = new HashMap<>();
+        concat_param.put("str1", "String");
+        concat_param.put("str2", "String");
+        FunctionInfo concatInfo = new FunctionInfo("concat", "String", concat_param);
+        this.addFunction("concat", concatInfo);
+
+        HashMap<String, String> len_param = new HashMap<>();
+        len_param.put("str", "String");
+        FunctionInfo lengthInfo = new FunctionInfo("length", "Integer", len_param);
+        this.addFunction("length", lengthInfo);
     }
 
     //  entering scope function
