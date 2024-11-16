@@ -1,0 +1,22 @@
+#this will pass phase 3
+
+Def foo[Integer:i,String:s,Double:d,Boolean:b]:Void{
+    Integer x;
+    x = 5;
+    If[x > 5]{
+        ::print[x];
+    }
+    Elseif[d < 10.0] {
+        ::print[d];
+    }
+    Elseif[b] {
+        ::print[b];
+    }
+    Else{
+        ::print[s];
+    }
+}
+
+def main[]:Void{
+    ::foo[3, "bar", 8.6, False];
+}

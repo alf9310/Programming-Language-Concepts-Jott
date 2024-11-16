@@ -7,7 +7,7 @@
 ## Build Instructions
 In the Programming-Language-Language-Concepts-Jott directory, run
 ```
-java -XX:+ShowCodeDetailsInExceptionMessages -cp .\bin testers.JottParserTester
+java -XX:+ShowCodeDetailsInExceptionMessages -cp /home/stu15/s0/lk2958/Courses/CSCI344/Programming-Language-Concepts-Jott/bin msc.Main [jott file to run]
 ```
 ## Project Overview
 CSCI.344 - Programming Language Concepts Fall 2024
