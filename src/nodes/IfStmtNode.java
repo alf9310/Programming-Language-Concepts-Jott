@@ -139,87 +139,27 @@ public class IfStmtNode implements BodyStmtNode {
             throw new SemanticError("Expression in if statement must be a boolean", this.expr.getToken());
         }
 
+        // Check returns
         this.body.validateTree(symbolTable);
         if(!this.body.allReturn()) {
             this.allReturn = false;
         }
-        
         for(ElseIfNode elseIf: this.elseIfs) {
             elseIf.validateTree(symbolTable);
             if(!elseIf.allReturn()) {
                 this.allReturn = false;
             }
         }
-
-        this.elseBlock.validateTree(symbolTable);
-        if(!this.elseBlock.allReturn()) {
-            this.allReturn = false;
-        }
-
-        return true;
-        /*
-        this.allReturn = true;
-        DataType returnVal = null;
-
-        this.expr.validateTree(symbolTable);
-
-        if(this.expr.getType(symbolTable) != DataType.BOOLEAN) {
-            throw new SemanticError("Expression in if statement must be a boolean", this.expr.getToken());
-        }
-
-        this.body.validateTree(symbolTable);
-
-        // handle first return
-        if(this.body.returnStmt != null) {
-            returnVal = this.body.getReturnType();
-            if(returnVal == null) {
+        if (this.elseBlock.body != null) {
+            this.elseBlock.validateTree(symbolTable);
+            if(!this.elseBlock.allReturn()) {
                 this.allReturn = false;
-            } else {
-                this.returnType = returnVal;
             }
-        }
-
-        for(ElseIfNode elseIf : this.elseIfs) {
-            elseIf.validateTree(symbolTable);
-            // check if each else/if block returns
-            returnVal = elseIf.getReturnType();
-            if(returnVal == null) {
-                this.allReturn = false;
-            } else {
-                if(this.returnType == null) {
-                    this.returnType = returnVal;
-                } else if(this.returnType != returnVal) {
-                    // return types don't match!
-                    
-                    throw new SemanticError("Return types throughout if/elif/else block don't match", elseIf.getToken());
-                }
-                // else, returnType and returnVal match
-            }
-        }
-
-        if(!this.elseBlock.validateTree(symbolTable)) {
-            this.allReturn = false;
-            return false;
-        }
-
-        returnVal = this.getReturnType();
-        if(returnVal == null) {
-            this.allReturn = false;
         } else {
-            if(this.returnType == null) {
-                this.returnType = returnVal;
-            } else if(this.returnType != returnVal) {
-                if(this.elseBlock.getToken() != null) {
-                    throw new SemanticError("Return types throughout if/elif/else block don't match", this.elseBlock.getToken());
-                } else {
-                    throw new SemanticError("Return types throughout if/elif/else block don't match", this.expr.getToken());
-                }
-            }
-            // else, returnType and returnVal match
+            this.allReturn = false;
         }
 
         return true;
-        */
     }
 
     @Override

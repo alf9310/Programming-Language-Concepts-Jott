@@ -88,7 +88,7 @@ public class BodyNode implements JottTree {
                 throw new SemanticError("Unreachable code after return statement", bodyStmt.getToken());
             }
 
-            //System.out.println("Handling Body statement(s)");
+            System.out.println("Handling Body statement(s) " + bodyStmt.convertToJott());
             bodyStmt.validateTree(symbolTable); // should check return types match in here
 
             if(bodyStmt.allReturn()) {
@@ -99,10 +99,31 @@ public class BodyNode implements JottTree {
             }
         }
 
-        //System.out.println("Handling Return");
-        // handle return at end of body
-        this.returnStmt.validateTree(symbolTable);  // should do return typechecking in here
+        System.out.println("Handling Return");
 
+        // Handle the return statement, if it exists
+        if (this.returnStmt != null) {
+            this.returnStmt.validateTree(symbolTable);
+
+            if (this.returnStmt.getReturnType() != null) {
+                if (this.returns) {
+                    throw new SemanticError("Unreachable return at end", this.returnStmt.getToken());
+                }
+
+                this.returns = true; // Set that all paths return
+                if (this.returnType == null) {
+                    this.returnType = this.returnStmt.getReturnType();
+                } else if (this.returnType != this.returnStmt.getReturnType()) {
+                    throw new SemanticError(
+                        "Mismatched return types in return statement", this.returnStmt.getToken());
+                }
+            }
+        }
+
+        if (!this.returns) {
+            throw new SemanticError("Not all code paths return a value", getToken());
+        }
+        /*
         if(this.returnStmt.getReturnType() != null) {
             if(this.returns == true) {
                 // all paths return before the end but another exists
@@ -111,58 +132,10 @@ public class BodyNode implements JottTree {
 
             this.returns = true;    // all paths return if return is at end of body
             this.returnType = this.returnStmt.getReturnType();
-        }
+        } */
 
         return true;
     }
-
-        /*
-        for(BodyStmtNode bodyStmt: this.bodyStmts) {
-            if(this.returns == true) {
-                throw new SemanticError("Unreachable code after return statement", bodyStmt.getToken());
-            }
-
-            bodyStmt.validateTree(symbolTable);
-
-            DataType returnType = bodyStmt.getReturnType();
-
-            if(returnType != null) {
-                if(this.returnType == null) {
-                    this.returnType = returnType;
-                } else if(this.returnType != returnType) {
-                    // this might print the wrong line number...
-                    throw new SemanticError("Body does not always return same data type", bodyStmt.getToken());
-                }
-            }
-
-            if(bodyStmt.allReturn()) {
-                this.returns = true;
-            }
-        }
-
-        this.returnStmt.validateTree(symbolTable);
-
-        if(this.returnStmt.getReturnType() == null) {
-            if(!this.returns && this.returnType != null) {
-                // not all paths return but at least one does
-                // use first body stmt for token because there's no return token
-                throw new SemanticError("Only some paths of function return", this.bodyStmts.get(0).getToken());
-            }
-        } else {
-            if(this.returns == true) {
-                // all paths return before the end but another
-                throw new SemanticError("Unreachable return at end", this.returnStmt.getToken());
-            } else if(this.returnType == null) {
-                this.returnType = this.returnStmt.getReturnType();
-            } else if (this.returnType != this.returnStmt.getReturnType()) {
-                // return type in loops/if doesn't match one at end
-                throw new SemanticError("Return types do not match", this.returnStmt.getToken());
-            }
-            this.returns = true;
-        }
-
-        return true;
-        */
 
     @Override
     public void execute() {

@@ -9,11 +9,15 @@ public class Main {
     static SymbolTable symbolTable = new SymbolTable();
     
         public static void main(String[] args) {
+            /*
             if (args.length != 1) {
                 // System.err.println("Provide a single file name");
                 return;
             }
             String filename = args[0];
+            */
+            //String filename = "phase3testcases/funcCallParamInvalid.jott";
+            String filename = "phase3testcases/ifStmtReturns.jott"; 
     
             ArrayList<Token> tokens = JottTokenizer.tokenize(filename);
             if (tokens == null) {

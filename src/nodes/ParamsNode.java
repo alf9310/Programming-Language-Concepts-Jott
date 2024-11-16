@@ -86,9 +86,12 @@ public class ParamsNode implements JottTree {
 
         // TODO Check symbol table to make sure function is using correct param types &
         // number
-        expr.validateTree(symbolTable);
-        for (ParamsTNode paramt : paramst) {
-            paramt.validateTree(symbolTable);
+        // NEED TO MAKE SURE PARAMETER EXISTS
+        if (expr != null){
+            expr.validateTree(symbolTable);
+            for (ParamsTNode paramt : paramst) {
+                paramt.validateTree(symbolTable);
+            }
         }
 
         // Check that the number of parameters matches the function definition
