@@ -88,7 +88,7 @@ public class BodyNode implements JottTree {
                 throw new SemanticError("Unreachable code after return statement", bodyStmt.getToken());
             }
 
-            System.out.println("Handling Body statement(s) " + bodyStmt.convertToJott());
+            //System.out.println("Handling Body statement(s) " + bodyStmt.convertToJott());
             bodyStmt.validateTree(symbolTable); // should check return types match in here
 
             if(bodyStmt.allReturn()) {
@@ -99,7 +99,7 @@ public class BodyNode implements JottTree {
             }
         }
 
-        System.out.println("Handling Return");
+        //System.out.println("Handling Return");
 
 
         // Handle the return statement, if it exists
