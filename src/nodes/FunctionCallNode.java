@@ -109,6 +109,7 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
     
         FunctionInfo func = symbolTable.getFunction(id.getToken().getToken());
 
+        // testing
         System.out.println(func.getName() + ": " + func.getReturnDataType());
         return func.getReturnDataType();
     }

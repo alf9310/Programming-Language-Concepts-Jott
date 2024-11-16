@@ -76,6 +76,9 @@ public class ProgramNode implements JottTree{
             Token infoToken = this.fDefNodes.get(0).funcName.getToken();
             throw new SemanticError("Program does not have a main function", infoToken);
         }
+
+        // TODO: move this error handling to fdef
+        /*
         FunctionInfo main = symbolTable.getFunction("main");
         if(!main.getParameterTypes().isEmpty()) {
             throw new SemanticError("Main function should not take any parameters", mainToken);
@@ -83,6 +86,7 @@ public class ProgramNode implements JottTree{
         if(main.getReturnDataType() != DataType.VOID) {
             throw new SemanticError("Main function should have Void return type", mainToken);
         }
+            */
 
         return true;
     }

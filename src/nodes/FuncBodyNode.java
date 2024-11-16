@@ -87,6 +87,8 @@ public class FuncBodyNode implements JottTree {
             varDec.validateTree(symbolTable);
         }
 
+        System.out.println("testing returns");
+
         this.body.validateTree(symbolTable);
         this.returns = this.body.allReturn();
         this.returnType = this.body.getReturnType();
@@ -101,6 +103,10 @@ public class FuncBodyNode implements JottTree {
         if(funcReturn != DataType.VOID && !this.returns) {
             // function should return, but not all paths do
             throw new SemanticError("Function should return " + funcReturn + ", but not all paths are returnable", this.body.getToken());
+        }
+
+        if(this.returnType != null && this.returnType != DataType.VOID && funcReturn == DataType.VOID) {
+            throw new SemanticError("Void function should not return", this.body.getToken());
         }
 
         return true;

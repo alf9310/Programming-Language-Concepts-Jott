@@ -37,7 +37,12 @@ public class BodyNode implements JottTree {
     }
 
     public Token getToken() {
-        return this.returnStmt.getToken();
+        if(this.returnStmt != null) {
+            return this.returnStmt.getToken();
+        } else if(!this.bodyStmts.isEmpty()) {
+            return this.bodyStmts.get(0).getToken();
+        }
+        return null;    // change this later???
     }
 
     // parse
@@ -99,28 +104,28 @@ public class BodyNode implements JottTree {
             }
         }
 
-        //System.out.println("Handling Return");
-
+        // System.out.println("Handling Return");
 
         // Handle the return statement, if it exists
 
-        // Don't need to return for main
-        if(symbolTable.current_scope.equals("main")){
-            return true;
-        }
+        if(this.returnStmt != null) {
 
-        if(this.returnStmt == null) {
-            return true;
-        }
-
-        this.returnStmt.validateTree(symbolTable);
-
-        if(this.returnStmt.getReturnType() != null) {
-            if(this.returns) {
-                throw new SemanticError("Unreachable return at end", this.returnStmt.getToken());
+            if(symbolTable.current_scope.equals("main") && this.returnStmt.expr != null){
+                throw new SemanticError("Main function should not return", this.returnStmt.expr.getToken());
             }
-            this.returns = true;
-            this.returnType = this.returnStmt.getReturnType();
+        
+            System.out.println(symbolTable.getFunction(symbolTable.current_scope));
+
+            this.returnStmt.validateTree(symbolTable);
+
+            if(this.returnStmt.getReturnType() != null) {
+                if(this.returns) {
+                    throw new SemanticError("Unreachable return at end", this.returnStmt.getToken());
+                }
+                this.returns = true;
+                this.returnType = this.returnStmt.getReturnType();
+            }
+
         }
 
         return true;    // it's okay if not all paths return, this could be nested in another body

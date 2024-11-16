@@ -153,7 +153,14 @@ public class FuncDefNode implements JottTree{
         if (_name.equals("print" ) || _name.equals("concat" ) || (_name.equals("length" ))) {
             throw new SemanticError("Func name can't be: " + this.funcName.getToken(), this.funcName.getToken());
         }
-
+        if(_name.equals("main")) {
+            if(this.params.id != null) {
+                throw new SemanticError("Main function should not take any params", this.funcName.getToken());
+            }
+            if(this.returnType.getType() != DataType.VOID) {
+                throw new SemanticError("Main function should have return type VOID", this.funcName.getToken());
+            }
+        }
 
         //Valid kids
         this.funcName.validateTree(symbolTable);
