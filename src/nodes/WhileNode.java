@@ -48,6 +48,9 @@ public class WhileNode implements BodyStmtNode {
             throw new SyntaxError("While statement is missing a left bracket [", JottParser.finalToken);
         }
         currentToken = tokens.get(0);
+        if(currentToken.getTokenType() == TokenType.ASSIGN) {
+            throw new SemanticError("Cannot assign While a value", currentToken);
+        }
         if (currentToken.getTokenType() != TokenType.L_BRACKET) {
             throw new SyntaxError(
                     "While statement missing a left bracket [, instead got " + currentToken.getTokenType(),

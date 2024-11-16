@@ -38,7 +38,7 @@ public class IDNode implements OperandNode {
         }
 
         List<String> uppercaseAllowed = Arrays.asList("Boolean", "Integer", "String", "Double", "Void", "True",
-                "False");
+                "False", "If", "Elseif", "Else", "While");
         if (!uppercaseAllowed.contains(currentToken.getToken())) {
             if (Character.isUpperCase(currentToken.getToken().charAt(0))) {
                 throw new SyntaxError("First character of id is not lowercase " + currentToken.getToken(),

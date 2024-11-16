@@ -56,6 +56,9 @@ public class IfStmtNode implements BodyStmtNode {
             throw new SyntaxError("If statement is missing a left bracket [", JottParser.finalToken);
         }
         currentToken = tokens.get(0);
+        if(currentToken.getTokenType() == TokenType.ASSIGN) {
+            throw new SemanticError("Cannot assign If a value", currentToken);
+        }
         if (currentToken.getTokenType() != TokenType.L_BRACKET) {
             throw new SyntaxError("If statement missing a left bracket [, instead got " + currentToken.getTokenType(),
                     currentToken);
