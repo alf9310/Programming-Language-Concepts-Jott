@@ -3,6 +3,7 @@ package nodes;
 import errors.SemanticError;
 import errors.SyntaxError;
 import java.util.ArrayList;
+import java.util.HashMap;
 import msc.*;
 import provided.JottParser;
 import provided.JottTree;
@@ -113,31 +114,98 @@ public class FuncBodyNode implements JottTree {
 
     public static void main(String[] args) {
         try {
+            System.out.println("Testing FuncBodyNode Main Method");
+    
+            SymbolTable symbolTable = new SymbolTable();
+            symbolTable.addFunction("main", new FunctionInfo("main", "void", new HashMap<>()));
+            symbolTable.enterScope("main");
+    
+            // Add a sample function to the symbol table for validation
+            symbolTable.addFunction("testFunc", new FunctionInfo("testFunc", "Boolean", new HashMap<>()));
+            symbolTable.enterScope("testFunc");
+    
+            // Test Case 1: Valid variable declaration and body
+            ArrayList<Token> tokens1 = new ArrayList<>();
+            // Variable declaration
+            tokens1.add(new Token("Boolean", "testFile.jott", 1, TokenType.ID_KEYWORD));
+            tokens1.add(new Token("var", "testFile.jott", 1, TokenType.ID_KEYWORD));
+            tokens1.add(new Token(";", "testFile.jott", 1, TokenType.SEMICOLON));
+            // Body
+            tokens1.add(new Token("Return", "testFile.jott", 2, TokenType.ID_KEYWORD));
+            tokens1.add(new Token("True", "testFile.jott", 2, TokenType.ID_KEYWORD));
+            tokens1.add(new Token(";", "testFile.jott", 2, TokenType.SEMICOLON));
+            FuncBodyNode funcBodyNode1 = FuncBodyNode.parse(tokens1);
+            System.out.println("Parsed FuncBodyNode Test Case 1: " + funcBodyNode1.convertToJott());
+            System.out.println("Validation Result Test Case 1: " + funcBodyNode1.validateTree(symbolTable));
+    
+            // TODO FIX THIS ERROR
+            // Test Case 2: Missing return statement for non-void function
+            FunctionInfo anotherFuncInfo = new FunctionInfo("anotherFunc", "Boolean", new HashMap<>());
+            symbolTable.addFunction("anotherFunc", anotherFuncInfo);
 
-            // Test Case 1:
             ArrayList<Token> tokens2 = new ArrayList<>();
-            // var dec
+            // Variable declaration
             tokens2.add(new Token("Boolean", "testFile.jott", 1, TokenType.ID_KEYWORD));
-            tokens2.add(new Token("var", "testFile.jott", 1, TokenType.ID_KEYWORD));
+            tokens2.add(new Token("flag", "testFile.jott", 1, TokenType.ID_KEYWORD));
             tokens2.add(new Token(";", "testFile.jott", 1, TokenType.SEMICOLON));
-            // body
+            // Body
             tokens2.add(new Token("::", "testFile.jott", 3, TokenType.FC_HEADER));
-            tokens2.add(new Token("multiParamsFunc", "testFile.jott", 3, TokenType.ID_KEYWORD));
+            tokens2.add(new Token("anotherFunc", "testFile.jott", 3, TokenType.ID_KEYWORD));
             tokens2.add(new Token("[", "testFile.jott", 3, TokenType.L_BRACKET));
-            tokens2.add(new Token("param1", "testFile.jott", 3, TokenType.ID_KEYWORD));
-            tokens2.add(new Token(",", "testFile.jott", 3, TokenType.COMMA));
-            tokens2.add(new Token("param2", "testFile.jott", 3, TokenType.ID_KEYWORD));
-            tokens2.add(new Token(",", "testFile.jott", 3, TokenType.COMMA));
-            tokens2.add(new Token("param3", "testFile.jott", 3, TokenType.ID_KEYWORD));
             tokens2.add(new Token("]", "testFile.jott", 3, TokenType.R_BRACKET));
             tokens2.add(new Token(";", "testFile.jott", 3, TokenType.SEMICOLON));
-            FuncBodyNode funcBodyNode = FuncBodyNode.parse(tokens2);
-            System.out.println(
-                    "Parsed func body 'Boolean var; :: multiParamsFunc [param1, param2, param3];':   "
-                            + funcBodyNode.convertToJott());
-
+            FuncBodyNode funcBodyNode2 = FuncBodyNode.parse(tokens2);
+            System.out.println("Parsed FuncBodyNode Test Case 2: " + funcBodyNode2.convertToJott());
+            try {
+                funcBodyNode2.validateTree(symbolTable);
+            } catch (Exception e) {
+                System.err.println("Validation Error Test Case 2: " + e.getMessage());
+            }
+    
+            // TODO fFIX THIS ERROR
+            // Test Case 3: Function with VOID return type and no return statement
+            symbolTable.addFunction("testFunc2", new FunctionInfo("testFunc2", "void", new HashMap<>()));
+            symbolTable.enterScope("testFunc2"); // Set the function's return type to VOID
+            try{
+                ArrayList<Token> tokens3 = new ArrayList<>();
+                // Variable declaration
+                tokens3.add(new Token("Integer", "testFile.jott", 1, TokenType.ID_KEYWORD));
+                tokens3.add(new Token("counter", "testFile.jott", 1, TokenType.ID_KEYWORD));
+                tokens3.add(new Token(";", "testFile.jott", 1, TokenType.SEMICOLON));
+                // Body without a return statement
+                tokens3.add(new Token("counter", "testFile.jott", 2, TokenType.ID_KEYWORD));
+                tokens3.add(new Token("=", "testFile.jott", 2, TokenType.ASSIGN));
+                tokens3.add(new Token("5", "testFile.jott", 2, TokenType.NUMBER));
+                tokens3.add(new Token(";", "testFile.jott", 2, TokenType.SEMICOLON));
+                FuncBodyNode funcBodyNode3 = FuncBodyNode.parse(tokens3);
+                System.out.println("Parsed FuncBodyNode Test Case 3: " + funcBodyNode3.convertToJott());
+                System.out.println("Validation Result Test Case 3: " + funcBodyNode3.validateTree(symbolTable));
+            } catch (Exception e){
+                System.err.println("Validation Error Test Case 3: " + e.getMessage());
+            }
+    
+            // Reset function return type for further testing
+            symbolTable.enterScope("testFunc");
+    
+            // Test Case 4: Invalid variable declaration
+            ArrayList<Token> tokens4 = new ArrayList<>();
+            // Invalid variable declaration
+            tokens4.add(new Token("Booleen", "testFile.jott", 1, TokenType.ID_KEYWORD)); // Typo in type
+            tokens4.add(new Token("invalidVar", "testFile.jott", 1, TokenType.ID_KEYWORD));
+            tokens4.add(new Token(";", "testFile.jott", 1, TokenType.SEMICOLON));
+            // Body
+            tokens4.add(new Token("Return", "testFile.jott", 2, TokenType.ID_KEYWORD));
+            tokens4.add(new Token("False", "testFile.jott", 2, TokenType.ID_KEYWORD));
+            tokens4.add(new Token(";", "testFile.jott", 2, TokenType.SEMICOLON));
+            FuncBodyNode funcBodyNode4 = FuncBodyNode.parse(tokens4);
+            System.out.println("Parsed FuncBodyNode Test Case 4: " + funcBodyNode4.convertToJott());
+            try {
+                funcBodyNode4.validateTree(symbolTable);
+            } catch (Exception e) {
+                System.err.println("Validation Error Test Case 4: " + e.getMessage());
+            }
+    
         } catch (Exception e) {
-            // Catch and print any exceptions
             System.err.println("Error: " + e.getMessage());
         }
     }
