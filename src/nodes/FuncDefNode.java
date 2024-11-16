@@ -161,6 +161,7 @@ public class FuncDefNode implements JottTree{
         this.returnType.validateTree(symbolTable);
         this.body.validateTree(symbolTable);
 
+        symbolTable.exitScope();
 
         return true;
     }

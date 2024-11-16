@@ -87,7 +87,21 @@ public class FDefParamsNode implements JottTree {
         }
 
         // 
+        FunctionInfo func = symbolTable.getFunction(symbolTable.current_scope);
+        String value = "";
+        if(this.type.getType() == DataType.BOOLEAN) {
+            value = "Boolean";
+        } else if(this.type.getType() == DataType.INTEGER) {
+            value = "Integer";
+        } else if(this.type.getType() == DataType.DOUBLE) {
+            value = "Double";
+        } else if(this.type.getType() == DataType.STRING) {
+            value = "String";
+        }
+        func.parameterTypes.put(this.id.getToken().getToken(), value);
         symbolTable.addVar(new VarInfo(id.convertToJott(), type.getType(), null));
+        // for testing:
+        System.out.println(func.parameterTypes.get(this.id.getToken().getToken()));
 
         // Validate the main parameter (id and type), if present
         if (id != null && type != null) {

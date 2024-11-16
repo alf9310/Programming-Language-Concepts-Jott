@@ -103,8 +103,13 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
         if(symbolTable.current_scope == null) {
             throw new SemanticError("Function call out of scope", this.id.getToken());
         }
-        FunctionInfo func = symbolTable.getFunction(symbolTable.current_scope);
+        if(symbolTable.getFunction(this.id.getToken().getToken()) == null) {
+            throw new SemanticError("Call to undefined function", this.id.getToken());
+        }
+    
+        FunctionInfo func = symbolTable.getFunction(id.getToken().getToken());
 
+        System.out.println(func.getName() + ": " + func.getReturnDataType());
         return func.getReturnDataType();
     }
 
@@ -130,16 +135,23 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
         
         params.validateTree(symbolTable);   // this should validate number and types
         
-        HashMap<String, DataType> params = func.getParameterDataTypes();
+        HashMap<String, DataType> parameters = func.getParameterDataTypes();
         int len = 0;
-        if(this.params != null) {
+        if(this.params.expr != null) {
             // first param plus number of other params (paramst)
-            len = this.params.paramst.size();
+            len = this.params.paramst.size() + 1;
         }
-        if(len != params.size()) {
-            throw new SemanticError(this.id.getToken().getToken() + " should take " + params.size() + " parameters, provided " + len + " instead", this.id.getToken());
+        if(len != parameters.size()) {
+            throw new SemanticError(this.id.getToken().getToken() + " should take " + parameters.size() + " parameters, provided " + len + " instead", this.id.getToken());
         }
-        Object[] pTypes = params.values().toArray();
+
+        System.out.println(func.getName());
+        if(func.getName().equals("print")) {
+            // hard code check for print, since it takes any type
+            return true;
+        }
+
+        Object[] pTypes = parameters.values().toArray();
         if(len > 0) {
             // check first param type matches
             if(pTypes[0] != this.params.expr.getType(symbolTable)) {

@@ -58,15 +58,16 @@ public class FunctionInfo {
 
         for(String key: parameterTypes.keySet()) {
             DataType value = null;
-            if(this.returnType.equals("Boolean")) {
+            String val = parameterTypes.get(key);
+            if(val.equals("Boolean")) {
                 value = DataType.BOOLEAN;
-            } else if(this.returnType.equals("String")) {
+            } else if(val.equals("String")) {
                 value =DataType.STRING;
-            } else if(this.returnType.equals("Integer")) {
+            } else if(val.equals("Integer")) {
                 value = DataType.INTEGER;
-            } else if(this.returnType.equals("Double")) {
+            } else if(val.equals("Double")) {
                 value = DataType.DOUBLE;
-            } else if(this.returnType.equals("Void")) {
+            } else if(val.equals("Void")) {
                 value = DataType.VOID;
             }
             paramTypes.put(key, value);

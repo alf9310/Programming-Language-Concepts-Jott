@@ -2,11 +2,11 @@ package nodes;
 
 import errors.*;
 import java.util.ArrayList;
+import msc.*;
 import provided.JottParser;
 import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
-import msc.*;
 
 /*
  * Function Definition Parameters T Node
@@ -67,6 +67,23 @@ public class FDefParamsTNode implements JottTree {
 
         // Validate the type using TypeNode's validateTree method
         type.validateTree(symbolTable);
+
+        //
+        FunctionInfo func = symbolTable.getFunction(symbolTable.current_scope);
+        String value = "";
+        if(this.type.getType() == DataType.BOOLEAN) {
+            value = "Boolean";
+        } else if(this.type.getType() == DataType.INTEGER) {
+            value = "Integer";
+        } else if(this.type.getType() == DataType.DOUBLE) {
+            value = "Double";
+        } else if(this.type.getType() == DataType.STRING) {
+            value = "String";
+        }
+        func.parameterTypes.put(this.id.getToken().getToken(), value);
+        symbolTable.addVar(new VarInfo(id.convertToJott(), type.getType(), null));
+        // for testing:
+        System.out.println(func.parameterTypes.get(this.id.getToken().getToken()));
     
         return true;
     }

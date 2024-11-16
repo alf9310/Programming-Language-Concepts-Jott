@@ -109,7 +109,22 @@ public class BodyNode implements JottTree {
             return true;
         }
 
+        if(this.returnStmt == null) {
+            return true;
+        }
 
+        this.returnStmt.validateTree(symbolTable);
+
+        if(this.returnStmt.getReturnType() != null) {
+            if(this.returns) {
+                throw new SemanticError("Unreachable return at end", this.returnStmt.getToken());
+            }
+            this.returns = true;
+            this.returnType = this.returnStmt.getReturnType();
+        }
+
+        return true;    // it's okay if not all paths return, this could be nested in another body
+        /* 
         if (this.returnStmt != null) {
             this.returnStmt.validateTree(symbolTable);
 
@@ -130,7 +145,7 @@ public class BodyNode implements JottTree {
 
         if (!this.returns) {
             throw new SemanticError("Not all code paths return a value");
-        }
+        }*/
         /*
         if(this.returnStmt.getReturnType() != null) {
             if(this.returns == true) {
@@ -142,7 +157,7 @@ public class BodyNode implements JottTree {
             this.returnType = this.returnStmt.getReturnType();
         } */
 
-        return true;
+        //return true;
     }
 
     @Override
