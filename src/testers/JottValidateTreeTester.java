@@ -73,6 +73,7 @@ public class JottValidateTreeTester {
             if (test.error) {
                 if (!errOutput.isEmpty()) {
                     System.out.println("\tPassed\n");
+                    System.out.println(errOutput);
                     return true;
                 } else {
                     System.err.println("\tFailed Test: " + test.testName);
