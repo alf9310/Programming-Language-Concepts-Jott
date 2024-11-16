@@ -3,6 +3,8 @@ package testers;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import msc.*;
 
@@ -55,27 +57,47 @@ public class JottValidateTreeTester {
             return false;
         }
 
+        // Capture System.err output
+        ByteArrayOutputStream errStream = new ByteArrayOutputStream();
+        PrintStream originalErr = System.err;
+        System.setErr(new PrintStream(errStream));
+
         // Call the Main.main method with the file name as a command-line argument
         String[] args = {"phase3testcases/" + test.fileName};
         try {
-            // Redirecting System.out and System.err if needed
-            System.setErr(System.out);  // or any other redirection logic
             msc.Main.main(args);
 
-            // If we expect an error, check the output (you could capture stderr output)
+            String errOutput = errStream.toString();
+
+            // If we expect an error and errOutput contains something, the test passes
             if (test.error) {
-                System.err.println("\tFailed Test: " + test.testName);
-                return false;
-            } else {
-                System.out.println("\tPassed\n");
-                return true;
+                if (!errOutput.isEmpty()) {
+                    System.out.println("\tPassed\n");
+                    return true;
+                } else {
+                    System.err.println("\tFailed Test: " + test.testName);
+                    System.err.println("\tExpected an error, but none occurred.");
+                    return false;
+                }
             }
 
+            // If we do not expect an error, check that errOutput is empty
+            if (errOutput.isEmpty()) {
+                System.out.println("\tPassed\n");
+                return true;
+            } else {
+                System.err.println("\tFailed Test: " + test.testName);
+                System.err.println("\tExpected no error, but got: " + errOutput);
+                return false;
+            }
         } catch (Exception e) {
             System.err.println("\tFailed Test: " + test.testName);
             System.err.println("Unknown Exception occurred.");
             e.printStackTrace();
             return false;
+        } finally {
+            // Restore original System.err
+            System.setErr(originalErr);
         }
     }
 
@@ -87,12 +109,10 @@ public class JottValidateTreeTester {
         int passedTests = 0;
         tester.createTestCases();
         for (JottValidateTreeTester.TestCase test : tester.testCases) {
+            System.out.println("-------------------------------Test Number "+ numTests + "-------------------------------");
             numTests++;
             if (tester.validateTreeTest(test)) {
                 passedTests++;
-                System.out.println("\tPassed\n");
-            } else {
-                System.out.println("\tFailed\n");
             }
         }
 
