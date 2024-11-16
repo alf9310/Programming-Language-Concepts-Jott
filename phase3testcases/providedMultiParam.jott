@@ -1,0 +1,14 @@
+Def foo[ x:Integer,y:Double]:String
+{
+If[x>5]{
+Return "foo";
+}
+Elseif[y<3.2]{
+Return "bar";
+}
+Return "foobar";
+}
+
+Def main[]:Void {
+    ::foo[2, 5.5];
+}

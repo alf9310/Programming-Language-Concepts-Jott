@@ -81,16 +81,12 @@ public class ReturnStmtNode implements JottTree {
             // body w/o return is valid
             return true;
         } else {
-            //System.out.println("Validating return expression");
             this.expr.validateTree(symbolTable);
 
-            //System.out.println("Setting return type");
             this.returnType = this.expr.getType(symbolTable);
 
-            //System.out.println("Getting scope");
             String func = symbolTable.current_scope;
             FunctionInfo info = symbolTable.getFunction(func);
-            //System.out.println("Getting return type");
             DataType funcReturn = info.getReturnDataType();
             if(funcReturn == null) {
                 throw new SemanticError("Function return should be one of the data types provided or VOID", this.expr.getToken());
@@ -105,7 +101,6 @@ public class ReturnStmtNode implements JottTree {
             } else if(funcReturn != this.returnType) {
                 throw new SemanticError(func + " should return type " + funcReturn + ", returns " + this.returnType + " instead", this.expr.getToken());
             }
-            //System.out.println("ReturnStmtPasses");
             return true;
         }
     }

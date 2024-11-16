@@ -93,7 +93,6 @@ public class BodyNode implements JottTree {
                 throw new SemanticError("Unreachable code after return statement", bodyStmt.getToken());
             }
 
-            //System.out.println("Handling Body statement(s) " + bodyStmt.convertToJott());
             bodyStmt.validateTree(symbolTable); // should check return types match in here
 
             if(bodyStmt.allReturn()) {
@@ -104,8 +103,6 @@ public class BodyNode implements JottTree {
             }
         }
 
-        // System.out.println("Handling Return");
-
         // Handle the return statement, if it exists
 
         if(this.returnStmt != null) {
@@ -113,8 +110,6 @@ public class BodyNode implements JottTree {
             if(symbolTable.current_scope.equals("main") && this.returnStmt.expr != null){
                 throw new SemanticError("Main function should not return", this.returnStmt.expr.getToken());
             }
-        
-            System.out.println(symbolTable.getFunction(symbolTable.current_scope));
 
             this.returnStmt.validateTree(symbolTable);
 

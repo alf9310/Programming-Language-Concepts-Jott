@@ -112,12 +112,9 @@ public class ElseIfNode implements JottTree {
 
     @Override
     public boolean validateTree(SymbolTable symbolTable) throws Exception {
-        // To be implemented in phase 3
-        //System.out.println("Validating expression");
         this.expr.validateTree(symbolTable);
-        //System.out.println("Validating body");
         this.body.validateTree(symbolTable);
-        //System.out.println("Checking if expression is boolean");
+        
         if(this.expr.getType(symbolTable) != DataType.BOOLEAN) {
             throw new SemanticError("Expression in if statement must be a boolean", this.expr.getToken());
         }

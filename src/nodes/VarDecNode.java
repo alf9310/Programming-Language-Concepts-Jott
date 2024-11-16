@@ -55,7 +55,7 @@ public class VarDecNode implements JottTree {
     */
     @Override
     public boolean validateTree(SymbolTable symbolTable) throws Exception {
-        // System.out.println("HERE");
+        
         type.validateTree(symbolTable);
 
         // Ensure variable is unique in the current scope
@@ -67,7 +67,7 @@ public class VarDecNode implements JottTree {
         DataType dataType = type.getType();
         VarInfo variable = new VarInfo(id.convertToJott(), dataType, null);
         Boolean succeeded = symbolTable.addVar(variable);
-        // System.out.println("from VarDecNode: " + symbolTable.current_scope);
+        
         if (!succeeded) {
             throw new UnsupportedOperationException("failed to add var");
         }

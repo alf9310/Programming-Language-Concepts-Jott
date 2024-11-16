@@ -87,8 +87,6 @@ public class FuncBodyNode implements JottTree {
             varDec.validateTree(symbolTable);
         }
 
-        System.out.println("testing returns");
-
         this.body.validateTree(symbolTable);
         this.returns = this.body.allReturn();
         this.returnType = this.body.getReturnType();

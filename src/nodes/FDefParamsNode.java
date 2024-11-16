@@ -100,8 +100,6 @@ public class FDefParamsNode implements JottTree {
         }
         func.parameterTypes.put(this.id.getToken().getToken(), value);
         symbolTable.addVar(new VarInfo(id.convertToJott(), type.getType(), null));
-        // for testing:
-        System.out.println(func.parameterTypes.get(this.id.getToken().getToken()));
 
         // Validate the main parameter (id and type), if present
         if (id != null && type != null) {

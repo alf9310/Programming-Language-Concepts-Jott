@@ -109,8 +109,6 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
     
         FunctionInfo func = symbolTable.getFunction(id.getToken().getToken());
 
-        // testing
-        System.out.println(func.getName() + ": " + func.getReturnDataType());
         return func.getReturnDataType();
     }
 
@@ -146,7 +144,6 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
             throw new SemanticError(this.id.getToken().getToken() + " should take " + parameters.size() + " parameters, provided " + len + " instead", this.id.getToken());
         }
 
-        System.out.println(func.getName());
         if(func.getName().equals("print")) {
             // hard code check for print, since it takes any type
             return true;
@@ -160,7 +157,7 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
             }
             // check all other param types match
             for(int i = 1; i < len; i++) {
-                if(pTypes[i] != this.params.paramst.get(i - 1)) {
+                if(pTypes[i] != this.params.paramst.get(i - 1).getType(symbolTable)) {
                     throw new SemanticError("Parameter " + (i + 1) + " of " + this.id.getToken().getToken() + " should be type " + pTypes[i], this.id.getToken());
                 }
             }
