@@ -1,5 +1,6 @@
 package nodes;
 
+import errors.SemanticError;
 import errors.SyntaxError;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -60,9 +61,12 @@ public class IDNode implements OperandNode {
     }
 
     @Override
-    public DataType getType(SymbolTable symbolTable) {
+    public DataType getType(SymbolTable symbolTable) throws SemanticError {
         // References scope table to get this
         VarInfo var = symbolTable.getVar(id.getToken());
+        if (var == null){
+            throw new SemanticError("Variable " + id.getToken() + " not found in current scope", id);
+        }
         DataType type = var.type;
         return type;
     }
