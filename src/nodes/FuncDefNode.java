@@ -145,6 +145,15 @@ public class FuncDefNode implements JottTree{
 
         // Add function to symbol table
         symbolTable.addFunction(_name, info);
+        // System.out.println("from funcdef" + symbolTable.functionMap);
+
+        symbolTable.enterScope(_name);
+        // System.out.println("from fncdef scope: " + symbolTable.current_scope);
+
+        if (_name.equals("print" ) || _name.equals("concat" ) || (_name.equals("length" ))) {
+            throw new SemanticError("Func name can't be: " + this.funcName.getToken(), this.funcName.getToken());
+        }
+
 
         //Valid kids
         this.funcName.validateTree(symbolTable);
