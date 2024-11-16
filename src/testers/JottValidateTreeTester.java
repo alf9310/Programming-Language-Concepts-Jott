@@ -1,12 +1,11 @@
 package testers;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.util.ArrayList;
-import msc.*;
 
 public class JottValidateTreeTester {
     ArrayList<TestCase> testCases;
@@ -65,7 +64,7 @@ public class JottValidateTreeTester {
         // Call the Main.main method with the file name as a command-line argument
         String[] args = {"phase3testcases/" + test.fileName};
         try {
-            msc.Main.main(args);
+            msc.Jott.main(args);
 
             String errOutput = errStream.toString();
 
