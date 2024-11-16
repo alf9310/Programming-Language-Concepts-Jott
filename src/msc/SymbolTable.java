@@ -22,12 +22,14 @@ public class SymbolTable {
     }
 
     //  entering scope function
-    public void enterScope(String name) {
+    public boolean enterScope(String name) {
         // verify scope is already in the func table
         if (!functionMap.containsKey(name)) {
-            throw new RuntimeException("Scope not found in symbol table");
+            return false;
+            // throw new RuntimeException("Scope not found in symbol table");
         }
         current_scope = name;
+        return true;
     }
 
     //  exiting scope function
@@ -49,16 +51,18 @@ public class SymbolTable {
     }
     
     // Add variable to current scope
-    public void addVar(VarInfo info) {
+    public boolean addVar(VarInfo info) {
         if (current_scope == null) {
-            throw new RuntimeException("Not in any scope!");
+            return false;
+            // throw new RuntimeException("Not in any scope!");
         }
         // Get the function information for the current scope
         FunctionInfo functionInfo = functionMap.get(current_scope);
     
         // Check if functionInfo is null
         if (functionInfo == null) {
-            throw new RuntimeException("Function information for scope " + current_scope + " does not exist.");
+            return false;
+            // throw new RuntimeException("Function information for scope " + current_scope + " does not exist.");
         }
     
         // Initialize the variableMap if it's null
@@ -68,28 +72,33 @@ public class SymbolTable {
     
         // Now add the variable to the current scope's variable map
         functionInfo.variableMap.get(current_scope).put(info.name, info);
+        return true;
     }
 
     //  get variable from current scope
     public VarInfo getVar(String name) {
         if (current_scope==null) {
-            throw new RuntimeException("Not in any scope!");
+            return null;
+            // throw new RuntimeException("Not in any scope!");
         }
         // throw error if variable not in map of current scope
         FunctionInfo currentFunction = functionMap.get(current_scope);
         if (currentFunction == null) {
-            throw new RuntimeException("Function "+current_scope+" not found in symbol table");
+            return null;
+            // throw new RuntimeException("Function "+current_scope+" not found in symbol table");
         }
         VarInfo var = currentFunction.variableMap.get(current_scope).get(name);
         if (var == null) {
-            throw new RuntimeException("Variable "+name+" not found in current scope: '" + current_scope + "'");
+            return null;
+            // throw new RuntimeException("Variable "+name+" not found in current scope: '" + current_scope + "'");
         }
         return var;
     }
 
     public boolean existsInScope(String varName) {
         if (current_scope == null) {
-            throw new RuntimeException("Not in any scope!");
+            return false;
+            // throw new RuntimeException("Not in any scope!");
         }
         // Get current function and check if variable exists in current scope's variable map
         FunctionInfo currentFunction = functionMap.get(current_scope);

@@ -65,7 +65,10 @@ public class VarDecNode implements JottTree {
         // Adds variable to symbol table 
         DataType dataType = type.getType();
         VarInfo variable = new VarInfo(id.convertToJott(), dataType, null);
-        symbolTable.addVar(variable);
+        Boolean succeeded = symbolTable.addVar(variable);
+        if (!succeeded) {
+            throw new UnsupportedOperationException("failed to add var");
+        }
 
         id.validateTree(symbolTable);
 
@@ -86,8 +89,10 @@ public class VarDecNode implements JottTree {
 
             // Test Case 1: Valid variable declaration in new scope
             symbolTable.addFunction("main", new FunctionInfo("main", "void", new HashMap<>()));
-            symbolTable.enterScope("main");
-
+            Boolean succeeded = symbolTable.enterScope("main");
+            if (!succeeded) {
+                throw new UnsupportedOperationException("failed to enter scope!");
+            }
             ArrayList<Token> tokens1 = new ArrayList<>();
             tokens1.add(new Token("Boolean", "testFile.jott", 1, TokenType.ID_KEYWORD));
             tokens1.add(new Token("var", "testFile.jott", 1, TokenType.ID_KEYWORD));

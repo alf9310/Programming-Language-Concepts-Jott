@@ -10,14 +10,14 @@ public class Main {
     
         public static void main(String[] args) {
             if (args.length != 1) {
-                System.err.println("Provide a single file name");
+                // System.err.println("Provide a single file name");
                 return;
             }
             String filename = args[0];
     
             ArrayList<Token> tokens = JottTokenizer.tokenize(filename);
             if (tokens == null) {
-                System.err.println("\t\tExpected a list of tokens, but got null");
+                // System.err.println("\t\tExpected a list of tokens, but got null");
                 return;
             }
 
@@ -31,7 +31,7 @@ public class Main {
         }
 
         if (root == null) {
-            System.err.println("Got null instead of a JottTree!");
+            // System.err.println("Got null instead of a JottTree!");
             return;
         }
 
