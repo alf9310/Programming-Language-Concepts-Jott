@@ -25,17 +25,21 @@ public class SymbolTable {
         str_param.put("str", "String");
         FunctionInfo printInfo = new FunctionInfo("print", "void", str_param);
         this.addFunction("print", printInfo);
+        printInfo.parameterOrder.put(1, "str");
 
         HashMap<String, String> concat_param = new HashMap<>();
         concat_param.put("str1", "String");
         concat_param.put("str2", "String");
         FunctionInfo concatInfo = new FunctionInfo("concat", "String", concat_param);
         this.addFunction("concat", concatInfo);
+        concatInfo.parameterOrder.put(1, "str1");
+        concatInfo.parameterOrder.put(2, "str2");
 
         HashMap<String, String> len_param = new HashMap<>();
         len_param.put("str", "String");
         FunctionInfo lengthInfo = new FunctionInfo("length", "Integer", len_param);
         this.addFunction("length", lengthInfo);
+        lengthInfo.parameterOrder.put(1, "str");
     }
 
     //  entering scope function

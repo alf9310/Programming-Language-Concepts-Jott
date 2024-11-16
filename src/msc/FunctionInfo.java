@@ -16,7 +16,7 @@ public class FunctionInfo {
     //NOTE there is a seperate parameter list to validate correct types passed in
     // also check number to params
     public HashMap<String, String> parameterTypes;
-    
+    public HashMap<Integer, String> parameterOrder; // key is current parameter # (starting at 1), value is its name
 
     public HashMap<String, HashMap<String, VarInfo>> variableMap;
 
@@ -26,6 +26,7 @@ public class FunctionInfo {
         this.parameterTypes = parameterTypes;
         // var list starts empty
         this.variableMap = new HashMap<>();
+        this.parameterOrder = new HashMap<>();
     }
 
     public String getName() {

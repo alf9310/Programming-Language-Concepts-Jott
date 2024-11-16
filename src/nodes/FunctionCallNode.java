@@ -132,7 +132,7 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
             throw new SemanticError("Call to undefined function", this.id.getToken());
         }
         
-        params.validateTree(symbolTable);   // this should validate number and types
+        params.validateTree(symbolTable);
         
         HashMap<String, DataType> parameters = func.getParameterDataTypes();
         int len = 0;
@@ -149,7 +149,30 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
             return true;
         }
 
+        ArrayList<DataType> pTypes = new ArrayList<>();
+        for(int i = 1; i <= len; i++) {
+            // get list of parameter data types IN ORDER
+            String name = func.parameterOrder.get(i);
+            pTypes.add(parameters.get(name));
+        }
+        if(len > 0) {
+            // check first param type matches
+            if(pTypes.get(0) != this.params.expr.getType(symbolTable)) {
+                throw new SemanticError(this.params.expr.getToken().getToken() + " should be type " + pTypes.get(0), this.params.expr.getToken());   
+            }
+            // check all other param types match
+            for(int i = 1; i < len; i++) {
+                if(pTypes.get(i) != this.params.paramst.get(i - 1).getType(symbolTable)) {
+                    throw new SemanticError("Parameter " + (i + 1) + " of " + this.id.getToken().getToken() + " should be type " + pTypes.get(i), this.id.getToken());
+                }
+            }
+        }
+
+        /*
         Object[] pTypes = parameters.values().toArray();
+        for(DataType val: parameters.values()) {
+            System.out.println(val);
+        }
         if(len > 0) {
             // check first param type matches
             if(pTypes[0] != this.params.expr.getType(symbolTable)) {
@@ -161,7 +184,7 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
                     throw new SemanticError("Parameter " + (i + 1) + " of " + this.id.getToken().getToken() + " should be type " + pTypes[i], this.id.getToken());
                 }
             }
-        }
+        }*/
 
         return true;
     }
