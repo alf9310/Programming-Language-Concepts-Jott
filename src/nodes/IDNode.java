@@ -79,24 +79,6 @@ public class IDNode implements OperandNode {
     // Check if ID exists in current scope
     @Override
     public boolean validateTree(SymbolTable symbolTable) throws Exception {
-        /*
-        if (this.id.getTokenType() == TokenType.ID_KEYWORD) {
-            // Check if the variable exists in the current scope
-            if (!symbolTable.existsInScope(this.id.getToken()) ) {
-                System.out.println("from idnode"+symbolTable.current_scope + " " + this.id.getToken());
-
-                throw new SemanticError("Undeclared variable (does not exist in scope): " + this.id.getToken(), this.id);
-                
-            } 
-<<<<<<< HEAD
-        } */
-=======
-            if (!symbolTable.functionMap.containsKey(this.id.getToken())) {
-                throw new SemanticError("Undeclared variable (not in symboltable): " + this.id.getToken(), this.id);
-            }
-        }
->>>>>>> c6e0e7e7e6b09a4b181730bd073bd92b6a5ba9d4
-        // Additional validation for other operand types, if needed
         return true;
     }
 
