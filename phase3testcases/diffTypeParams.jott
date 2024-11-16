@@ -1,6 +1,6 @@
 #this will pass phase 3
 
-Def foo[Integer:i,String:s,Double:d,Boolean:b]:Void{
+Def foo[i:Integer,s:String,d:Double,b:Boolean]:Void{
     Integer x;
     x = 5;
     If[x > 5]{
