@@ -124,40 +124,7 @@ public class BodyNode implements JottTree {
         }
 
         return true;    // it's okay if not all paths return, this could be nested in another body
-        /* 
-        if (this.returnStmt != null) {
-            this.returnStmt.validateTree(symbolTable);
-
-            if (this.returnStmt.getReturnType() != null) {
-                if (this.returns) {
-                    throw new SemanticError("Unreachable return at end", this.returnStmt.getToken());
-                }
-
-                this.returns = true; // Set that all paths return
-                if (this.returnType == null) {
-                    this.returnType = this.returnStmt.getReturnType();
-                } else if (this.returnType != this.returnStmt.getReturnType()) {
-                    throw new SemanticError(
-                        "Mismatched return types in return statement", this.returnStmt.getToken());
-                }
-            }
-        }
-
-        if (!this.returns) {
-            throw new SemanticError("Not all code paths return a value");
-        }*/
-        /*
-        if(this.returnStmt.getReturnType() != null) {
-            if(this.returns == true) {
-                // all paths return before the end but another exists
-                throw new SemanticError("Unreachable return at end", this.returnStmt.getToken());
-            }
-
-            this.returns = true;    // all paths return if return is at end of body
-            this.returnType = this.returnStmt.getReturnType();
-        } */
-
-        //return true;
+        
     }
 
     @Override
