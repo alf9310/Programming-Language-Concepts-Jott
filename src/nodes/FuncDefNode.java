@@ -36,7 +36,7 @@ public class FuncDefNode implements JottTree{
         
         Token lastToken = tokens.get(0);
 
-        if (!tokens.get(0).getToken().equals("Def")){
+        if (!(tokens.get(0).getToken().equals("Def") || tokens.get(0).getToken().equals("def"))){
             throw new SyntaxError("Expected Def got " + lastToken.getToken(), lastToken);
         }
 
