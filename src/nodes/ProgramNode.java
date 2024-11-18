@@ -1,6 +1,9 @@
 package nodes;
 
+import errors.SemanticError;
+import errors.SyntaxError;
 import java.util.ArrayList;
+import msc.*;
 import provided.JottTree;
 import provided.Token;
 import provided.TokenType;
@@ -23,7 +26,8 @@ public class ProgramNode implements JottTree{
         // Keep parsing until EOF
         try {
             while (!tokens.isEmpty()) {
-                if (tokens.get(0).getTokenType() == TokenType.ID_KEYWORD && tokens.get(0).getToken().equals("Def")) {
+                if (tokens.get(0).getTokenType() == TokenType.ID_KEYWORD && tokens.get(0).getToken().equals("Def") || tokens
+                        .get(0).getTokenType() == TokenType.ID_KEYWORD && tokens.get(0).getToken().equals("def")) {
                     nodes.add(FuncDefNode.parse(tokens));
                 } else {
                     throw new SyntaxError("Expected function definition Def got " + tokens.get(0).getToken(), tokens.get(0));
@@ -55,8 +59,24 @@ public class ProgramNode implements JottTree{
     }
 
     @Override
-    public boolean validateTree() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public boolean validateTree(SymbolTable symbolTable) throws Exception {
+        Token mainToken = null;
+        for (FuncDefNode fDefNode : fDefNodes) {
+            fDefNode.validateTree(symbolTable);
+            if(fDefNode.funcName.getToken().getToken().equals("main")) {
+                mainToken = fDefNode.funcName.getToken();
+            }
+        }
+
+        if(mainToken == null) {
+            if(this.fDefNodes.isEmpty()) {
+                throw new SemanticError("Program does not have a main function");
+            }
+            Token infoToken = this.fDefNodes.get(0).funcName.getToken();
+            throw new SemanticError("Program does not have a main function", infoToken);
+        }
+
+        return true;
     }
 
     @Override

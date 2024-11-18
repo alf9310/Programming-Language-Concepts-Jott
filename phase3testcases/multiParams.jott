@@ -1,0 +1,13 @@
+# valid test case
+
+Def foo[x:Integer, y:Integer]:Integer{
+    ::print[x];
+    ::print[y];
+	Return x + y;
+}
+
+Def main[]:Void{
+    Integer z;
+    z = ::foo[1, 2];
+	::print[z];
+}

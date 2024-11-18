@@ -1,6 +1,10 @@
 package nodes;
 
+import errors.SemanticError;
+import errors.SyntaxError;
 import java.util.ArrayList;
+import java.util.HashMap;
+import msc.*;
 import provided.JottParser;
 import provided.JottTree;
 import provided.Token;
@@ -32,7 +36,7 @@ public class FuncDefNode implements JottTree{
         
         Token lastToken = tokens.get(0);
 
-        if (!tokens.get(0).getToken().equals("Def")){
+        if (!(tokens.get(0).getToken().equals("Def") || tokens.get(0).getToken().equals("def"))){
             throw new SyntaxError("Expected Def got " + lastToken.getToken(), lastToken);
         }
 
@@ -126,8 +130,45 @@ public class FuncDefNode implements JottTree{
     }
 
     @Override
-    public boolean validateTree() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public boolean validateTree(SymbolTable symbolTable) throws Exception {
+
+        String _name = this.funcName.getToken().getToken();
+        String _returnType = this.returnType.type.getToken();
+
+        //NOTE the parameters will be filled in by the FDefParamsNode
+        FunctionInfo info = new FunctionInfo(_name, _returnType, new HashMap<>());
+
+        // Return error if func already defined in symbol table
+        if (symbolTable.getFunction(_name) != null) {
+            throw new SemanticError("Function " + _name + " already defined in symbol table", this.funcName.getToken());
+        }
+
+        // Add function to symbol table
+        symbolTable.addFunction(_name, info);
+
+        symbolTable.enterScope(_name);
+
+        if (_name.equals("print" ) || _name.equals("concat" ) || (_name.equals("length" ))) {
+            throw new SemanticError("Func name can't be: " + this.funcName.getToken(), this.funcName.getToken());
+        }
+        if(_name.equals("main")) {
+            if(this.params.id != null) {
+                throw new SemanticError("Main function should not take any params", this.funcName.getToken());
+            }
+            if(this.returnType.getType() != DataType.VOID) {
+                throw new SemanticError("Main function should have return type VOID", this.funcName.getToken());
+            }
+        }
+
+        //Valid kids
+        this.funcName.validateTree(symbolTable);
+        this.params.validateTree(symbolTable);
+        this.returnType.validateTree(symbolTable);
+        this.body.validateTree(symbolTable);
+
+        symbolTable.exitScope();
+
+        return true;
     }
 
     @Override
@@ -136,41 +177,82 @@ public class FuncDefNode implements JottTree{
     }
 
     public static void main(String[] args) {
-        System.out.println("Testing FuncDefNode Main Method");
-
+        System.out.println("Testing FuncDefNode Validation");
+    
+        SymbolTable symbolTable = new SymbolTable();
+    
+        // Test Case 1: Valid Function Definition
         try {
-            // Sample tokens for function definition:
-            // Def main[]:Void { 
-            //     ::print[5]; 
-            //     ::print["foo bar"]; 
-            // /}
             ArrayList<Token> tokens = new ArrayList<>();
-
-            // Add tokens corresponding to the function definition
-            tokens.add(new Token("Def", "testFile.jott", 1, TokenType.ID_KEYWORD));  // Def
-            tokens.add(new Token("main", "testFile.jott", 1, TokenType.ID_KEYWORD));  // main
-            tokens.add(new Token("[", "testFile.jott", 1, TokenType.L_BRACKET));  // [
-            tokens.add(new Token("]", "testFile.jott", 1, TokenType.R_BRACKET));  // ]
-            tokens.add(new Token(":", "testFile.jott", 1, TokenType.COLON));  // :
-            tokens.add(new Token("Void", "testFile.jott", 1, TokenType.ID_KEYWORD));  // Void
-            tokens.add(new Token("{", "testFile.jott", 1, TokenType.L_BRACE));  // {
-            tokens.add(new Token("::", "testFile.jott", 2, TokenType.FC_HEADER));  // ::
-            tokens.add(new Token("print", "testFile.jott", 2, TokenType.ID_KEYWORD));  // print
-            tokens.add(new Token("[", "testFile.jott", 2, TokenType.L_BRACKET));  // [
-            tokens.add(new Token("5", "testFile.jott", 2, TokenType.NUMBER));  // 5
-            tokens.add(new Token("]", "testFile.jott", 2, TokenType.R_BRACKET));  // ]
-            tokens.add(new Token(";", "testFile.jott", 2, TokenType.SEMICOLON));  // ;
-            tokens.add(new Token("}", "testFile.jott", 4, TokenType.R_BRACE));  // }
-
-            // Parse the function definition
+            tokens.add(new Token("Def", "testFile.jott", 1, TokenType.ID_KEYWORD)); // Def
+            tokens.add(new Token("main", "testFile.jott", 1, TokenType.ID_KEYWORD)); // main
+            tokens.add(new Token("[", "testFile.jott", 1, TokenType.L_BRACKET)); // [
+            tokens.add(new Token("]", "testFile.jott", 1, TokenType.R_BRACKET)); // ]
+            tokens.add(new Token(":", "testFile.jott", 1, TokenType.COLON)); // :
+            tokens.add(new Token("Void", "testFile.jott", 1, TokenType.ID_KEYWORD)); // Void
+            tokens.add(new Token("{", "testFile.jott", 1, TokenType.L_BRACE)); // {
+            tokens.add(new Token("String", "testFile.jott", 2, TokenType.ID_KEYWORD)); // String
+            tokens.add(new Token("s", "testFile.jott", 2, TokenType.ID_KEYWORD)); // s
+            tokens.add(new Token(";", "testFile.jott", 2, TokenType.SEMICOLON)); // ;
+            tokens.add(new Token("}", "testFile.jott", 4, TokenType.R_BRACE)); // }
+    
             FuncDefNode funcDefNode = FuncDefNode.parse(tokens);
-
-            // Convert the parsed function back to Jott code and print
-            System.out.println("Parsed 'Def main[]:Void { ::print[5]; }' to  " + funcDefNode.convertToJott());
-
+            funcDefNode.validateTree(symbolTable);
+            System.out.println("Test Case 1 Passed: Valid function definition.");
         } catch (Exception e) {
-            // Catch and print any exceptions
-            System.err.println("Error: " + e.getMessage());
+            System.err.println("Test Case 1 Failed: " + e.getMessage());
+        }
+    
+        // Test Case 2: Duplicate Function Name
+        try {
+            ArrayList<Token> tokens = new ArrayList<>();
+            tokens.add(new Token("Def", "testFile.jott", 1, TokenType.ID_KEYWORD)); // Def
+            tokens.add(new Token("main", "testFile.jott", 1, TokenType.ID_KEYWORD)); // main
+            tokens.add(new Token("[", "testFile.jott", 1, TokenType.L_BRACKET)); // [
+            tokens.add(new Token("]", "testFile.jott", 1, TokenType.R_BRACKET)); // ]
+            tokens.add(new Token(":", "testFile.jott", 1, TokenType.COLON)); // :
+            tokens.add(new Token("Void", "testFile.jott", 1, TokenType.ID_KEYWORD)); // Void
+            tokens.add(new Token("{", "testFile.jott", 1, TokenType.L_BRACE)); // {
+            tokens.add(new Token("Integer", "testFile.jott", 2, TokenType.ID_KEYWORD)); // Integer
+            tokens.add(new Token("i", "testFile.jott", 2, TokenType.ID_KEYWORD)); // i
+            tokens.add(new Token(";", "testFile.jott", 2, TokenType.SEMICOLON)); // ;
+            tokens.add(new Token("}", "testFile.jott", 4, TokenType.R_BRACE)); // }
+    
+            FuncDefNode funcDefNode = FuncDefNode.parse(tokens);
+            funcDefNode.validateTree(symbolTable); // Duplicate function
+    
+            System.err.println("Test Case 2 Failed: Expected duplicate function name error.");
+        } catch (Exception e) {
+            System.out.println("Test Case 2 Passed: " + e.getMessage());
+        }
+    
+        // Test Case 3: Function with Parameters
+        try {
+            ArrayList<Token> tokens = new ArrayList<>();
+            tokens.add(new Token("Def", "testFile.jott", 1, TokenType.ID_KEYWORD)); // Def
+            tokens.add(new Token("sum", "testFile.jott", 1, TokenType.ID_KEYWORD)); // sum
+            tokens.add(new Token("[", "testFile.jott", 1, TokenType.L_BRACKET)); // [
+            tokens.add(new Token("Integer", "testFile.jott", 1, TokenType.ID_KEYWORD)); // Integer
+            tokens.add(new Token("a", "testFile.jott", 1, TokenType.ID_KEYWORD)); // a
+            tokens.add(new Token(",", "testFile.jott", 1, TokenType.COMMA)); // ,
+            tokens.add(new Token("Integer", "testFile.jott", 1, TokenType.ID_KEYWORD)); // Integer
+            tokens.add(new Token("b", "testFile.jott", 1, TokenType.ID_KEYWORD)); // b
+            tokens.add(new Token("]", "testFile.jott", 1, TokenType.R_BRACKET)); // ]
+            tokens.add(new Token(":", "testFile.jott", 1, TokenType.COLON)); // :
+            tokens.add(new Token("Integer", "testFile.jott", 1, TokenType.ID_KEYWORD)); // Integer
+            tokens.add(new Token("{", "testFile.jott", 1, TokenType.L_BRACE)); // {
+            tokens.add(new Token("return", "testFile.jott", 2, TokenType.ID_KEYWORD)); // return
+            tokens.add(new Token("a", "testFile.jott", 2, TokenType.ID_KEYWORD)); // a
+            tokens.add(new Token("+", "testFile.jott", 2, TokenType.MATH_OP)); // +
+            tokens.add(new Token("b", "testFile.jott", 2, TokenType.ID_KEYWORD)); // b
+            tokens.add(new Token(";", "testFile.jott", 2, TokenType.SEMICOLON)); // ;
+            tokens.add(new Token("}", "testFile.jott", 3, TokenType.R_BRACE)); // }
+    
+            FuncDefNode funcDefNode = FuncDefNode.parse(tokens);
+            funcDefNode.validateTree(symbolTable);
+            System.out.println("Test Case 3 Passed: Function with parameters validated.");
+        } catch (Exception e) {
+            System.err.println("Test Case 3 Failed: " + e.getMessage());
         }
     }
 }

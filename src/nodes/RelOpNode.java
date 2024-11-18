@@ -1,6 +1,8 @@
 package nodes;
 
+import errors.SyntaxError;
 import java.util.ArrayList;
+import msc.*;
 import provided.JottParser;
 import provided.Token;
 import provided.TokenType;
@@ -9,7 +11,7 @@ import provided.TokenType;
  * RelOpNode
  * relational operation like >, <, >=, <=, ==, !=
  */
-public class RelOpNode implements OperatorNode{
+public class RelOpNode implements OperatorNode {
 
     Token operator;
 
@@ -19,25 +21,27 @@ public class RelOpNode implements OperatorNode{
 
     // Returns Relational Operator Node if a valid relop
     // Otherwise Throws SyntaxError Exception
-    public static RelOpNode parse(ArrayList <Token> tokens) throws Exception{
+    public static RelOpNode parse(ArrayList<Token> tokens) throws Exception {
 
         // Check if there is tokens
-        if(tokens.isEmpty()){
-            throw new SyntaxError("Expected relational operator got " + JottParser.finalToken.getToken(), JottParser.finalToken);
+        if (tokens.isEmpty()) {
+            throw new SyntaxError("Expected relational operator got " + JottParser.finalToken.getToken(),
+                    JottParser.finalToken);
         }
         Token currentToken = tokens.get(0);
         // Make sure token is type REL_OP
-        if(currentToken.getTokenType() != TokenType.REL_OP){
+        if (currentToken.getTokenType() != TokenType.REL_OP) {
             throw new SyntaxError("Expected relational operator got " + currentToken.getTokenType(), currentToken);
         }
         // Make sure token is a valid operator character
-        if(!(currentToken.getToken().equals(">") || 
-        currentToken.getToken().equals(">=") || 
-        currentToken.getToken().equals("<") || 
-        currentToken.getToken().equals("<=") || 
-        currentToken.getToken().equals("==") || 
-        currentToken.getToken().equals("!="))){
-            throw new SyntaxError("Expected relational operator >, <, >=, <=, == or != got " + currentToken.getToken(), currentToken);
+        if (!(currentToken.getToken().equals(">") ||
+                currentToken.getToken().equals(">=") ||
+                currentToken.getToken().equals("<") ||
+                currentToken.getToken().equals("<=") ||
+                currentToken.getToken().equals("==") ||
+                currentToken.getToken().equals("!="))) {
+            throw new SyntaxError("Expected relational operator >, <, >=, <=, == or != got " + currentToken.getToken(),
+                    currentToken);
         }
 
         Token operator = tokens.remove(0);
@@ -50,9 +54,23 @@ public class RelOpNode implements OperatorNode{
     }
 
     @Override
-    public boolean validateTree() {
-        // To be implemented in phase 3
-        throw new UnsupportedOperationException("Validation not supported yet.");
+    public TokenType getTokenType() {
+        return operator.getTokenType();
+    }
+
+    @Override
+    public Token getToken() {
+        return operator;
+    }
+
+    @Override
+    public DataType getType(SymbolTable symbolTable) {
+        return DataType.BOOLEAN;
+    }
+
+    @Override
+    public boolean validateTree(SymbolTable symbolTable) {
+        return true;
     }
 
     @Override

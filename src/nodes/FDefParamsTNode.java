@@ -1,6 +1,8 @@
 package nodes;
 
+import errors.*;
 import java.util.ArrayList;
+import msc.*;
 import provided.JottParser;
 import provided.JottTree;
 import provided.Token;
@@ -11,7 +13,7 @@ import provided.TokenType;
  * ,<id >: < type >
  */
 public class FDefParamsTNode implements JottTree {
-    
+
     IDNode id;
     TypeNode type;
 
@@ -25,11 +27,12 @@ public class FDefParamsTNode implements JottTree {
     public static FDefParamsTNode parse(ArrayList<Token> tokens) throws Exception {
         // Check if there is tokens
         if (tokens.isEmpty()) {
-            throw new SyntaxError("Expected comma , got " + JottParser.finalToken.getToken(), JottParser.finalToken);            
+            throw new SyntaxError("Expected comma , got " + JottParser.finalToken.getToken(), JottParser.finalToken);
         }
         // Check that there are at least 4 tokens
         if (tokens.size() < 4) {
-            throw new SyntaxError("Expected at least 4 tokens for Function Definition Parameters T", JottParser.finalToken);
+            throw new SyntaxError("Expected at least 4 tokens for Function Definition Parameters T",
+                    JottParser.finalToken);
         }
 
         // Parse comma
@@ -58,9 +61,30 @@ public class FDefParamsTNode implements JottTree {
     }
 
     @Override
-    public boolean validateTree() {
-        // To be implemented in phase 3
-        throw new UnsupportedOperationException("Validation not supported yet.");
+    public boolean validateTree(SymbolTable symbolTable) throws Exception {
+        // Validate the identifier using IDNode's validateTree method
+        id.validateTree(symbolTable);
+
+        // Validate the type using TypeNode's validateTree method
+        type.validateTree(symbolTable);
+
+        //
+        FunctionInfo func = symbolTable.getFunction(symbolTable.current_scope);
+        String value = "";
+        if(this.type.getType() == DataType.BOOLEAN) {
+            value = "Boolean";
+        } else if(this.type.getType() == DataType.INTEGER) {
+            value = "Integer";
+        } else if(this.type.getType() == DataType.DOUBLE) {
+            value = "Double";
+        } else if(this.type.getType() == DataType.STRING) {
+            value = "String";
+        }
+        func.parameterTypes.put(this.id.getToken().getToken(), value);
+        func.parameterOrder.put(func.parameterTypes.size(), this.id.getToken().getToken());
+        symbolTable.addVar(new VarInfo(id.convertToJott(), type.getType(), null));
+    
+        return true;
     }
 
     @Override
@@ -99,11 +123,11 @@ public class FDefParamsTNode implements JottTree {
             tokens3.add(new Token(":", "testFile.jott", 1, TokenType.COLON));
             try {
                 FDefParamsTNode FDefParamsTNode3 = FDefParamsTNode.parse(tokens3);
-                System.out.println("Parsed FDefParamsTNode ',var:':   " + FDefParamsTNode3.convertToJott()); // Should fail
+                System.out.println("Parsed FDefParamsTNode ',var:':   " + FDefParamsTNode3.convertToJott()); // Should
+                                                                                                             // fail
             } catch (SyntaxError e) {
                 System.err.println(e.getMessage());
             }
-            
 
         } catch (Exception e) {
             // Catch and print any exceptions

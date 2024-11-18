@@ -1,6 +1,8 @@
 package nodes;
 
+import errors.SyntaxError;
 import java.util.ArrayList;
+import msc.*;
 import provided.JottParser;
 import provided.Token;
 import provided.TokenType;
@@ -11,34 +13,43 @@ import provided.TokenType;
  */
 public interface OperandNode extends ExpressionNode {
 
-    // Determine if the node is IDNode, (-)NumberNode, or FunctionCallNode. 
+    // Determine if the node is IDNode, (-)NumberNode, or FunctionCallNode.
     // Returns the proper node type that you created above.
-    public static OperandNode parse(ArrayList <Token> tokens) throws Exception{
+    public static OperandNode parse(ArrayList<Token> tokens) throws Exception {
 
         // Check if there is tokens
-        if(tokens.isEmpty()){
-            throw new SyntaxError("Expected id, num, function call or - num got " + JottParser.finalToken.getToken(), JottParser.finalToken);
+        if (tokens.isEmpty()) {
+            throw new SyntaxError("Expected id, num, function call or - num got " + JottParser.finalToken.getToken(),
+                    JottParser.finalToken);
         }
 
         Token currentToken = tokens.get(0);
 
         // <id>
-        if(currentToken.getTokenType() == TokenType.ID_KEYWORD){
-	        return IDNode.parse(tokens);
-        // <num>
-        } else if(currentToken.getTokenType() == TokenType.NUMBER){
-	        return NumberNode.parse(tokens);
-        // <func_call>
-        } else if(currentToken.getTokenType() == TokenType.FC_HEADER){
-	        return FunctionCallNode.parse(tokens);
-        // -<num>
-        } else if (currentToken.getTokenType() == TokenType.MATH_OP && currentToken.getToken().equals("-") 
-        && tokens.size() > 1 && tokens.get(1).getTokenType() == TokenType.NUMBER) {
+        if (currentToken.getTokenType() == TokenType.ID_KEYWORD) {
+            return IDNode.parse(tokens);
+            // <num>
+        } else if (currentToken.getTokenType() == TokenType.NUMBER) {
+            return NumberNode.parse(tokens);
+            // <func_call>
+        } else if (currentToken.getTokenType() == TokenType.FC_HEADER) {
+            return FunctionCallNode.parse(tokens);
+            // -<num>
+        } else if (currentToken.getTokenType() == TokenType.MATH_OP && currentToken.getToken().equals("-")
+                && tokens.size() > 1 && tokens.get(1).getTokenType() == TokenType.NUMBER) {
             return NumberNode.parse(tokens); // Negation is handled in NumberNode's parse method
         }
-
-        throw new SyntaxError("Expected ID_KEYWORD, (-)NUMBER or FC_HEADER for Operand got " + currentToken.getToken(), currentToken);
+        throw new SyntaxError("Expected ID_KEYWORD, (-)NUMBER or FC_HEADER for Operand got " + currentToken.getToken(),
+                currentToken);
     }
+
+    @Override
+    public DataType getType(SymbolTable symbolTable) throws Exception;
+
+    public Token getToken();
+
+    @Override
+    public boolean validateTree(SymbolTable symbolTable) throws Exception;
 
     public static void main(String[] args) {
         System.out.println("Testing Operand Node Main Method");
