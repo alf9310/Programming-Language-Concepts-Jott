@@ -1,8 +1,8 @@
 package nodes;
 
+import msc.*;
 import provided.Token;
 import provided.TokenType;
-import msc.*;
 
 /**
  * Interface for RelOpNode and MathOpNode
@@ -20,5 +20,5 @@ public interface OperatorNode extends ExpressionNode {
     boolean validateTree(SymbolTable symbolTable);
     
     @Override
-    void execute();
+    void execute(SymbolTable symbolTable);
 }

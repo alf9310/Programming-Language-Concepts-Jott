@@ -190,7 +190,7 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
     }
 
     @Override
-    public void execute() {
+    public void execute(SymbolTable symbolTable) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

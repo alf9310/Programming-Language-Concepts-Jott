@@ -3,11 +3,11 @@ package nodes;
 import errors.SemanticError;
 import errors.SyntaxError;
 import java.util.ArrayList;
+import java.util.HashMap;
 import msc.*;
 import provided.JottParser;
 import provided.Token;
 import provided.TokenType;
-import java.util.HashMap;
 
 /*
  * Binary Operation Node
@@ -126,7 +126,7 @@ public class BinaryOpNode implements ExpressionNode {
     }
 
     @Override
-    public void execute() {
+    public void execute(SymbolTable symbolTable) {
         // To be implemented in phase 4
         throw new UnsupportedOperationException("Execution not supported yet.");
     }
