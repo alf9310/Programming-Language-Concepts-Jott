@@ -88,7 +88,7 @@ public class TypeNode implements JottTree {
     }
 
     @Override
-    public void execute(SymbolTable symbolTable) {
+    public Object execute(SymbolTable symbolTable) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
