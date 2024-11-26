@@ -35,7 +35,6 @@ public class Jott {
             System.err.println(e.getMessage());
             return;
         }
-
         root.execute(symbolTable);
     }
 }

@@ -146,9 +146,11 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
 
         if(func.getName().equals("print")) {
             // hard code check for print, since it takes any type
+            if (!(this.params.expr instanceof ExpressionNode)) {
+                throw new SemanticError("Print only takes in expression nodes", this.id.getToken());
+            }
             return true;
         }
-
         ArrayList<DataType> pTypes = new ArrayList<>();
         for(int i = 1; i <= len; i++) {
             // get list of parameter data types IN ORDER
@@ -168,30 +170,36 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
             }
         }
 
-        /*
-        Object[] pTypes = parameters.values().toArray();
-        for(DataType val: parameters.values()) {
-            System.out.println(val);
-        }
-        if(len > 0) {
-            // check first param type matches
-            if(pTypes[0] != this.params.expr.getType(symbolTable)) {
-                throw new SemanticError(this.params.expr.getToken().getToken() + " should be type " + pTypes[0], this.params.expr.getToken());
-            }
-            // check all other param types match
-            for(int i = 1; i < len; i++) {
-                if(pTypes[i] != this.params.paramst.get(i - 1).getType(symbolTable)) {
-                    throw new SemanticError("Parameter " + (i + 1) + " of " + this.id.getToken().getToken() + " should be type " + pTypes[i], this.id.getToken());
-                }
-            }
-        }*/
-
         return true;
     }
 
     @Override
-    public void execute(SymbolTable symbolTable) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Object execute(SymbolTable symbolTable) {
+
+        //Print
+        if (this.id.getToken().getToken().equals("print")) {
+            ExpressionNode expr = this.params.expr;
+            // just print: operand, stringliteral, bool
+            if (expr instanceof OperandNode || expr instanceof StringLiteralNode || expr instanceof BooleanNode) {
+                System.out.println(expr.getToken().getToken());
+            }
+            // evaluate: mathop, relop
+            else if (expr instanceof ExpressionNode) {
+                System.out.println(expr.execute(symbolTable));
+            }
+            return null;
+        }
+
+        //Concat
+        // validation checks should already be covered by geneneral validation
+        if (this.id.getToken().getToken().equals("print")) {
+            //TODO not sure what the expression node would be in a concat call
+        }
+
+
+        //TODO the normal case still needs to be implemented
+        return null;
+
     }
 
     public static void main(String[] args) {
