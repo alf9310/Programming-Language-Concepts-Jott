@@ -1,3 +1,4 @@
+#Semantic Error
 #this will fail phase 3 for missing params in function call.
 
 Def foo[x:Integer]:Integer{

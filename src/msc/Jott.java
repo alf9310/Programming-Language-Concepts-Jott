@@ -5,21 +5,21 @@ import provided.*;
 public class Jott {
     static JottTree root;
     static SymbolTable symbolTable = new SymbolTable();
-    
-        public static void main(String[] args) {
-            
-            if (args.length != 1) {
-                return;
-            }
-            String filename = args[0];
-    
-            ArrayList<Token> tokens = JottTokenizer.tokenize(filename);
-            if (tokens == null) {
-                return;
-            }
-    
-            try {
-                root = JottParser.parse(tokens);
+
+    public static void main(String[] args) {
+        
+        if (args.length != 1) {
+            return;
+        }
+        String filename = args[0];
+
+        ArrayList<Token> tokens = JottTokenizer.tokenize(filename);
+        if (tokens == null) {
+            return;
+        }
+
+        try {
+            root = JottParser.parse(tokens);
         } catch (Exception e) {
             System.err.println(e.getMessage());
             return;
@@ -33,9 +33,9 @@ public class Jott {
             root.validateTree(symbolTable);
         } catch (Exception e) {
             System.err.println(e.getMessage());
+            return;
         }
-        
+
         root.execute(symbolTable);
     }
-
 }

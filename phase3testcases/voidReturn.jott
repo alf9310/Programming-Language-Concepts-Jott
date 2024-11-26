@@ -1,3 +1,4 @@
+#Semantic Error
 #this will fail phase 3 for void function with a return.
 
 Def foo[x:Integer]:Void{
