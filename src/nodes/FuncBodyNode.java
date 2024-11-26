@@ -111,7 +111,7 @@ public class FuncBodyNode implements JottTree {
     }
 
     @Override
-    public void execute(SymbolTable symbolTable) {
+    public void execute() {
         // To be implemented in phase 4
         throw new UnsupportedOperationException("Execution not supported yet.");
     }

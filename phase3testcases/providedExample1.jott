@@ -1,4 +1,3 @@
-#5\nfoo bar
 #this is an example
 Def main[]:Void{
     ::print[5];

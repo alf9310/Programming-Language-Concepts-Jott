@@ -1,4 +1,3 @@
-#Semantic Error
 #should pass phase 2 but fail phase 3
 #while is a keyword and starts with an uppercase letter
 

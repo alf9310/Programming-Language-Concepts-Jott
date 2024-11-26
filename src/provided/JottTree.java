@@ -25,5 +25,5 @@ public interface JottTree {
 	/**
 	 * This will execute the Jott code represented by this JottTree node.
 	 */
-	public void execute(SymbolTable symbolTable);
+	public void execute();
 }

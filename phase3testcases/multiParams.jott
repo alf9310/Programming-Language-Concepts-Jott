@@ -1,4 +1,3 @@
-#1\n2\n\n3
 # valid test case
 
 Def foo[x:Integer, y:Integer]:Integer{
