@@ -86,7 +86,18 @@ public class NumberNode implements OperandNode {
 
     @Override
     public void execute(SymbolTable symbolTable) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        String value = number.getToken();
+    
+        // Determine the numeric value, considering if the number is negative
+        if (negative) {
+            value = "-" + value;
+        }
+    
+        // Determine the data type: DOUBLE if it contains a decimal point, otherwise INTEGER
+        DataType type = value.contains(".") ? DataType.DOUBLE : DataType.INTEGER;
+    
+        // Store the evaluated result in the SymbolTable under a temporary key
+        symbolTable.addVar(new VarInfo("result", type, value));
     }
 
     // Main method to test NumberNode parsing and negation
