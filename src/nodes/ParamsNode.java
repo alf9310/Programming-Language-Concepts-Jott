@@ -101,7 +101,7 @@ public class ParamsNode implements JottTree {
     }
 
     @Override
-    public void execute() {
+    public void execute(SymbolTable symbolTable) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

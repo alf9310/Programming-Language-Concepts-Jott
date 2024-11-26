@@ -1,3 +1,4 @@
+#Semantic Error
 #this will fail phase 3 for wrong type of return in function call.
 
 Def foo[x:Double]:Integer{

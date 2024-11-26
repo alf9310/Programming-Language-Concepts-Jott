@@ -1,5 +1,5 @@
+#foobar
 #this will pass phase 3
-
 
 def main[]:Void{
     String s;
