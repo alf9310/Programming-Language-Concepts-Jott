@@ -85,8 +85,34 @@ public class AssignmentNode implements BodyStmtNode {
 
     @Override
     public void execute(SymbolTable symbolTable) {
-        // To be implemented in phase 4
-        throw new UnsupportedOperationException("Execution not supported yet.");
+        // Execute the expression on the right-hand side
+        expression.execute(symbolTable);
+    
+        // Fetch the result of the expression
+        VarInfo expressionResult = symbolTable.getVar("result"); // Assuming the expression execution stores its result as "result"
+    
+        // Ensure the expression was executed properly
+        if (expressionResult == null) {
+            throw new RuntimeException("Expression evaluation failed.");
+        }
+    
+        // Fetch the variable from the symbol table
+        VarInfo variable = symbolTable.getVar(id.getToken().getToken());
+    
+        // Ensure the variable exists in the symbol table
+        if (variable == null) {
+            throw new RuntimeException("Variable '" + id.getToken().getToken() + "' not found in the current scope.");
+        }
+    
+        // Ensure the types match
+        if (variable.type != expressionResult.type) {
+            throw new RuntimeException("Type mismatch: Cannot assign a value of type " +
+                    expressionResult.type + " to variable of type " + variable.type);
+        }
+    
+        // Update the variable's value in the symbol table
+        variable.value = expressionResult.value;
+        symbolTable.addVar(variable); // Re-add the updated variable
     }
 
     @Override
