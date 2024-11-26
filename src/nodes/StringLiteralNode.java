@@ -65,7 +65,10 @@ public class StringLiteralNode implements ExpressionNode {
 
     @Override
     public void execute(SymbolTable symbolTable) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        // In Jott, execution of a literal simply evaluates its value.
+        // Here, we add the literal's value to the symbol table under a temporary result key.
+        VarInfo stringLiteral = new VarInfo("result", DataType.STRING, string.getToken());
+        symbolTable.addVar(stringLiteral);
     }
 
     public static void main(String[] args) {
