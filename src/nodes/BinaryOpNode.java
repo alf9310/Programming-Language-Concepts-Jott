@@ -127,8 +127,126 @@ public class BinaryOpNode implements ExpressionNode {
 
     @Override
     public void execute(SymbolTable symbolTable) {
-        // To be implemented in phase 4
-        throw new UnsupportedOperationException("Execution not supported yet.");
+        // Execute the left and right operands to evaluate their values
+        leftOperand.execute(symbolTable);
+        VarInfo leftVar = symbolTable.getVar("result"); // Retrieve the result of the left operand
+    
+        rightOperand.execute(symbolTable);
+        VarInfo rightVar = symbolTable.getVar("result"); // Retrieve the result of the right operand
+    
+        // Ensure both variables are valid
+        if (leftVar == null || rightVar == null) {
+            throw new RuntimeException("Operands could not be resolved or are invalid.");
+        }
+    
+        // Ensure types are consistent
+        if (leftVar.type != rightVar.type) {
+            throw new RuntimeException("Operands must have the same data type for operation.");
+        }
+    
+        String operatorToken = operator.convertToJott();
+        String resultValue;
+        DataType resultType;
+    
+        try {
+            // Handle mathematical operations
+            if (operator.getTokenType() == TokenType.MATH_OP) {
+                if (leftVar.type == DataType.INTEGER) {
+                    int leftValue = Integer.parseInt(leftVar.value);
+                    int rightValue = Integer.parseInt(rightVar.value);
+    
+                    switch (operatorToken) {
+                        case "+":
+                            resultValue = String.valueOf(leftValue + rightValue);
+                            break;
+                        case "-":
+                            resultValue = String.valueOf(leftValue - rightValue);
+                            break;
+                        case "*":
+                            resultValue = String.valueOf(leftValue * rightValue);
+                            break;
+                        case "/":
+                            if (rightValue == 0) {
+                                throw new RuntimeException("Division by zero is not allowed.");
+                            }
+                            resultValue = String.valueOf(leftValue / rightValue); // Integer division
+                            break;
+                        default:
+                            throw new RuntimeException("Unsupported math operator: " + operatorToken);
+                    }
+                    resultType = DataType.INTEGER;
+                } else if (leftVar.type == DataType.DOUBLE) {
+                    double leftValue = Double.parseDouble(leftVar.value);
+                    double rightValue = Double.parseDouble(rightVar.value);
+    
+                    switch (operatorToken) {
+                        case "+":
+                            resultValue = String.valueOf(leftValue + rightValue);
+                            break;
+                        case "-":
+                            resultValue = String.valueOf(leftValue - rightValue);
+                            break;
+                        case "*":
+                            resultValue = String.valueOf(leftValue * rightValue);
+                            break;
+                        case "/":
+                            if (rightValue == 0.0) {
+                                throw new RuntimeException("Division by zero is not allowed.");
+                            }
+                            resultValue = String.valueOf(leftValue / rightValue);
+                            break;
+                        default:
+                            throw new RuntimeException("Unsupported math operator: " + operatorToken);
+                    }
+                    resultType = DataType.DOUBLE;
+                } else {
+                    throw new RuntimeException("Math operations only support INTEGER or DOUBLE types.");
+                }
+            }
+            // Handle relational operations
+            else if (operator.getTokenType() == TokenType.REL_OP) {
+                if (leftVar.type == DataType.INTEGER || leftVar.type == DataType.DOUBLE) {
+                    double leftValue = Double.parseDouble(leftVar.value);
+                    double rightValue = Double.parseDouble(rightVar.value);
+    
+                    boolean result;
+                    switch (operatorToken) {
+                        case ">":
+                            result = leftValue > rightValue;
+                            break;
+                        case "<":
+                            result = leftValue < rightValue;
+                            break;
+                        case ">=":
+                            result = leftValue >= rightValue;
+                            break;
+                        case "<=":
+                            result = leftValue <= rightValue;
+                            break;
+                        case "==":
+                            result = leftValue == rightValue;
+                            break;
+                        case "!=":
+                            result = leftValue != rightValue;
+                            break;
+                        default:
+                            throw new RuntimeException("Unsupported relational operator: " + operatorToken);
+                    }
+                    resultValue = String.valueOf(result);
+                    resultType = DataType.BOOLEAN;
+                } else {
+                    throw new RuntimeException("Relational operations only support INTEGER or DOUBLE types.");
+                }
+            } else {
+                throw new RuntimeException("Unsupported operator type: " + operator.getTokenType());
+            }
+    
+            // Store the result in the symbol table
+            symbolTable.addVar(new VarInfo("result", resultType, resultValue));
+    
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("Failed to parse operand values for operation.", e);
+        }
     }
 
     public static void main(String[] args) {
