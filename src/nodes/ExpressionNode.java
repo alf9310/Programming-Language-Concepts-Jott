@@ -102,6 +102,9 @@ public interface ExpressionNode extends JottTree {
     @Override
     public boolean validateTree(SymbolTable symbolTable) throws Exception;
 
+    @Override
+    public Object execute(SymbolTable symbolTable);
+
     public DataType getType(SymbolTable symbolTable) throws Exception;
 
     public Token getToken();

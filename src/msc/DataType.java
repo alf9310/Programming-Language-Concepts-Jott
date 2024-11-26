@@ -5,5 +5,6 @@ public enum DataType {
     STRING,
     INTEGER,
     DOUBLE, 
-    VOID
+    VOID,
+    ANY
 }

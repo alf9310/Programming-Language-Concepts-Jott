@@ -25,7 +25,8 @@ public class SymbolTable {
         str_param.put("str", "String");
         FunctionInfo printInfo = new FunctionInfo("print", "void", str_param);
         this.addFunction("print", printInfo);
-        printInfo.parameterOrder.put(1, "str");
+        printInfo.parameterOrder.put(1, "");
+        //TODO update this to handle any data type but void
 
         HashMap<String, String> concat_param = new HashMap<>();
         concat_param.put("str1", "String");

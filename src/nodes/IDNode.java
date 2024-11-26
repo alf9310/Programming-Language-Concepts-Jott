@@ -79,11 +79,18 @@ public class IDNode implements OperandNode {
     // Check if ID exists in current scope
     @Override
     public boolean validateTree(SymbolTable symbolTable) throws Exception {
+
+        // These are not allowed as variable or function names
+        List<String> forbidden = Arrays.asList("print", "concat","length", "while", "if", "elseif", "else",
+                "void", "boolean", "integer", "double", "string");
+        if (forbidden.contains(id.getToken())) {
+            throw new SemanticError("Reserved keyword! Cannot be function/variable name: " + id.getToken(), id);
+        }
         return true;
     }
 
     @Override
-    public void execute(SymbolTable symbolTable) {
+    public Object execute(SymbolTable symbolTable) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

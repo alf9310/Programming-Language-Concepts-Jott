@@ -102,7 +102,7 @@ public class ElseNode implements JottTree {
     }
 
     @Override
-    public void execute(SymbolTable symbolTable) {
+    public Object execute(SymbolTable symbolTable) {
         // To be implemented in phase 4
         throw new UnsupportedOperationException("Execution not supported yet.");
     }
