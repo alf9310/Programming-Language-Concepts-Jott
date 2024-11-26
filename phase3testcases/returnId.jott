@@ -1,4 +1,3 @@
-#Semantic Error
 #this should pass parsing but fail sematic analysis (phase3)
 #return <id> is not allowed from void
 

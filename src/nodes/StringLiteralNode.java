@@ -64,7 +64,7 @@ public class StringLiteralNode implements ExpressionNode {
     }
 
     @Override
-    public void execute(SymbolTable symbolTable) {
+    public void execute() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

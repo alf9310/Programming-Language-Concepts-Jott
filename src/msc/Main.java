@@ -2,7 +2,7 @@ package msc;
 import java.util.ArrayList;
 import provided.*;
 
-public class Jott {
+public class Main {
     //TODO check docs for how file name should be passed to be compatible with testers
     // Also how to throw user errors
     static JottTree root;

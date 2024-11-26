@@ -1,4 +1,3 @@
-#Semantic Error
 #this will pass phase 2 but fail phase 3 for foo param type not matching
 
 Def foo[y:Double]:Integer{
