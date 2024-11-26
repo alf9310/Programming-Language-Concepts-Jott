@@ -75,8 +75,86 @@ public class RelOpNode implements OperatorNode {
 
     @Override
     public void execute(SymbolTable symbolTable) {
-        // To be implemented in phase 4
-        throw new UnsupportedOperationException("Execution not supported yet.");
+        // Retrieve the two operands from the symbol table
+        VarInfo leftOperand = symbolTable.getVar("leftOperand");
+        VarInfo rightOperand = symbolTable.getVar("rightOperand");
+    
+        // Check if operands exist
+        if (leftOperand == null || rightOperand == null) {
+            throw new RuntimeException("Operands not found in the symbol table.");
+        }
+    
+        // Ensure the operand types are consistent
+        if (leftOperand.type != rightOperand.type) {
+            throw new RuntimeException("Type mismatch: Both operands must be of the same type.");
+        }
+    
+        DataType operandType = leftOperand.type;
+        boolean result;
+    
+        try {
+            // Perform the relational operation based on the operand type
+            if (operandType == DataType.INTEGER) {
+                int leftValue = Integer.parseInt(leftOperand.value);
+                int rightValue = Integer.parseInt(rightOperand.value);
+    
+                switch (operator.getToken()) {
+                    case ">":
+                        result = leftValue > rightValue;
+                        break;
+                    case ">=":
+                        result = leftValue >= rightValue;
+                        break;
+                    case "<":
+                        result = leftValue < rightValue;
+                        break;
+                    case "<=":
+                        result = leftValue <= rightValue;
+                        break;
+                    case "==":
+                        result = leftValue == rightValue;
+                        break;
+                    case "!=":
+                        result = leftValue != rightValue;
+                        break;
+                    default:
+                        throw new RuntimeException("Unsupported relational operator: " + operator.getToken());
+                }
+            } else if (operandType == DataType.DOUBLE) {
+                double leftValue = Double.parseDouble(leftOperand.value);
+                double rightValue = Double.parseDouble(rightOperand.value);
+    
+                switch (operator.getToken()) {
+                    case ">":
+                        result = leftValue > rightValue;
+                        break;
+                    case ">=":
+                        result = leftValue >= rightValue;
+                        break;
+                    case "<":
+                        result = leftValue < rightValue;
+                        break;
+                    case "<=":
+                        result = leftValue <= rightValue;
+                        break;
+                    case "==":
+                        result = leftValue == rightValue;
+                        break;
+                    case "!=":
+                        result = leftValue != rightValue;
+                        break;
+                    default:
+                        throw new RuntimeException("Unsupported relational operator: " + operator.getToken());
+                }
+            } else {
+                throw new RuntimeException("Unsupported data type for relational operation: " + operandType);
+            }
+    
+            // Store the result as a Boolean in the symbol table
+            symbolTable.addVar(new VarInfo("result", DataType.BOOLEAN, Boolean.toString(result)));
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("Failed to parse operand values for relational operation.", e);
+        }
     }
 
     public static void main(String[] args) {
