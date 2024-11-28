@@ -173,8 +173,15 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
         return true;
     }
 
+    /**
+     * Sets the scope as the id's function in the symbol table
+     * Executes the parameters (Setting their value in the symbol table is handled in params and paramst)
+     * Locates the functionDefNode based on id and executes it
+     * Sets the scope to what it was before the function call
+     * Returns the functionDefNode execute's return value
+     */
     @Override
-    public Object execute(SymbolTable symbolTable) {
+    public Object execute(SymbolTable symbolTable) throws Exception{
 
         //Print
         if (this.id.getToken().getToken().equals("print")) {
@@ -196,10 +203,30 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
             //TODO not sure what the expression node would be in a concat call
         }
 
+        // Save the current scope
+        String previousScope = symbolTable.current_scope;
 
-        //TODO the normal case still needs to be implemented
-        return null;
+        // Find the function being called
+        FunctionInfo funcInfo = symbolTable.getFunction(this.id.getToken().getToken());
 
+        // Set the scope to the called function
+        symbolTable.enterScope(id.getToken().getToken());
+
+        // Execute the parameters (handles setting their values in the symbol table)
+        this.params.execute(symbolTable);
+
+        // TODO Locate and execute the corresponding FunctionDefNode
+        // I think we need to store a function's FunctionDefNode in FunctionInfo in order to make this work....
+        FuncDefNode functionDefNode = funcInfo.getFunctionDefNode();
+
+        // Execute the function body and capture its return value
+        Object returnValue = functionDefNode.execute(symbolTable);
+
+        // Restore the previous scope
+        symbolTable.current_scope = previousScope;
+
+        // To be used in assignments and stuff
+        return returnValue;
     }
 
     public static void main(String[] args) {

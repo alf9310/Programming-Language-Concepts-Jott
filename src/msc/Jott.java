@@ -35,6 +35,10 @@ public class Jott {
             System.err.println(e.getMessage());
             return;
         }
-        root.execute(symbolTable);
+        try {
+            root.execute(symbolTable);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
     }
 }

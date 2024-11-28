@@ -79,6 +79,7 @@ public class VarDecNode implements JottTree {
 
     @Override
     public Object execute(SymbolTable symbolTable) {
+        // TODO I don't think this needs execute
         // To be implemented in phase 4
         throw new UnsupportedOperationException("Execution not supported yet.");
     }

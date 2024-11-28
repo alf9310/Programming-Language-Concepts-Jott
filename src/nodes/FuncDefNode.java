@@ -171,9 +171,19 @@ public class FuncDefNode implements JottTree{
         return true;
     }
 
+    /**
+     * Enter function scope and execute body
+     */
     @Override
-    public Object execute(SymbolTable symbolTable) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Object execute(SymbolTable symbolTable) throws Exception {
+        // Enter function scope
+        String _name = this.funcName.getToken().getToken();
+        symbolTable.enterScope(_name);
+
+        // TODO I don't believe we do anything with function params here... 
+
+        // Execute the function body
+        return body.execute(symbolTable);
     }
 
     public static void main(String[] args) {

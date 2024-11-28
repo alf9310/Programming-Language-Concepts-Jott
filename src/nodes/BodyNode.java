@@ -12,7 +12,7 @@ import provided.TokenType;
 
 /*
  * Body Node
- * Can either be a boolean equation or a mathmatical equation
+ * Anything that could have a return statement in it
  * < body_stmt >⋆ < return_stmt >
  */
 public class BodyNode implements JottTree {
@@ -127,10 +127,25 @@ public class BodyNode implements JottTree {
         
     }
 
+    /**
+     * Execute the body statements & return the return value 
+     */
     @Override
-    public Object execute(SymbolTable symbolTable) {
-        // To be implemented in phase 4
-        throw new UnsupportedOperationException("Execution not supported yet.");
+    public Object execute(SymbolTable symbolTable) throws Exception {
+        Object result;
+
+        // Execute body statements
+        for (BodyStmtNode bodyStmt : this.bodyStmts) {
+            result = bodyStmt.execute(symbolTable);
+
+            // If a return value is encountered, terminate execution early and return value
+            if (result != null) {
+                return result;
+            }
+        }
+
+        return this.returnStmt.execute(symbolTable);
+        
     }
 
     public static void main(String[] args) {

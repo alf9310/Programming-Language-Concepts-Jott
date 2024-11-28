@@ -110,10 +110,15 @@ public class FuncBodyNode implements JottTree {
         return true;
     }
 
+    /**
+     * Execute the function's body
+     */
     @Override
-    public Object execute(SymbolTable symbolTable) {
-        // To be implemented in phase 4
-        throw new UnsupportedOperationException("Execution not supported yet.");
+    public Object execute(SymbolTable symbolTable) throws Exception {
+        // TODO: I don't think we need to execute variable declarations as they're already in scope
+
+        // Return the body of the function
+        return body.execute(symbolTable);
     }
 
     public static void main(String[] args) {

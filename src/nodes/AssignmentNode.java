@@ -83,10 +83,29 @@ public class AssignmentNode implements BodyStmtNode {
         return true;
     }
 
+    /**
+     * Execute the expression and set it as the value of the id's VarInfo in the symbolTable
+     */
     @Override
     public Object execute(SymbolTable symbolTable) {
-        // To be implemented in phase 4
-        throw new UnsupportedOperationException("Execution not supported yet.");
+        // Evaluate the expression to get its value
+        Object value = expression.execute(symbolTable);
+
+        // Retrieve the variable information from the symbol table
+        VarInfo varInfo = symbolTable.getVar(id.getToken().getToken());
+
+        // Assign the value to the variable in the symbol table
+        // TODO Do we want to keep the value attribute of a variable a string? 
+        // TODO or change it to a generic object to later make math with integers and such easier?
+        if (value instanceof String string) {
+            varInfo.value = string;
+        } else {
+            varInfo.value = String.valueOf(value);
+        }
+
+        // Not a function return, so don't return anything
+        return null;
+
     }
 
     @Override
