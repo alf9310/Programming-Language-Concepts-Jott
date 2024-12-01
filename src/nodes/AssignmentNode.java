@@ -3,7 +3,8 @@ package nodes;
 import errors.SemanticError;
 import errors.SyntaxError;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.List;
 import msc.*;
 import provided.JottParser;
 import provided.Token;
@@ -80,6 +81,14 @@ public class AssignmentNode implements BodyStmtNode {
             throw new SemanticError("Id and Expression must be of the same data type", id.getToken());
         }
 
+        // Throw error if trying to define a variable with a reserved name
+        // These are not allowed as variable or function names
+        List<String> forbidden = Arrays.asList("print", "concat","length", "while", "if", "elseif", "else",
+                "void", "boolean", "integer", "double", "string");
+        if (forbidden.contains(id.getToken().getToken())) {
+            throw new SemanticError("Reserved keyword! Cannot be function/variable name: " + id.getToken().getToken(), id.getToken());
+        }
+
         return true;
     }
 
@@ -87,7 +96,7 @@ public class AssignmentNode implements BodyStmtNode {
      * Execute the expression and set it as the value of the id's VarInfo in the symbolTable
      */
     @Override
-    public Object execute(SymbolTable symbolTable) {
+    public Object execute(SymbolTable symbolTable) throws Exception {
         // Evaluate the expression to get its value
         Object value = expression.execute(symbolTable);
 
@@ -114,6 +123,7 @@ public class AssignmentNode implements BodyStmtNode {
     }
 
     public static void main(String[] args) {
+    /*
         System.out.println("Testing AssignmentNode Main Method");
         SymbolTable symbolTable = new SymbolTable();
         symbolTable.addFunction("main", new FunctionInfo("main", "void", new HashMap<>()));
@@ -212,5 +222,6 @@ public class AssignmentNode implements BodyStmtNode {
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
+    */
     }
 }

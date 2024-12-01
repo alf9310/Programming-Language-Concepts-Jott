@@ -3,7 +3,6 @@ package nodes;
 import errors.SemanticError;
 import errors.SyntaxError;
 import java.util.ArrayList;
-import java.util.HashMap;
 import msc.*;
 import provided.JottParser;
 import provided.Token;
@@ -132,6 +131,7 @@ public class BinaryOpNode implements ExpressionNode {
     }
 
     public static void main(String[] args) {
+    /*
         try {
             System.out.println("-----Testing BinaryOpNode Main Method-----");
    
@@ -228,5 +228,6 @@ public class BinaryOpNode implements ExpressionNode {
             // Catch and print any unexpected exceptions
             System.err.println("Unexpected exception: " + e.getMessage());
         }
+    */
     }
 }

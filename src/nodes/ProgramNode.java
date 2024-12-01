@@ -94,8 +94,11 @@ public class ProgramNode implements JottTree{
                 break;
             }
         }
-    
-        // Execute the main function
+
+        // Set the scope to main
+        symbolTable.enterScope("main");
+
+        // Execute the main function's definition
         return mainFunction.execute(symbolTable);
     }
 

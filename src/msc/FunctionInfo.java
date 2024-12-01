@@ -1,7 +1,8 @@
 package msc;
 import java.util.HashMap;
+import nodes.FuncDefNode;
 /**
- * This class is responsible for
+ * This class is responsible for storing info about a function
  * 
  * @author Kaiy Muhammad, Sejal Bhattad, Lauren Kaestle, Audrey Fuller
  **/
@@ -17,13 +18,14 @@ public class FunctionInfo {
     // also check number to params
     public HashMap<String, String> parameterTypes;
     public HashMap<Integer, String> parameterOrder; // key is current parameter # (starting at 1), value is its name
+    public FuncDefNode functionDefNode; // Function definition Node to be stored in validateTree and used in execute  
+    public HashMap<String, HashMap<String, VarInfo>> variableMap; // Variables local to this function
 
-    public HashMap<String, HashMap<String, VarInfo>> variableMap;
-
-    public FunctionInfo(String name, String returnType, HashMap<String, String> parameterTypes) {
+    public FunctionInfo(String name, String returnType, HashMap<String, String> parameterTypes, FuncDefNode functionDefNode) {
         this.name = name;
         this.returnType = returnType;
         this.parameterTypes = parameterTypes;
+        this.functionDefNode = functionDefNode;
         // var list starts empty
         this.variableMap = new HashMap<>();
         this.parameterOrder = new HashMap<>();
@@ -78,5 +80,9 @@ public class FunctionInfo {
     }
     public HashMap<String, VarInfo> getVars(String scope) {
         return variableMap.get(scope);
+    }
+
+    public FuncDefNode getFunctionDefNode(){
+        return this.functionDefNode;
     }
 }

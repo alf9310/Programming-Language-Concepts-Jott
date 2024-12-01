@@ -3,12 +3,10 @@ package nodes;
 import errors.SemanticError;
 import errors.SyntaxError;
 import java.util.ArrayList;
-import java.util.HashMap;
 import msc.*;
 import provided.JottParser;
 import provided.JottTree;
 import provided.Token;
-import provided.TokenType;
 
 /*
  * Function Body Node
@@ -122,6 +120,7 @@ public class FuncBodyNode implements JottTree {
     }
 
     public static void main(String[] args) {
+        /*
         try {
             System.out.println("Testing FuncBodyNode Main Method");
     
@@ -217,5 +216,6 @@ public class FuncBodyNode implements JottTree {
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
         }
+    */
     }
 }

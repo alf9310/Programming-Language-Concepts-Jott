@@ -2,7 +2,6 @@ package nodes;
 
 import errors.SyntaxError;
 import java.util.ArrayList;
-import java.util.HashMap;
 import msc.*;
 import provided.JottParser;
 import provided.JottTree;
@@ -103,12 +102,13 @@ public interface ExpressionNode extends JottTree {
     public boolean validateTree(SymbolTable symbolTable) throws Exception;
 
     @Override
-    public Object execute(SymbolTable symbolTable);
+    public Object execute(SymbolTable symbolTable) throws Exception;
 
     public DataType getType(SymbolTable symbolTable) throws Exception;
 
     public Token getToken();
 
+    /*
     public static void main(String[] args) {
         System.out.println("Testing ExpressionNode Main Method");
         // Validate tree tests
@@ -211,4 +211,5 @@ public interface ExpressionNode extends JottTree {
             System.err.println("!FAILED TEST! Test Validate Tree 5 Failed: " + e.getMessage());
         }
     }
+    */
 }

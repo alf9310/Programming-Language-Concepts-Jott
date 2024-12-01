@@ -20,10 +20,12 @@ public class SymbolTable {
     public SymbolTable() {
         functionMap = new HashMap<>();
 
+        // TODO: Could define built-in functions function def nodes here to call instead of null
+
         // builtin print, concat, length
         HashMap<String, String> str_param = new HashMap<>();
         str_param.put("str", "String");
-        FunctionInfo printInfo = new FunctionInfo("print", "void", str_param);
+        FunctionInfo printInfo = new FunctionInfo("print", "void", str_param, null);
         this.addFunction("print", printInfo);
         printInfo.parameterOrder.put(1, "");
         //TODO update this to handle any data type but void
@@ -31,14 +33,14 @@ public class SymbolTable {
         HashMap<String, String> concat_param = new HashMap<>();
         concat_param.put("str1", "String");
         concat_param.put("str2", "String");
-        FunctionInfo concatInfo = new FunctionInfo("concat", "String", concat_param);
+        FunctionInfo concatInfo = new FunctionInfo("concat", "String", concat_param, null);
         this.addFunction("concat", concatInfo);
         concatInfo.parameterOrder.put(1, "str1");
         concatInfo.parameterOrder.put(2, "str2");
 
         HashMap<String, String> len_param = new HashMap<>();
         len_param.put("str", "String");
-        FunctionInfo lengthInfo = new FunctionInfo("length", "Integer", len_param);
+        FunctionInfo lengthInfo = new FunctionInfo("length", "Integer", len_param, null);
         this.addFunction("length", lengthInfo);
         lengthInfo.parameterOrder.put(1, "str");
     }
@@ -56,7 +58,7 @@ public class SymbolTable {
 
     //  exiting scope function
     //TODO should function info and variable info be removed?
-    //TODO change type of exception thrown to aubrey's
+    //TODO change type of exception thrown to audrey's
     public void exitScope() {
         current_scope = null;
     }

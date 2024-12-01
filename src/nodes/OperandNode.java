@@ -51,6 +51,9 @@ public interface OperandNode extends ExpressionNode {
     @Override
     public boolean validateTree(SymbolTable symbolTable) throws Exception;
 
+    @Override
+    public Object execute(SymbolTable symbolTable) throws Exception;
+
     public static void main(String[] args) {
         System.out.println("Testing Operand Node Main Method");
         try {

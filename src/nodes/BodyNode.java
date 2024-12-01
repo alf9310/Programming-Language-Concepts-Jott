@@ -3,12 +3,10 @@ package nodes;
 import errors.SemanticError;
 import errors.SyntaxError;
 import java.util.ArrayList;
-import java.util.HashMap;
 import msc.*;
 import provided.JottParser;
 import provided.JottTree;
 import provided.Token;
-import provided.TokenType;
 
 /*
  * Body Node
@@ -149,6 +147,7 @@ public class BodyNode implements JottTree {
     }
 
     public static void main(String[] args) {
+    /*
         System.out.println("-----Testing BodyNode validateTree Method-----");
         // Initialize SymbolTable
         SymbolTable symbolTable = new SymbolTable();
@@ -183,7 +182,6 @@ public class BodyNode implements JottTree {
         symbolTable.addFunction("func2", new FunctionInfo("func2", "Integer", new HashMap<>()));    
         symbolTable.enterScope("func2");
         symbolTable.addVar(new VarInfo("z", DataType.INTEGER, null)); // Variable z as INTEGER (no initial value)
-        /*
         try {
             // Test Case 2: BodyNode with unreachable code after return
             // NOTE: Parser already removes unreachable code 
@@ -207,7 +205,6 @@ public class BodyNode implements JottTree {
         } catch (Exception e){
             System.err.println("Expected Error: " + e.getMessage());
         }
-        */
         try{
             // Test Case 3: Invalid return type mismatch
             ArrayList<Token> tokens3 = new ArrayList<>();
@@ -222,7 +219,6 @@ public class BodyNode implements JottTree {
         } catch (Exception e){
             System.err.println("Expected Error: " + e.getMessage());
         }
-        /*
         // Set up new function scope
         symbolTable.exitScope();
         symbolTable.addFunction("func3", new FunctionInfo("func3", "Integer", new HashMap<>()));    

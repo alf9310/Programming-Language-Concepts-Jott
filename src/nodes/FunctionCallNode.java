@@ -182,7 +182,6 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
      */
     @Override
     public Object execute(SymbolTable symbolTable) throws Exception{
-
         //Print
         if (this.id.getToken().getToken().equals("print")) {
             ExpressionNode expr = this.params.expr;
@@ -203,6 +202,7 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
             //TODO not sure what the expression node would be in a concat call
         }
 
+        // ----------General Use-Case----------
         // Save the current scope
         String previousScope = symbolTable.current_scope;
 
@@ -215,8 +215,7 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
         // Execute the parameters (handles setting their values in the symbol table)
         this.params.execute(symbolTable);
 
-        // TODO Locate and execute the corresponding FunctionDefNode
-        // I think we need to store a function's FunctionDefNode in FunctionInfo in order to make this work....
+        // Locate and execute the corresponding FunctionDefNode
         FuncDefNode functionDefNode = funcInfo.getFunctionDefNode();
 
         // Execute the function body and capture its return value
@@ -230,6 +229,7 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
     }
 
     public static void main(String[] args) {
+        /*
         System.out.println("Testing FunctionCallNode Main Method");
         try {
             // Test Case 1: Valid function call with two parameters ::myFunc[param1,param2]
@@ -320,5 +320,6 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
         }
+        */
     }
 }

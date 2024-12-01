@@ -85,6 +85,7 @@ public class VarDecNode implements JottTree {
     }
 
     public static void main(String[] args) {
+        /*
         try {
             System.out.println("Testing VarDecNode Main Method");
 
@@ -152,5 +153,6 @@ public class VarDecNode implements JottTree {
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
         }
+    */
     }
 }
