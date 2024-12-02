@@ -104,7 +104,12 @@ public class ElseNode implements JottTree {
     @Override
     public Object execute(SymbolTable symbolTable) {
         // To be implemented in phase 4
-        throw new UnsupportedOperationException("Execution not supported yet.");
+        //throw new UnsupportedOperationException("Execution not supported yet.");
+        if(this.body == null) {
+            return null;
+        } else {
+            return this.body.execute(symbolTable);
+        }
     }
 
     public static void main(String[] args) {
