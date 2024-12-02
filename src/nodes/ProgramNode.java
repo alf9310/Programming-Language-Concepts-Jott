@@ -79,9 +79,27 @@ public class ProgramNode implements JottTree{
         return true;
     }
 
+    /**
+     * Set scope to main function and execute
+     */
     @Override
-    public Object execute(SymbolTable symbolTable) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Object execute(SymbolTable symbolTable) throws Exception {
+        FuncDefNode mainFunction = null;
+
+        // Get the main function
+        // TODO: This could prob be stored as an attribute of program node & defined in validateTree
+        for (FuncDefNode fDefNode : fDefNodes) {
+            if (fDefNode.funcName.getToken().getToken().equals("main")) {
+                mainFunction = fDefNode;
+                break;
+            }
+        }
+
+        // Set the scope to main
+        symbolTable.enterScope("main");
+
+        // Execute the main function's definition
+        return mainFunction.execute(symbolTable);
     }
 
 }

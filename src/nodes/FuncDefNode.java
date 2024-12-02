@@ -3,7 +3,9 @@ package nodes;
 import errors.SemanticError;
 import errors.SyntaxError;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import msc.*;
 import provided.JottParser;
 import provided.JottTree;
@@ -136,11 +138,19 @@ public class FuncDefNode implements JottTree{
         String _returnType = this.returnType.type.getToken();
 
         //NOTE the parameters will be filled in by the FDefParamsNode
-        FunctionInfo info = new FunctionInfo(_name, _returnType, new HashMap<>());
+        FunctionInfo info = new FunctionInfo(_name, _returnType, new HashMap<>(), this);
 
         // Return error if func already defined in symbol table
         if (symbolTable.getFunction(_name) != null) {
             throw new SemanticError("Function " + _name + " already defined in symbol table", this.funcName.getToken());
+        }
+
+        // Throw error if trying to define a function with a reserved name
+        // These are not allowed as variable or function names
+        List<String> forbidden = Arrays.asList("print", "concat","length", "while", "if", "elseif", "else",
+                "void", "boolean", "integer", "double", "string");
+        if (forbidden.contains(_name)) {
+            throw new SemanticError("Reserved keyword! Cannot be function/variable name: " + _name, this.funcName.getToken());
         }
 
         // Add function to symbol table
@@ -171,9 +181,18 @@ public class FuncDefNode implements JottTree{
         return true;
     }
 
+    /**
+     * Enter function scope and execute body
+     */
     @Override
-    public Object execute(SymbolTable symbolTable) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Object execute(SymbolTable symbolTable) throws Exception {
+        // TODO I don't believe we do anything with function params or Scope here,
+        // That should be handled by functionCallNode
+        // String _name = this.funcName.getToken().getToken();
+        // symbolTable.enterScope(_name);
+        
+        // Execute the function body
+        return body.execute(symbolTable);
     }
 
     public static void main(String[] args) {

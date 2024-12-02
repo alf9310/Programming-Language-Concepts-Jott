@@ -3,12 +3,10 @@ package nodes;
 import errors.SemanticError;
 import errors.SyntaxError;
 import java.util.ArrayList;
-import java.util.HashMap;
 import msc.*;
 import provided.JottParser;
 import provided.JottTree;
 import provided.Token;
-import provided.TokenType;
 
 /*
  * Function Body Node
@@ -110,13 +108,19 @@ public class FuncBodyNode implements JottTree {
         return true;
     }
 
+    /**
+     * Execute the function's body
+     */
     @Override
-    public Object execute(SymbolTable symbolTable) {
-        // To be implemented in phase 4
-        throw new UnsupportedOperationException("Execution not supported yet.");
+    public Object execute(SymbolTable symbolTable) throws Exception {
+        // TODO: I don't think we need to execute variable declarations as they're already in scope
+
+        // Return the body of the function
+        return body.execute(symbolTable);
     }
 
     public static void main(String[] args) {
+        /*
         try {
             System.out.println("Testing FuncBodyNode Main Method");
     
@@ -212,5 +216,6 @@ public class FuncBodyNode implements JottTree {
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
         }
+    */
     }
 }

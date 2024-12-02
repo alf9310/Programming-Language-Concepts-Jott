@@ -3,7 +3,6 @@ package nodes;
 import errors.SemanticError;
 import errors.SyntaxError;
 import java.util.ArrayList;
-import java.util.HashMap;
 import msc.*;
 import provided.JottParser;
 import provided.JottTree;
@@ -136,6 +135,7 @@ public class ElseIfNode implements JottTree {
     }
 
     public static void main(String[] args) {
+        /*
         System.out.println("Testing ElseIfNode Main Method");
 
         // Initialize SymbolTable
@@ -209,5 +209,6 @@ public class ElseIfNode implements JottTree {
         } catch (Exception e) {
             System.err.println("Expected Error: " + e.getMessage());
         }
+    */
     }
 }

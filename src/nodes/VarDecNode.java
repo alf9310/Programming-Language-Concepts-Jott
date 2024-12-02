@@ -79,11 +79,13 @@ public class VarDecNode implements JottTree {
 
     @Override
     public Object execute(SymbolTable symbolTable) {
+        // TODO I don't think this needs execute
         // To be implemented in phase 4
         throw new UnsupportedOperationException("Execution not supported yet.");
     }
 
     public static void main(String[] args) {
+        /*
         try {
             System.out.println("Testing VarDecNode Main Method");
 
@@ -151,5 +153,6 @@ public class VarDecNode implements JottTree {
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
         }
+    */
     }
 }

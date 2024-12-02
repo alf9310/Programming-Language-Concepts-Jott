@@ -26,5 +26,5 @@ public interface JottTree {
 	 * This will execute the Jott code represented by this JottTree node.
 	 * @return 
 	 */
-	public Object execute(SymbolTable symbolTable);
+	public Object execute(SymbolTable symbolTable) throws Exception;
 }

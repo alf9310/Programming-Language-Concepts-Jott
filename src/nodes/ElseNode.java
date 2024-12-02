@@ -2,7 +2,6 @@ package nodes;
 
 import errors.SyntaxError;
 import java.util.ArrayList;
-import java.util.HashMap;
 import msc.*;
 import provided.JottParser;
 import provided.JottTree;
@@ -113,6 +112,7 @@ public class ElseNode implements JottTree {
     }
 
     public static void main(String[] args) {
+        /*
         System.out.println("Testing ElseNode validateTree Method");
 
         // Initialize SymbolTable
@@ -181,5 +181,6 @@ public class ElseNode implements JottTree {
         } catch (Exception e) {
             System.err.println("Expected Error: " + e.getMessage());
         }
+    */
     }
 }

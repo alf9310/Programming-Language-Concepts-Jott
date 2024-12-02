@@ -2,7 +2,6 @@ package nodes;
 
 import errors.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import msc.*;
 import provided.JottTree;
 import provided.Token;
@@ -125,6 +124,7 @@ public class FDefParamsNode implements JottTree {
     }
 
     public static void main(String[] args) {
+        /*
         try {
             System.out.println("Testing FDefParamsNode Main Method");
 
@@ -214,5 +214,6 @@ public class FDefParamsNode implements JottTree {
         } catch (Exception e) {
             System.err.println("Error in main method: " + e.getMessage());
         }
+    */
     }
 }

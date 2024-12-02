@@ -173,9 +173,15 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
         return true;
     }
 
+    /**
+     * Sets the scope as the id's function in the symbol table
+     * Executes the parameters (Setting their value in the symbol table is handled in params and paramst)
+     * Locates the functionDefNode based on id and executes it
+     * Sets the scope to what it was before the function call
+     * Returns the functionDefNode execute's return value
+     */
     @Override
-    public Object execute(SymbolTable symbolTable) {
-
+    public Object execute(SymbolTable symbolTable) throws Exception{
         //Print
         if (this.id.getToken().getToken().equals("print")) {
             ExpressionNode expr = this.params.expr;
@@ -196,13 +202,34 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
             //TODO not sure what the expression node would be in a concat call
         }
 
+        // ----------General Use-Case----------
+        // Save the current scope
+        String previousScope = symbolTable.current_scope;
 
-        //TODO the normal case still needs to be implemented
-        return null;
+        // Find the function being called
+        FunctionInfo funcInfo = symbolTable.getFunction(this.id.getToken().getToken());
 
+        // Set the scope to the called function
+        symbolTable.enterScope(id.getToken().getToken());
+
+        // Execute the parameters (handles setting their values in the symbol table)
+        this.params.execute(symbolTable);
+
+        // Locate and execute the corresponding FunctionDefNode
+        FuncDefNode functionDefNode = funcInfo.getFunctionDefNode();
+
+        // Execute the function body and capture its return value
+        Object returnValue = functionDefNode.execute(symbolTable);
+
+        // Restore the previous scope
+        symbolTable.current_scope = previousScope;
+
+        // To be used in assignments and stuff
+        return returnValue;
     }
 
     public static void main(String[] args) {
+        /*
         System.out.println("Testing FunctionCallNode Main Method");
         try {
             // Test Case 1: Valid function call with two parameters ::myFunc[param1,param2]
@@ -293,5 +320,6 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
         }
+        */
     }
 }
