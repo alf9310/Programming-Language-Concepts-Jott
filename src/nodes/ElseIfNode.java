@@ -33,6 +33,10 @@ public class ElseIfNode implements JottTree {
         return this.body.allReturn();
     }
 
+    public Boolean executes(SymbolTable symbolTable) {
+        return (Boolean)this.expr.execute(symbolTable);
+    }
+
     public Token getToken() {
         if(this.body.getToken() != null) {
             return this.body.getToken();
@@ -124,7 +128,11 @@ public class ElseIfNode implements JottTree {
     @Override
     public Object execute(SymbolTable symbolTable) {
         // To be implemented in phase 4
-        throw new UnsupportedOperationException("Execution not supported yet.");
+        // throw new UnsupportedOperationException("Execution not supported yet.");
+        if((Boolean)this.expr.execute(symbolTable)) {
+            return this.body.execute(symbolTable);
+        }
+        return null;
     }
 
     public static void main(String[] args) {

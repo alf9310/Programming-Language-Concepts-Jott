@@ -115,7 +115,15 @@ public class WhileNode implements BodyStmtNode {
     @Override
     public Object execute(SymbolTable symbolTable) {
         // To be implemented in phase 4
-        throw new UnsupportedOperationException("Execution not supported yet.");
+        // TODO: double check expr returns obj version of primitive
+        while((Boolean)this.expr.execute(symbolTable)) {
+            // TODO: double check body returns null if no return
+            Object result = this.body.execute(symbolTable);
+            if(result != null) {
+                return result;
+            }
+        }
+        return null;
     }
 
     @Override

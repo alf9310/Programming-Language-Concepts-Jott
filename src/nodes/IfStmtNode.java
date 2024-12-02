@@ -168,7 +168,15 @@ public class IfStmtNode implements BodyStmtNode {
     @Override
     public Object execute(SymbolTable symbolTable) {
         // To be implemented in phase 4
-        throw new UnsupportedOperationException("Execution not supported yet.");
+        if((Boolean)this.expr.execute(symbolTable)) {
+            return this.body.execute(symbolTable);
+        }
+        for(ElseIfNode elseIf: this.elseIfs) {
+            if(elseIf.executes(symbolTable)) {
+                return elseIf.execute(symbolTable);
+            }
+        }
+        return this.elseBlock.execute(symbolTable);
     }
 
 }
