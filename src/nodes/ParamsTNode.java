@@ -66,7 +66,7 @@ public class ParamsTNode implements JottTree {
     }
 
     @Override
-    public Object execute(SymbolTable symbolTable) {
+    public Object execute(SymbolTable symbolTable) throws Exception {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

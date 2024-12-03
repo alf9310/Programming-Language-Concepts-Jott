@@ -83,7 +83,7 @@ public class IDNode implements OperandNode {
     }
 
     @Override
-    public Object execute(SymbolTable symbolTable) {
+    public Object execute(SymbolTable symbolTable) throws Exception {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
