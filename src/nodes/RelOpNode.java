@@ -79,16 +79,6 @@ public class RelOpNode implements OperatorNode {
         VarInfo leftOperand = symbolTable.getVar("leftOperand");
         VarInfo rightOperand = symbolTable.getVar("rightOperand");
     
-        // Check if operands exist
-        if (leftOperand == null || rightOperand == null) {
-            throw new RuntimeException("Operands not found in the symbol table.");
-        }
-    
-        // Ensure the operand types are consistent
-        if (leftOperand.type != rightOperand.type) {
-            throw new RuntimeException("Type mismatch: Both operands must be of the same type.");
-        }
-    
         DataType operandType = leftOperand.type;
         boolean result;
     
