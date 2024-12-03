@@ -87,11 +87,6 @@ public class IDNode implements OperandNode {
         // Retrieve the variable from the symbol table using its identifier
         VarInfo variable = symbolTable.getVar(id.getToken());
     
-        // Check if the variable exists in the current scope
-        if (variable == null) {
-            throw new RuntimeException("Variable '" + id.getToken() + "' is not declared in the current scope.");
-        }
-    
         // Store the value of the variable in the symbol table under the "result" key
         symbolTable.addVar(new VarInfo("result", variable.type, variable.value));
     }
