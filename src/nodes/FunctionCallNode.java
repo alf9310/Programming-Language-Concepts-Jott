@@ -203,6 +203,7 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
         }
 
         // ----------General Use-Case----------
+        Object returnValue = null;
         // Save the current scope
         String previousScope = symbolTable.current_scope;
 
@@ -215,11 +216,22 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
         // Execute the parameters (handles setting their values in the symbol table)
         this.params.execute(symbolTable);
 
-        // Locate and execute the corresponding FunctionDefNode
-        FuncDefNode functionDefNode = funcInfo.getFunctionDefNode();
-
-        // Execute the function body and capture its return value
-        Object returnValue = functionDefNode.execute(symbolTable);
+        if (this.id.getToken().getToken().equals("concat")) {
+            String str1 = symbolTable.getVar("str1").value;
+            String str2 = symbolTable.getVar("str2").value;
+            returnValue = str1 + str2;
+            
+        }
+        else if (this.id.getToken().getToken().equals("length")) { 
+            String str = symbolTable.getVar("str").value;
+            returnValue = str.length();
+        } 
+        else {
+            // Locate and execute the corresponding FunctionDefNode
+            FuncDefNode functionDefNode = funcInfo.getFunctionDefNode();
+            // Execute the function body and capture its return value
+            returnValue = functionDefNode.execute(symbolTable);
+        }
 
         // Restore the previous scope
         symbolTable.current_scope = previousScope;
