@@ -129,20 +129,10 @@ public class BinaryOpNode implements ExpressionNode {
     public void execute(SymbolTable symbolTable) {
         // Execute the left and right operands to evaluate their values
         leftOperand.execute(symbolTable);
-        VarInfo leftVar = symbolTable.getVar("result"); // Retrieve the result of the left operand
+        VarInfo leftVar = symbolTable.getVar("result");
     
         rightOperand.execute(symbolTable);
-        VarInfo rightVar = symbolTable.getVar("result"); // Retrieve the result of the right operand
-    
-        // Ensure both variables are valid
-        if (leftVar == null || rightVar == null) {
-            throw new RuntimeException("Operands could not be resolved or are invalid.");
-        }
-    
-        // Ensure types are consistent
-        if (leftVar.type != rightVar.type) {
-            throw new RuntimeException("Operands must have the same data type for operation.");
-        }
+        VarInfo rightVar = symbolTable.getVar("result");
     
         String operatorToken = operator.convertToJott();
         String resultValue;
