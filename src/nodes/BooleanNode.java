@@ -70,7 +70,6 @@ public class BooleanNode implements ExpressionNode {
 
     @Override
     public void execute(SymbolTable symbolTable) {
-        // The value of a BooleanNode is its literal "True" or "False"
         boolean value = Boolean.parseBoolean(bool.getToken());
     
         // Store the value in the symbol table under a temporary key
