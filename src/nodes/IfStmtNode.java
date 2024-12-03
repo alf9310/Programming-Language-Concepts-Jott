@@ -166,7 +166,7 @@ public class IfStmtNode implements BodyStmtNode {
     }
 
     @Override
-    public Object execute(SymbolTable symbolTable) {
+    public Object execute(SymbolTable symbolTable) throws Exception {
         // To be implemented in phase 4
         if((Boolean)this.expr.execute(symbolTable)) {
             return this.body.execute(symbolTable);

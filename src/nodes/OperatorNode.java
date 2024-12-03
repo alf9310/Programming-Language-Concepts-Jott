@@ -20,5 +20,5 @@ public interface OperatorNode extends ExpressionNode {
     boolean validateTree(SymbolTable symbolTable);
     
     @Override
-    Object execute(SymbolTable symbolTable);
+    Object execute(SymbolTable symbolTable) throws Exception;
 }

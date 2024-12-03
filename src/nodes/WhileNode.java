@@ -113,7 +113,7 @@ public class WhileNode implements BodyStmtNode {
     }
 
     @Override
-    public Object execute(SymbolTable symbolTable) {
+    public Object execute(SymbolTable symbolTable) throws Exception {
         // To be implemented in phase 4
         // TODO: double check expr returns obj version of primitive
         while((Boolean)this.expr.execute(symbolTable)) {
