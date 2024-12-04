@@ -107,7 +107,6 @@ public class ReturnStmtNode implements JottTree {
 
     @Override
     public Object execute(SymbolTable symbolTable) throws Exception {
-        // To be implemented in phase 4
-        throw new UnsupportedOperationException("Execution not supported yet.");
+        return expr.execute(symbolTable);
     }
 }
