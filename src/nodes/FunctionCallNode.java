@@ -196,12 +196,6 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
             return null;
         }
 
-        //Concat
-        // validation checks should already be covered by geneneral validation
-        if (this.id.getToken().getToken().equals("print")) {
-            //TODO not sure what the expression node would be in a concat call
-        }
-
         // ----------General Use-Case----------
         Object returnValue = null;
         // Save the current scope
