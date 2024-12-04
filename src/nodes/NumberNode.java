@@ -87,7 +87,6 @@ public class NumberNode implements OperandNode {
     @Override
     public void execute(SymbolTable symbolTable) {
         String value = number.getToken();
-    
         // Determine the numeric value, considering if the number is negative
         if (negative) {
             value = "-" + value;
@@ -97,7 +96,7 @@ public class NumberNode implements OperandNode {
         DataType type = value.contains(".") ? DataType.DOUBLE : DataType.INTEGER;
     
         // Store the evaluated result in the SymbolTable under a temporary key
-        symbolTable.addVar(new VarInfo("result", type, value));
+        symbolTable.addVar(new VarInfo(number.getToken(), type, value));
     }
 
     // Main method to test NumberNode parsing and negation
