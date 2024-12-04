@@ -88,7 +88,7 @@ public class IDNode implements OperandNode {
         VarInfo variable = symbolTable.getVar(id.getToken());
     
         // Store the value of the variable in the symbol table under the "result" key
-        symbolTable.addVar(new VarInfo("result", variable.type, variable.value));
+        symbolTable.addVar(new VarInfo(id.getToken(), variable.type, variable.value));
     }
 
     public static void main(String[] args) {

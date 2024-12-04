@@ -75,15 +75,17 @@ public class MathOpNode implements OperatorNode {
         // Retrieve the two operands from the symbol table
         VarInfo leftOperand = symbolTable.getVar("leftOperand");
         VarInfo rightOperand = symbolTable.getVar("rightOperand");
-    
-        // Assume the type of operands is valid since validateTree has ensured correctness
+
+        if (leftOperand == null || rightOperand == null) {
+            throw new RuntimeException("Operands not found in SymbolTable.");
+        }
+
+        // Perform the operation based on the type
         String result;
-    
         if (leftOperand.type == DataType.INTEGER) {
-            // Integer operation
             int leftValue = Integer.parseInt(leftOperand.value);
             int rightValue = Integer.parseInt(rightOperand.value);
-    
+
             switch (operator.getToken()) {
                 case "+":
                     result = String.valueOf(leftValue + rightValue);
@@ -95,37 +97,38 @@ public class MathOpNode implements OperatorNode {
                     result = String.valueOf(leftValue * rightValue);
                     break;
                 case "/":
-                    result = String.valueOf(leftValue / rightValue); // Integer division
-                    break;
-                default:
-                    throw new RuntimeException("Unexpected math operator: " + operator.getToken());
-            }
-        } else if (leftOperand.type == DataType.DOUBLE) {
-            // Double operation
-            double leftValue = Double.parseDouble(leftOperand.value);
-            double rightValue = Double.parseDouble(rightOperand.value);
-    
-            switch (operator.getToken()) {
-                case "+":
-                    result = String.valueOf(leftValue + rightValue);
-                    break;
-                case "-":
-                    result = String.valueOf(leftValue - rightValue);
-                    break;
-                case "*":
-                    result = String.valueOf(leftValue * rightValue);
-                    break;
-                case "/":
+                    if (rightValue == 0) throw new RuntimeException("Division by zero.");
                     result = String.valueOf(leftValue / rightValue);
                     break;
                 default:
-                    throw new RuntimeException("Unexpected math operator: " + operator.getToken());
+                    throw new RuntimeException("Unsupported math operator: " + operator.getToken());
+            }
+        } else if (leftOperand.type == DataType.DOUBLE) {
+            double leftValue = Double.parseDouble(leftOperand.value);
+            double rightValue = Double.parseDouble(rightOperand.value);
+
+            switch (operator.getToken()) {
+                case "+":
+                    result = String.valueOf(leftValue + rightValue);
+                    break;
+                case "-":
+                    result = String.valueOf(leftValue - rightValue);
+                    break;
+                case "*":
+                    result = String.valueOf(leftValue * rightValue);
+                    break;
+                case "/":
+                    if (rightValue == 0.0) throw new RuntimeException("Division by zero.");
+                    result = String.valueOf(leftValue / rightValue);
+                    break;
+                default:
+                    throw new RuntimeException("Unsupported math operator: " + operator.getToken());
             }
         } else {
             throw new RuntimeException("Unsupported data type for math operation: " + leftOperand.type);
         }
-    
-        // Update the value of the leftOperand with the computed result
+
+        // Store the result back in the left operand
         leftOperand.value = result;
     }
 

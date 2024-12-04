@@ -78,73 +78,43 @@ public class RelOpNode implements OperatorNode {
         // Retrieve the two operands from the symbol table
         VarInfo leftOperand = symbolTable.getVar("leftOperand");
         VarInfo rightOperand = symbolTable.getVar("rightOperand");
-    
-        DataType operandType = leftOperand.type;
-        boolean result;
-    
-        try {
-            // Perform the relational operation based on the operand type
-            if (operandType == DataType.INTEGER) {
-                int leftValue = Integer.parseInt(leftOperand.value);
-                int rightValue = Integer.parseInt(rightOperand.value);
-    
-                switch (operator.getToken()) {
-                    case ">":
-                        result = leftValue > rightValue;
-                        break;
-                    case ">=":
-                        result = leftValue >= rightValue;
-                        break;
-                    case "<":
-                        result = leftValue < rightValue;
-                        break;
-                    case "<=":
-                        result = leftValue <= rightValue;
-                        break;
-                    case "==":
-                        result = leftValue == rightValue;
-                        break;
-                    case "!=":
-                        result = leftValue != rightValue;
-                        break;
-                    default:
-                        throw new RuntimeException("Unsupported relational operator: " + operator.getToken());
-                }
-            } else if (operandType == DataType.DOUBLE) {
-                double leftValue = Double.parseDouble(leftOperand.value);
-                double rightValue = Double.parseDouble(rightOperand.value);
-    
-                switch (operator.getToken()) {
-                    case ">":
-                        result = leftValue > rightValue;
-                        break;
-                    case ">=":
-                        result = leftValue >= rightValue;
-                        break;
-                    case "<":
-                        result = leftValue < rightValue;
-                        break;
-                    case "<=":
-                        result = leftValue <= rightValue;
-                        break;
-                    case "==":
-                        result = leftValue == rightValue;
-                        break;
-                    case "!=":
-                        result = leftValue != rightValue;
-                        break;
-                    default:
-                        throw new RuntimeException("Unsupported relational operator: " + operator.getToken());
-                }
-            } else {
-                throw new RuntimeException("Unsupported data type for relational operation: " + operandType);
-            }
-    
-            // Store the result as a Boolean in the symbol table
-            symbolTable.addVar(new VarInfo("result", DataType.BOOLEAN, Boolean.toString(result)));
-        } catch (NumberFormatException e) {
-            throw new RuntimeException("Failed to parse operand values for relational operation.", e);
+
+        if (leftOperand == null || rightOperand == null) {
+            throw new RuntimeException("Operands not found in SymbolTable.");
         }
+
+        // Perform the relational operation
+        boolean result;
+
+        double leftValue = Double.parseDouble(leftOperand.value);
+        double rightValue = Double.parseDouble(rightOperand.value);
+
+        switch (operator.getToken()) {
+            case ">":
+                result = leftValue > rightValue;
+                break;
+            case "<":
+                result = leftValue < rightValue;
+                break;
+            case ">=":
+                result = leftValue >= rightValue;
+                break;
+            case "<=":
+                result = leftValue <= rightValue;
+                break;
+            case "==":
+                result = leftValue == rightValue;
+                break;
+            case "!=":
+                result = leftValue != rightValue;
+                break;
+            default:
+                throw new RuntimeException("Unsupported relational operator: " + operator.getToken());
+        }
+
+        // Update the left operand's value with the boolean result
+        leftOperand.value = String.valueOf(result);
+        leftOperand.type = DataType.BOOLEAN;
     }
 
     public static void main(String[] args) {
