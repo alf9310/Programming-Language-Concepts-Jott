@@ -144,13 +144,13 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
             throw new SemanticError(this.id.getToken().getToken() + " should take " + parameters.size() + " parameters, provided " + len + " instead", this.id.getToken());
         }
 
-        // if(func.getName().equals("print")) {
-        //     // hard code check for print, since it takes any type
-        //     if (!(this.params.expr instanceof ExpressionNode)) {
-        //         throw new SemanticError("Print only takes in expression nodes", this.id.getToken());
-        //     }
-        //     return true;
-        // }
+        if(func.getName().equals("print")) {
+            // hard code check for print, since it takes any type
+            // if (!(this.params.expr instanceof ExpressionNode)) {
+            //     throw new SemanticError("Print only takes in expression nodes", this.id.getToken());
+            // }
+            return true;
+        }
         ArrayList<DataType> pTypes = new ArrayList<>();
         for(int i = 1; i <= len; i++) {
             // get list of parameter data types IN ORDER
