@@ -137,6 +137,8 @@ public class BodyNode implements JottTree {
             result = bodyStmt.execute(symbolTable);
 
             // If a return value is encountered, terminate execution early and return value
+            // TODO, Will need a better way to check for a function return 
+            // (as non-function returns like function call can also return)
             if (result != null) {
                 return result;
             }
