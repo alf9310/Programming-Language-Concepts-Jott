@@ -83,12 +83,12 @@ public class IDNode implements OperandNode {
     }
 
     @Override
-    public void execute(SymbolTable symbolTable) {
-        // Retrieve the variable from the symbol table using its identifier
+    public Object execute(SymbolTable symbolTable) throws Exception {
         VarInfo variable = symbolTable.getVar(id.getToken());
-    
-        // Store the value of the variable in the symbol table under the "result" key
-        symbolTable.addVar(new VarInfo(id.getToken(), variable.type, variable.value));
+        if (variable == null) {
+            throw new RuntimeException("Variable not found: " + id.getToken());
+        }
+        return variable.value;
     }
 
     public static void main(String[] args) {
