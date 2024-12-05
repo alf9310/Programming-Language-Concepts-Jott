@@ -144,7 +144,12 @@ public class BodyNode implements JottTree {
             }
         }
 
-        return this.returnStmt.execute(symbolTable);
+        if (this.returnStmt == null) {
+            return "";
+        }
+        else {
+            return this.returnStmt.execute(symbolTable);
+        }
         
     }
 
