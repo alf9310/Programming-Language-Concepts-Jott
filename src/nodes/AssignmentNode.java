@@ -106,6 +106,8 @@ public class AssignmentNode implements BodyStmtNode {
         // Update the variable's value in the symbol table
         variable.value = expressionResult.value;
         symbolTable.addVar(variable);
+
+        return null;
     }
 
     @Override
