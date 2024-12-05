@@ -107,6 +107,10 @@ public class ReturnStmtNode implements JottTree {
 
     @Override
     public Object execute(SymbolTable symbolTable) throws Exception {
+        if(this.expr == null) {
+            // body w/o return is valid
+            return null;
+        }
         return expr.execute(symbolTable);
     }
 }
