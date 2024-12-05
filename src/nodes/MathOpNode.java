@@ -71,65 +71,43 @@ public class MathOpNode implements OperatorNode {
     }
 
     @Override
-    public void execute(SymbolTable symbolTable) {
-        // Retrieve the two operands from the symbol table
-        VarInfo leftOperand = symbolTable.getVar("leftOperand");
-        VarInfo rightOperand = symbolTable.getVar("rightOperand");
-
-        if (leftOperand == null || rightOperand == null) {
-            throw new RuntimeException("Operands not found in SymbolTable.");
-        }
-
-        // Perform the operation based on the type
-        String result;
-        if (leftOperand.type == DataType.INTEGER) {
-            int leftValue = Integer.parseInt(leftOperand.value);
-            int rightValue = Integer.parseInt(rightOperand.value);
-
-            switch (operator.getToken()) {
-                case "+":
-                    result = String.valueOf(leftValue + rightValue);
-                    break;
-                case "-":
-                    result = String.valueOf(leftValue - rightValue);
-                    break;
-                case "*":
-                    result = String.valueOf(leftValue * rightValue);
-                    break;
-                case "/":
-                    if (rightValue == 0) throw new RuntimeException("Division by zero.");
-                    result = String.valueOf(leftValue / rightValue);
-                    break;
-                default:
-                    throw new RuntimeException("Unsupported math operator: " + operator.getToken());
-            }
-        } else if (leftOperand.type == DataType.DOUBLE) {
-            double leftValue = Double.parseDouble(leftOperand.value);
-            double rightValue = Double.parseDouble(rightOperand.value);
-
-            switch (operator.getToken()) {
-                case "+":
-                    result = String.valueOf(leftValue + rightValue);
-                    break;
-                case "-":
-                    result = String.valueOf(leftValue - rightValue);
-                    break;
-                case "*":
-                    result = String.valueOf(leftValue * rightValue);
-                    break;
-                case "/":
-                    if (rightValue == 0.0) throw new RuntimeException("Division by zero.");
-                    result = String.valueOf(leftValue / rightValue);
-                    break;
-                default:
-                    throw new RuntimeException("Unsupported math operator: " + operator.getToken());
-            }
+    public Object execute(SymbolTable symbolTable) throws Exception {
+        // Retrieve operands from the SymbolTable or passed context
+        Object leftValue = symbolTable.getVar("leftOperand").value;
+        Object rightValue = symbolTable.getVar("rightOperand").value;
+    
+        // Perform math operation based on the type
+        if (leftValue instanceof Integer && rightValue instanceof Integer) {
+            int left = (Integer) leftValue;
+            int right = (Integer) rightValue;
+    
+            return switch (operator.getToken()) {
+                case "+" -> left + right;
+                case "-" -> left - right;
+                case "*" -> left * right;
+                case "/" -> {
+                    if (right == 0) throw new ArithmeticException("Division by zero");
+                    yield left / right;
+                }
+                default -> throw new UnsupportedOperationException("Unknown operator: " + operator.getToken());
+            };
+        } else if (leftValue instanceof Double || rightValue instanceof Double) {
+            double left = Double.parseDouble(leftValue.toString());
+            double right = Double.parseDouble(rightValue.toString());
+    
+            return switch (operator.getToken()) {
+                case "+" -> left + right;
+                case "-" -> left - right;
+                case "*" -> left * right;
+                case "/" -> {
+                    if (right == 0.0) throw new ArithmeticException("Division by zero");
+                    yield left / right;
+                }
+                default -> throw new UnsupportedOperationException("Unknown operator: " + operator.getToken());
+            };
         } else {
-            throw new RuntimeException("Unsupported data type for math operation: " + leftOperand.type);
+            throw new UnsupportedOperationException("Unsupported operand types for MathOpNode");
         }
-
-        // Store the result back in the left operand
-        leftOperand.value = result;
     }
 
     public static void main(String[] args) {

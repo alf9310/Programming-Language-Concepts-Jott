@@ -69,12 +69,9 @@ public class BooleanNode implements ExpressionNode {
     }
 
     @Override
-    public void execute(SymbolTable symbolTable) {
-        // Evaluate the boolean value
-        String value = bool.getToken().equals("True") ? "true" : "false";
-
-        // Add the evaluated boolean value to the SymbolTable with its token name
-        symbolTable.addVar(new VarInfo(null, null, value));
+    public Object execute(SymbolTable symbolTable) throws Exception {
+        // Evaluate and return the boolean value
+        return bool.getToken().equals("True");
     }
 
     public static void main(String[] args) {

@@ -74,47 +74,23 @@ public class RelOpNode implements OperatorNode {
     }
 
     @Override
-    public void execute(SymbolTable symbolTable) {
-        // Retrieve the two operands from the symbol table
-        VarInfo leftOperand = symbolTable.getVar("leftOperand");
-        VarInfo rightOperand = symbolTable.getVar("rightOperand");
-
-        if (leftOperand == null || rightOperand == null) {
-            throw new RuntimeException("Operands not found in SymbolTable.");
-        }
-
-        // Perform the relational operation
-        boolean result;
-
-        double leftValue = Double.parseDouble(leftOperand.value);
-        double rightValue = Double.parseDouble(rightOperand.value);
-
-        switch (operator.getToken()) {
-            case ">":
-                result = leftValue > rightValue;
-                break;
-            case "<":
-                result = leftValue < rightValue;
-                break;
-            case ">=":
-                result = leftValue >= rightValue;
-                break;
-            case "<=":
-                result = leftValue <= rightValue;
-                break;
-            case "==":
-                result = leftValue == rightValue;
-                break;
-            case "!=":
-                result = leftValue != rightValue;
-                break;
-            default:
-                throw new RuntimeException("Unsupported relational operator: " + operator.getToken());
-        }
-
-        // Update the left operand's value with the boolean result
-        leftOperand.value = String.valueOf(result);
-        leftOperand.type = DataType.BOOLEAN;
+    public Object execute(SymbolTable symbolTable) throws Exception {
+        Object leftValue = symbolTable.getVar("leftOperand").value;
+        Object rightValue = symbolTable.getVar("rightOperand").value;
+    
+        // Perform relational operation
+        double left = Double.parseDouble(leftValue.toString());
+        double right = Double.parseDouble(rightValue.toString());
+    
+        return switch (operator.getToken()) {
+            case ">" -> left > right;
+            case "<" -> left < right;
+            case ">=" -> left >= right;
+            case "<=" -> left <= right;
+            case "==" -> left == right;
+            case "!=" -> left != right;
+            default -> throw new UnsupportedOperationException("Unknown operator: " + operator.getToken());
+        };
     }
 
     public static void main(String[] args) {

@@ -126,15 +126,13 @@ public class BinaryOpNode implements ExpressionNode {
     }
 
     @Override
-    public void execute(SymbolTable symbolTable) {
-        // Execute left and right operands
-        leftOperand.execute(symbolTable);
-        rightOperand.execute(symbolTable);
+    public Object execute(SymbolTable symbolTable) throws Exception {
+        // Execute left and right operands to get their values
+        Object leftValue = leftOperand.execute(symbolTable);
+        Object rightValue = rightOperand.execute(symbolTable);
 
-        // Delegate the operation to the operator node
-        operator.execute(symbolTable);
-
-        // The result is already handled internally by the operator (MathOpNode or RelOpNode)
+        // Perform the operation using the operator
+        return operator.execute(symbolTable, leftValue, rightValue);
     }
 
     public static void main(String[] args) {
