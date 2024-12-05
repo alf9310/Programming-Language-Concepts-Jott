@@ -92,11 +92,7 @@ public class NumberNode implements OperandNode {
             value = "-" + value;
         }
     
-        // Determine the data type: DOUBLE if it contains a decimal point, otherwise INTEGER
-        DataType type = value.contains(".") ? DataType.DOUBLE : DataType.INTEGER;
-    
-        // Store the evaluated result in the SymbolTable under a temporary key
-        symbolTable.addVar(new VarInfo(number.getToken(), type, value));
+        symbolTable.addVar(new VarInfo(null, null, value));
     }
 
     // Main method to test NumberNode parsing and negation

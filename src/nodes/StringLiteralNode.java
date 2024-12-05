@@ -66,7 +66,7 @@ public class StringLiteralNode implements ExpressionNode {
     @Override
     public void execute(SymbolTable symbolTable) {
         // Add the string literal value to the SymbolTable with its token name
-        symbolTable.addVar(new VarInfo(string.getToken(), DataType.STRING, string.getToken()));
+        symbolTable.addVar(new VarInfo(null, null, string.getToken()));
     }
 
     public static void main(String[] args) {
