@@ -146,9 +146,9 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
 
         if(func.getName().equals("print")) {
             // hard code check for print, since it takes any type
-            if (!(this.params.expr instanceof ExpressionNode)) {
-                throw new SemanticError("Print only takes in expression nodes", this.id.getToken());
-            }
+            // if (!(this.params.expr instanceof ExpressionNode)) {
+            //     throw new SemanticError("Print only takes in expression nodes", this.id.getToken());
+            // }
             return true;
         }
         ArrayList<DataType> pTypes = new ArrayList<>();
