@@ -144,13 +144,13 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
             throw new SemanticError(this.id.getToken().getToken() + " should take " + parameters.size() + " parameters, provided " + len + " instead", this.id.getToken());
         }
 
-        if(func.getName().equals("print")) {
-            // hard code check for print, since it takes any type
-            if (!(this.params.expr instanceof ExpressionNode)) {
-                throw new SemanticError("Print only takes in expression nodes", this.id.getToken());
-            }
-            return true;
-        }
+        // if(func.getName().equals("print")) {
+        //     // hard code check for print, since it takes any type
+        //     if (!(this.params.expr instanceof ExpressionNode)) {
+        //         throw new SemanticError("Print only takes in expression nodes", this.id.getToken());
+        //     }
+        //     return true;
+        // }
         ArrayList<DataType> pTypes = new ArrayList<>();
         for(int i = 1; i <= len; i++) {
             // get list of parameter data types IN ORDER
@@ -184,22 +184,25 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
     public Object execute(SymbolTable symbolTable) throws Exception{
         //Print
         if (this.id.getToken().getToken().equals("print")) {
-            ExpressionNode expr = this.params.expr;
-            // just print: operand, stringliteral, bool
-            if (expr instanceof OperandNode || expr instanceof StringLiteralNode || expr instanceof BooleanNode) {
-                System.out.println(expr.getToken().getToken());
-            }
-            // evaluate: mathop, relop
-            else if (expr instanceof ExpressionNode) {
-                System.out.println(expr.execute(symbolTable));
+            if ((this.params.expr instanceof ExpressionNode)) {
+                ExpressionNode expr = this.params.expr;
+                // just print: operand, stringliteral, bool
+                if (expr instanceof OperandNode || expr instanceof StringLiteralNode || expr instanceof BooleanNode) {
+                    System.out.println(expr.getToken().getToken());
+                }
+                // evaluate: mathop, relop
+                else if (expr instanceof ExpressionNode) {
+                    System.out.println(expr.execute(symbolTable));
+                }
+            } else {
+                // Might be printing a variable of the current scope
+                //TODO I think this want expression not parameter but will double check while testing
+                VarInfo var = symbolTable.getVar(this.params.expr.getToken().getToken());
+                if (var != null) {
+                    System.out.println(var.value);
+                }
             }
             return null;
-        }
-
-        //Concat
-        // validation checks should already be covered by geneneral validation
-        if (this.id.getToken().getToken().equals("print")) {
-            //TODO not sure what the expression node would be in a concat call
         }
 
         // ----------General Use-Case----------
