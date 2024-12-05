@@ -130,8 +130,57 @@ public class BinaryOpNode implements ExpressionNode {
         Object leftValue = leftOperand.execute(symbolTable);
         Object rightValue = rightOperand.execute(symbolTable);
 
-        // Perform the operation using the operator
-        return operator.execute(symbolTable, leftValue, rightValue);
+        if (operator.getTokenType() == TokenType.REL_OP) {
+            // For Relational Operator checks
+            // Perform relational operation
+            double left = Double.parseDouble(leftValue.toString());
+            double right = Double.parseDouble(rightValue.toString());
+        
+            return switch (operator.getToken()) {
+                case ">" -> left > right;
+                case "<" -> left < right;
+                case ">=" -> left >= right;
+                case "<=" -> left <= right;
+                case "==" -> left == right;
+                case "!=" -> left != right;
+                default -> throw new UnsupportedOperationException("Unknown operator: " + operator.getToken());
+            };
+
+        } else if (operator.getTokenType() == TokenType.MATH_OP) {
+            // For Mathematical Operator checks
+            // Perform math operation based on the type
+            if (leftValue instanceof Integer && rightValue instanceof Integer) {
+                int left = (Integer) leftValue;
+                int right = (Integer) rightValue;
+        
+                return switch (operator.getToken()) {
+                    case "+" -> left + right;
+                    case "-" -> left - right;
+                    case "*" -> left * right;
+                    case "/" -> {
+                        if (right == 0) throw new ArithmeticException("Division by zero");
+                        yield left / right;
+                    }
+                    default -> throw new UnsupportedOperationException("Unknown operator: " + operator.getToken());
+                };
+            } else if (leftValue instanceof Double || rightValue instanceof Double) {
+                double left = Double.parseDouble(leftValue.toString());
+                double right = Double.parseDouble(rightValue.toString());
+        
+                return switch (operator.getToken()) {
+                    case "+" -> left + right;
+                    case "-" -> left - right;
+                    case "*" -> left * right;
+                    case "/" -> {
+                        if (right == 0.0) throw new ArithmeticException("Division by zero");
+                        yield left / right;
+                    }
+                    default -> throw new UnsupportedOperationException("Unknown operator: " + operator.getToken());
+                };
+            }
+        }
+
+        return null;
     }
 
     public static void main(String[] args) {

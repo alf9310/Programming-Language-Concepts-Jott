@@ -72,42 +72,7 @@ public class MathOpNode implements OperatorNode {
 
     @Override
     public Object execute(SymbolTable symbolTable) throws Exception {
-        // Retrieve operands from the SymbolTable or passed context
-        Object leftValue = symbolTable.getVar("leftOperand").value;
-        Object rightValue = symbolTable.getVar("rightOperand").value;
-    
-        // Perform math operation based on the type
-        if (leftValue instanceof Integer && rightValue instanceof Integer) {
-            int left = (Integer) leftValue;
-            int right = (Integer) rightValue;
-    
-            return switch (operator.getToken()) {
-                case "+" -> left + right;
-                case "-" -> left - right;
-                case "*" -> left * right;
-                case "/" -> {
-                    if (right == 0) throw new ArithmeticException("Division by zero");
-                    yield left / right;
-                }
-                default -> throw new UnsupportedOperationException("Unknown operator: " + operator.getToken());
-            };
-        } else if (leftValue instanceof Double || rightValue instanceof Double) {
-            double left = Double.parseDouble(leftValue.toString());
-            double right = Double.parseDouble(rightValue.toString());
-    
-            return switch (operator.getToken()) {
-                case "+" -> left + right;
-                case "-" -> left - right;
-                case "*" -> left * right;
-                case "/" -> {
-                    if (right == 0.0) throw new ArithmeticException("Division by zero");
-                    yield left / right;
-                }
-                default -> throw new UnsupportedOperationException("Unknown operator: " + operator.getToken());
-            };
-        } else {
-            throw new UnsupportedOperationException("Unsupported operand types for MathOpNode");
-        }
+        return null;
     }
 
     public static void main(String[] args) {
