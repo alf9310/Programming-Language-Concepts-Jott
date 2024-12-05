@@ -75,8 +75,22 @@ public class RelOpNode implements OperatorNode {
 
     @Override
     public Object execute(SymbolTable symbolTable) throws Exception {
-        // To be implemented in phase 4
-        throw new UnsupportedOperationException("Execution not supported yet.");
+        Object leftValue = symbolTable.getVar("leftOperand").value;
+        Object rightValue = symbolTable.getVar("rightOperand").value;
+    
+        // Perform relational operation
+        double left = Double.parseDouble(leftValue.toString());
+        double right = Double.parseDouble(rightValue.toString());
+    
+        return switch (operator.getToken()) {
+            case ">" -> left > right;
+            case "<" -> left < right;
+            case ">=" -> left >= right;
+            case "<=" -> left <= right;
+            case "==" -> left == right;
+            case "!=" -> left != right;
+            default -> throw new UnsupportedOperationException("Unknown operator: " + operator.getToken());
+        };
     }
 
     public static void main(String[] args) {

@@ -126,8 +126,12 @@ public class BinaryOpNode implements ExpressionNode {
 
     @Override
     public Object execute(SymbolTable symbolTable) throws Exception {
-        // To be implemented in phase 4
-        throw new UnsupportedOperationException("Execution not supported yet.");
+        // Execute left and right operands to get their values
+        Object leftValue = leftOperand.execute(symbolTable);
+        Object rightValue = rightOperand.execute(symbolTable);
+
+        // Perform the operation using the operator
+        return operator.execute(symbolTable, leftValue, rightValue);
     }
 
     public static void main(String[] args) {

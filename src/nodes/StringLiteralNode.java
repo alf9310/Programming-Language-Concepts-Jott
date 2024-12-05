@@ -65,7 +65,8 @@ public class StringLiteralNode implements ExpressionNode {
 
     @Override
     public Object execute(SymbolTable symbolTable) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet.");
+        // Return the string literal value
+        return string.getToken();
     }
 
     public static void main(String[] args) {

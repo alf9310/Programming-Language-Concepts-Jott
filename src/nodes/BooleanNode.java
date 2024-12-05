@@ -70,7 +70,8 @@ public class BooleanNode implements ExpressionNode {
 
     @Override
     public Object execute(SymbolTable symbolTable) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet.");
+        // Evaluate and return the boolean value
+        return bool.getToken().equals("True");
     }
 
     public static void main(String[] args) {
