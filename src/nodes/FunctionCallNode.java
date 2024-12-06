@@ -178,6 +178,7 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
      */
     @Override
     public Object execute(SymbolTable symbolTable) throws Exception{
+        System.out.println(this.id.getToken().getToken());
         //Print
         if (this.id.getToken().getToken().equals("print")) {
             if ((this.params.expr instanceof ExpressionNode)) {
@@ -195,6 +196,37 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
 
         // ----------General Use-Case----------
         Object returnValue = null;
+
+        if (this.id.getToken().getToken().equals("concat")) {
+            String concat_str1, concat_str2;
+            if (this.params.expr.getToken().getTokenType() == TokenType.STRING) {
+                // String
+                 concat_str1 = this.params.expr.getToken().getToken();
+            } else {
+                // Variable name
+                String str1_var_name = this.params.expr.getToken().getToken();
+                 concat_str1 = symbolTable.getVar(str1_var_name).value;
+            }
+            
+            if (this.params.paramst.get(0).expr.getToken().getTokenType() == TokenType.STRING) {
+                // String
+                 concat_str2 = this.params.paramst.get(0).expr.getToken().getToken();
+            } else  { 
+                // Variable name
+                String str2_var_name = this.params.paramst.get(0).expr.getToken().getToken();
+                 concat_str2 = symbolTable.getVar(str2_var_name).value;
+            }
+            concat_str1 = concat_str1.replace("\"", "");
+            concat_str2 = concat_str2.replace("\"", "");
+            returnValue = concat_str1 + concat_str2;
+            // System.out.println(returnValue);
+            return returnValue;
+        } else if (this.id.getToken().getToken().equals("length")) {
+            String str = symbolTable.getVar("str").value;
+            returnValue = str.length();
+            return returnValue;
+        }
+
         // Save the current scope
         String previousScope = symbolTable.current_scope;
 
@@ -207,22 +239,11 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
         // Execute the parameters (handles setting their values in the symbol table)
         this.params.execute(symbolTable);
 
-        if (this.id.getToken().getToken().equals("concat")) {
-            String str1 = symbolTable.getVar("str1").value;
-            String str2 = symbolTable.getVar("str2").value;
-            returnValue = str1 + str2;
-            
-        }
-        else if (this.id.getToken().getToken().equals("length")) { 
-            String str = symbolTable.getVar("str").value;
-            returnValue = str.length();
-        } 
-        else {
-            // Locate and execute the corresponding FunctionDefNode
-            FuncDefNode functionDefNode = funcInfo.getFunctionDefNode();
-            // Execute the function body and capture its return value
-            returnValue = functionDefNode.execute(symbolTable);
-        }
+
+        // Locate and execute the corresponding FunctionDefNode
+        FuncDefNode functionDefNode = funcInfo.getFunctionDefNode();
+        // Execute the function body and capture its return value
+        returnValue = functionDefNode.execute(symbolTable);
 
         // Restore the previous scope
         symbolTable.current_scope = previousScope;
