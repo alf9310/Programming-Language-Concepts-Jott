@@ -17,11 +17,13 @@ public class ElseIfNode implements JottTree {
     // vars
     ExpressionNode expr;
     BodyNode body;
+    Boolean runElseIf;
 
     // constructor
     public ElseIfNode(ExpressionNode exprNode, BodyNode bodyNode) {
         this.expr = exprNode;
         this.body = bodyNode;
+        this.runElseIf = false;
     }
 
     public DataType getReturnType() throws Exception {
@@ -32,8 +34,8 @@ public class ElseIfNode implements JottTree {
         return this.body.allReturn();
     }
 
-    public Boolean executes(SymbolTable symbolTable) throws Exception {
-        return (Boolean)this.expr.execute(symbolTable);
+    public Boolean runs(SymbolTable symbolTable) {
+        return this.runElseIf;
     }
 
     public Token getToken() {
@@ -129,6 +131,7 @@ public class ElseIfNode implements JottTree {
         // To be implemented in phase 4
         // throw new UnsupportedOperationException("Execution not supported yet.");
         if((Boolean)this.expr.execute(symbolTable)) {
+            this.runElseIf = true;
             return this.body.execute(symbolTable);
         }
         return null;

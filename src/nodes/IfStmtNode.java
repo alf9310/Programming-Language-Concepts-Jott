@@ -172,8 +172,9 @@ public class IfStmtNode implements BodyStmtNode {
             return this.body.execute(symbolTable);
         }
         for(ElseIfNode elseIf: this.elseIfs) {
-            if(elseIf.executes(symbolTable)) {
-                return elseIf.execute(symbolTable);
+            Object result = elseIf.execute(symbolTable);
+            if(elseIf.runElseIf = true) {
+                return result;
             }
         }
         return this.elseBlock.execute(symbolTable);
