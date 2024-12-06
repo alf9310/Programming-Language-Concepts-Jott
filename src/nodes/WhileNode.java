@@ -120,7 +120,7 @@ public class WhileNode implements BodyStmtNode {
             // special case where expr is an id (boolean variable)
             while(runLoop.toString().equalsIgnoreCase("true")) {
                 Object result = this.body.execute(symbolTable);
-                if(result != null) {
+                if(!result.equals("")) {
                     return result;
                 }
                 runLoop = this.expr.execute(symbolTable);
