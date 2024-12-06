@@ -14,6 +14,7 @@ public class Jott {
         String filename = args[0];
 
         ArrayList<Token> tokens = JottTokenizer.tokenize(filename);
+
         if (tokens == null) {
             return;
         }

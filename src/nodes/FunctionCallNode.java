@@ -178,15 +178,18 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
      */
     @Override
     public Object execute(SymbolTable symbolTable) throws Exception{
+        //System.out.println("Function Call execute " + this.id.getToken().getToken());
         //Print
         String print_String;
         if (this.id.getToken().getToken().equals("print")) {
             if ((this.params.expr instanceof ExpressionNode)) {
+                //System.out.println("Expression Node");
                 ExpressionNode expr = this.params.expr;
                 print_String = expr.execute(symbolTable).toString();
                 print_String = print_String.replace("\"", "");
                 System.out.println(print_String);
             } else {
+                //System.out.println("Not Expression Node");
                 //TODO I think this want expression not parameter but will double check while testing
                 VarInfo var = symbolTable.getVar(this.params.expr.getToken().getToken());
                 if (var != null) {
@@ -198,18 +201,19 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
             return null;
         }
 
-        // ----------General Use-Case----------
         Object returnValue = null;
 
+        // Concat
         if (this.id.getToken().getToken().equals("concat")) {
+            //System.out.println("Concat execute"); 
             String concat_str1, concat_str2;
             if (this.params.expr.getToken().getTokenType() == TokenType.STRING) {
                 // String
-                 concat_str1 = this.params.expr.getToken().getToken();
+                concat_str1 = this.params.expr.getToken().getToken();
             } else {
                 // Variable name
                 String str1_var_name = this.params.expr.getToken().getToken();
-                 concat_str1 = symbolTable.getVar(str1_var_name).value;
+                concat_str1 = symbolTable.getVar(str1_var_name).value;
             }
             
             if (this.params.paramst.get(0).expr.getToken().getTokenType() == TokenType.STRING) {
@@ -225,7 +229,10 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
             returnValue = concat_str1 + concat_str2;
             // System.out.println(returnValue);
             return returnValue;
+        
+        // Length
         } else if (this.id.getToken().getToken().equals("length")) {
+            //System.out.println("length execute"); 
             String len_string;
             if (this.params.expr.getToken().getTokenType() == TokenType.STRING) {
                 // String
@@ -239,6 +246,9 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
             returnValue = len_string.length();
             return returnValue;
         }
+
+        // ----------General Use-Case----------
+        //System.out.println("General execute"); 
 
         // Save the current scope
         String previousScope = symbolTable.current_scope;

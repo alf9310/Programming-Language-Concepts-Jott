@@ -1,11 +1,13 @@
-#foobar
+#foobar\n6
 #this will pass phase 3
 
 def main[]:Void{
     String s;
+    String s2;
     Integer len;
     s = "foo";
-    ::concat[s, "bar"];
-    ::print[s];
-    len = ::length[s];
+    s2 = ::concat[s, "bar"];
+    ::print[s2];
+    len = ::length[s2];
+    ::print[len];
 }

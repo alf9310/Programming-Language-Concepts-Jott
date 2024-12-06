@@ -130,17 +130,14 @@ public class BodyNode implements JottTree {
      */
     @Override
     public Object execute(SymbolTable symbolTable) throws Exception {
-        Object result;
-
         // Execute body statements
         for (BodyStmtNode bodyStmt : this.bodyStmts) {
-            result = bodyStmt.execute(symbolTable);
+            bodyStmt.execute(symbolTable);
 
             // If a return value is encountered, terminate execution early and return value
-            // TODO, Will need a better way to check for a function return 
-            // (as non-function returns like function call can also return)
-            if (result != null) {
-                return result;
+            FunctionInfo func = symbolTable.getFunction(symbolTable.current_scope);
+            if (func.returnValue != null){
+                return func.returnValue;
             }
         }
 

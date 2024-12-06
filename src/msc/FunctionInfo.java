@@ -14,6 +14,7 @@ import nodes.FuncDefNode;
 public class FunctionInfo {
     public String name;
     public String returnType;
+    public String returnValue;
     //NOTE there is a seperate parameter list to validate correct types passed in
     // also check number to params
     public HashMap<String, String> parameterTypes;
@@ -24,6 +25,8 @@ public class FunctionInfo {
     public FunctionInfo(String name, String returnType, HashMap<String, String> parameterTypes, FuncDefNode functionDefNode) {
         this.name = name;
         this.returnType = returnType;
+        // return value starts as null
+        this.returnValue = null;
         this.parameterTypes = parameterTypes;
         this.functionDefNode = functionDefNode;
         // var list starts empty
