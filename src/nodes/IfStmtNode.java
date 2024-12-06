@@ -168,7 +168,12 @@ public class IfStmtNode implements BodyStmtNode {
     @Override
     public Object execute(SymbolTable symbolTable) throws Exception {
         // To be implemented in phase 4
-        if((Boolean)this.expr.execute(symbolTable)) {
+        Object runIf = this.expr.execute(symbolTable);
+        if(runIf instanceof String) {
+            if(runIf.toString().equalsIgnoreCase("true")) {
+                return this.body.execute(symbolTable);
+            }
+        } else if((Boolean)runIf) {
             return this.body.execute(symbolTable);
         }
         for(ElseIfNode elseIf: this.elseIfs) {

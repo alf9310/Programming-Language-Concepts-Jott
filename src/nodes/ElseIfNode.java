@@ -130,7 +130,13 @@ public class ElseIfNode implements JottTree {
     public Object execute(SymbolTable symbolTable) throws Exception {
         // To be implemented in phase 4
         // throw new UnsupportedOperationException("Execution not supported yet.");
-        if((Boolean)this.expr.execute(symbolTable)) {
+        Object runCurrent = this.expr.execute(symbolTable);
+        if(runCurrent instanceof String) {
+            if(runCurrent.toString().equalsIgnoreCase("true")) {
+                this.runElseIf = true;
+                return this.body.execute(symbolTable);
+            }
+        } else if((Boolean)runCurrent) {
             this.runElseIf = true;
             return this.body.execute(symbolTable);
         }
