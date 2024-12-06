@@ -178,7 +178,6 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
      */
     @Override
     public Object execute(SymbolTable symbolTable) throws Exception{
-        System.out.println(this.id.getToken().getToken());
         //Print
         if (this.id.getToken().getToken().equals("print")) {
             if ((this.params.expr instanceof ExpressionNode)) {
@@ -222,8 +221,17 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
             // System.out.println(returnValue);
             return returnValue;
         } else if (this.id.getToken().getToken().equals("length")) {
-            String str = symbolTable.getVar("str").value;
-            returnValue = str.length();
+            String len_string;
+            if (this.params.expr.getToken().getTokenType() == TokenType.STRING) {
+                // String
+                len_string = this.params.expr.getToken().getToken();
+            } else {
+                // Variable name
+                String str_var_name = this.params.expr.getToken().getToken();
+                len_string = symbolTable.getVar(str_var_name).value;
+            }
+            len_string = len_string.replace("\"", "");
+            returnValue = len_string.length();
             return returnValue;
         }
 
