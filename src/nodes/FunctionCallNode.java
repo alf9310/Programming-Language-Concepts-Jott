@@ -179,15 +179,20 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
     @Override
     public Object execute(SymbolTable symbolTable) throws Exception{
         //Print
+        String print_String;
         if (this.id.getToken().getToken().equals("print")) {
             if ((this.params.expr instanceof ExpressionNode)) {
                 ExpressionNode expr = this.params.expr;
-                System.out.println(expr.execute(symbolTable));
+                print_String = expr.execute(symbolTable).toString();
+                print_String = print_String.replace("\"", "");
+                System.out.println(print_String);
             } else {
                 //TODO I think this want expression not parameter but will double check while testing
                 VarInfo var = symbolTable.getVar(this.params.expr.getToken().getToken());
                 if (var != null) {
-                    System.out.println(var.value);
+                    print_String = var.value;
+                    print_String = print_String.replace("\"", "");
+                    System.out.println(print_String);
                 }
             }
             return null;
