@@ -1,0 +1,17 @@
+Def foo[]:Integer{
+    Integer x;
+    x = 5;
+    If[x > 5]{
+        If[x < 10]{
+            ::print[x];
+        }
+        Return x;
+    }
+    Else{
+        Return x;
+    }
+}
+
+def main[]:Void{
+    ::foo[];
+}

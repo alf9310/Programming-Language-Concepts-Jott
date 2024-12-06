@@ -1,0 +1,5 @@
+Def main[]:Void{
+    ::print[5];
+    #this is a comment
+    ::print[ "foo bar"];
+}

@@ -1,0 +1,6 @@
+#Hello World
+#this is hello world in Jott
+
+Def main[]:Void{
+    ::print["Hello World"];
+}
