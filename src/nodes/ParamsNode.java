@@ -107,6 +107,7 @@ public class ParamsNode implements JottTree {
 
         // If first papameter's expression exists
         if (expr != null){
+            //System.out.println("Execute first param");
             // Get the expression's value
             Object value = expr.execute(symbolTable);
             // Get the name of the first parameter from the function info
@@ -120,6 +121,7 @@ public class ParamsNode implements JottTree {
             // Execute other parameters
             Integer index = 2;
             for (ParamsTNode paramt : paramst) {
+                // System.out.println("Execute " + index +"param");
                 // Get the expression's value
                 Object valuet = paramt.expr.execute(symbolTable);
                 // Get the name of the current parametert from the function info
@@ -129,6 +131,7 @@ public class ParamsNode implements JottTree {
                 VarInfo paramt_info = symbolTable.getVar(param_name_t);
                 // Set the value of the param
                 paramt_info.value = String.valueOf(valuet);
+                index += 1;
             }
         }
 

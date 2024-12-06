@@ -183,13 +183,13 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
         String print_String;
         if (this.id.getToken().getToken().equals("print")) {
             if ((this.params.expr instanceof ExpressionNode)) {
-                //System.out.println("Expression Node");
+                //System.out.println("print expression Node");
                 ExpressionNode expr = this.params.expr;
                 print_String = expr.execute(symbolTable).toString();
                 print_String = print_String.replace("\"", "");
                 System.out.println(print_String);
             } else {
-                //System.out.println("Not Expression Node");
+                //System.out.println("print not Expression Node");
                 //TODO I think this want expression not parameter but will double check while testing
                 VarInfo var = symbolTable.getVar(this.params.expr.getToken().getToken());
                 if (var != null) {
