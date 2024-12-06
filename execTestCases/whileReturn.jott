@@ -1,0 +1,18 @@
+def foo[]:Integer{
+    Integer i;
+    Integer k;
+    i = 5;
+    k = 1;
+    While[i < 10] {
+        k = i * k;
+        If[k > 200]{
+            Return k;
+        }
+        i = i + 1;
+    }
+    Return i;
+}
+
+def main[]:Void{
+    ::print[::foo[]];
+}

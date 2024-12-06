@@ -130,7 +130,7 @@ public class WhileNode implements BodyStmtNode {
         while((Boolean)runLoop) {
             // expr is some sort of relational operation
             Object result = this.body.execute(symbolTable);
-            if(result != null) {
+            if(!result.equals("")) {
                 return result;
             }
             runLoop = this.expr.execute(symbolTable);
