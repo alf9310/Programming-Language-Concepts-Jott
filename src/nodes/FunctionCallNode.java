@@ -182,16 +182,8 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
         if (this.id.getToken().getToken().equals("print")) {
             if ((this.params.expr instanceof ExpressionNode)) {
                 ExpressionNode expr = this.params.expr;
-                // just print: operand, stringliteral, bool
-                if (expr instanceof OperandNode || expr instanceof StringLiteralNode || expr instanceof BooleanNode) {
-                    System.out.println(expr.getToken().getToken());
-                }
-                // evaluate: mathop, relop
-                else if (expr instanceof ExpressionNode) {
-                    System.out.println(expr.execute(symbolTable));
-                }
+                System.out.println(expr.execute(symbolTable));
             } else {
-                // Might be printing a variable of the current scope
                 //TODO I think this want expression not parameter but will double check while testing
                 VarInfo var = symbolTable.getVar(this.params.expr.getToken().getToken());
                 if (var != null) {
