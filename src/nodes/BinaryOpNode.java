@@ -136,7 +136,7 @@ public class BinaryOpNode implements ExpressionNode {
             double left = Double.parseDouble(leftValue.toString());
             double right = Double.parseDouble(rightValue.toString());
         
-            return switch (operator.getToken()) {
+            return switch (operator.getToken().getToken()) {
                 case ">" -> left > right;
                 case "<" -> left < right;
                 case ">=" -> left >= right;
@@ -153,7 +153,7 @@ public class BinaryOpNode implements ExpressionNode {
                 int left = (Integer) leftValue;
                 int right = (Integer) rightValue;
         
-                return switch (operator.getToken()) {
+                return switch (operator.getToken().getToken()) {
                     case "+" -> left + right;
                     case "-" -> left - right;
                     case "*" -> left * right;
@@ -167,7 +167,7 @@ public class BinaryOpNode implements ExpressionNode {
                 double left = Double.parseDouble(leftValue.toString());
                 double right = Double.parseDouble(rightValue.toString());
         
-                return switch (operator.getToken()) {
+                return switch (operator.getToken().getToken()) {
                     case "+" -> left + right;
                     case "-" -> left - right;
                     case "*" -> left * right;
