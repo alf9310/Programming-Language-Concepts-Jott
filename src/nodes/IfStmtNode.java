@@ -170,10 +170,12 @@ public class IfStmtNode implements BodyStmtNode {
         // To be implemented in phase 4
         Object runIf = this.expr.execute(symbolTable);
         if(runIf instanceof String) {
+            // expr is a boolean variable
             if(runIf.toString().equalsIgnoreCase("true")) {
                 return this.body.execute(symbolTable);
             }
         } else if((Boolean)runIf) {
+            // expr is a relational operation
             return this.body.execute(symbolTable);
         }
         for(ElseIfNode elseIf: this.elseIfs) {

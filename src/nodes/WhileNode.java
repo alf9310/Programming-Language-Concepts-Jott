@@ -115,13 +115,25 @@ public class WhileNode implements BodyStmtNode {
     @Override
     public Object execute(SymbolTable symbolTable) throws Exception {
         // To be implemented in phase 4
-        // TODO: double check expr returns obj version of primitive
-        while((Boolean)this.expr.execute(symbolTable)) {
-            // TODO: double check body returns null if no return
+        Object runLoop = this.expr.execute(symbolTable);
+        if(runLoop instanceof String) {
+            // special case where expr is an id (boolean variable)
+            while(runLoop.toString().equalsIgnoreCase("true")) {
+                Object result = this.body.execute(symbolTable);
+                if(result != null) {
+                    return result;
+                }
+                runLoop = this.expr.execute(symbolTable);
+            }
+            return null;
+        }
+        while((Boolean)runLoop) {
+            // expr is some sort of relational operation
             Object result = this.body.execute(symbolTable);
             if(result != null) {
                 return result;
             }
+            runLoop = this.expr.execute(symbolTable);
         }
         return null;
     }
