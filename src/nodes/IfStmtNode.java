@@ -173,7 +173,7 @@ public class IfStmtNode implements BodyStmtNode {
         }
         for(ElseIfNode elseIf: this.elseIfs) {
             Object result = elseIf.execute(symbolTable);
-            if(elseIf.runElseIf = true) {
+            if(elseIf.runs() == true) {
                 return result;
             }
         }

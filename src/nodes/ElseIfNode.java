@@ -34,7 +34,7 @@ public class ElseIfNode implements JottTree {
         return this.body.allReturn();
     }
 
-    public Boolean runs(SymbolTable symbolTable) {
+    public Boolean runs() {
         return this.runElseIf;
     }
 
