@@ -179,23 +179,20 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
     @Override
     public Object execute(SymbolTable symbolTable) throws Exception{
         //Print
+        String print_String;
         if (this.id.getToken().getToken().equals("print")) {
             if ((this.params.expr instanceof ExpressionNode)) {
                 ExpressionNode expr = this.params.expr;
-                // just print: operand, stringliteral, bool
-                if (expr instanceof OperandNode || expr instanceof StringLiteralNode || expr instanceof BooleanNode) {
-                    System.out.println(expr.getToken().getToken());
-                }
-                // evaluate: mathop, relop
-                else if (expr instanceof ExpressionNode) {
-                    System.out.println(expr.execute(symbolTable));
-                }
+                print_String = expr.execute(symbolTable).toString();
+                print_String = print_String.replace("\"", "");
+                System.out.println(print_String);
             } else {
-                // Might be printing a variable of the current scope
                 //TODO I think this want expression not parameter but will double check while testing
                 VarInfo var = symbolTable.getVar(this.params.expr.getToken().getToken());
                 if (var != null) {
-                    System.out.println(var.value);
+                    print_String = var.value;
+                    print_String = print_String.replace("\"", "");
+                    System.out.println(print_String);
                 }
             }
             return null;
@@ -203,6 +200,46 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
 
         // ----------General Use-Case----------
         Object returnValue = null;
+
+        if (this.id.getToken().getToken().equals("concat")) {
+            String concat_str1, concat_str2;
+            if (this.params.expr.getToken().getTokenType() == TokenType.STRING) {
+                // String
+                 concat_str1 = this.params.expr.getToken().getToken();
+            } else {
+                // Variable name
+                String str1_var_name = this.params.expr.getToken().getToken();
+                 concat_str1 = symbolTable.getVar(str1_var_name).value;
+            }
+            
+            if (this.params.paramst.get(0).expr.getToken().getTokenType() == TokenType.STRING) {
+                // String
+                 concat_str2 = this.params.paramst.get(0).expr.getToken().getToken();
+            } else  { 
+                // Variable name
+                String str2_var_name = this.params.paramst.get(0).expr.getToken().getToken();
+                 concat_str2 = symbolTable.getVar(str2_var_name).value;
+            }
+            concat_str1 = concat_str1.replace("\"", "");
+            concat_str2 = concat_str2.replace("\"", "");
+            returnValue = concat_str1 + concat_str2;
+            // System.out.println(returnValue);
+            return returnValue;
+        } else if (this.id.getToken().getToken().equals("length")) {
+            String len_string;
+            if (this.params.expr.getToken().getTokenType() == TokenType.STRING) {
+                // String
+                len_string = this.params.expr.getToken().getToken();
+            } else {
+                // Variable name
+                String str_var_name = this.params.expr.getToken().getToken();
+                len_string = symbolTable.getVar(str_var_name).value;
+            }
+            len_string = len_string.replace("\"", "");
+            returnValue = len_string.length();
+            return returnValue;
+        }
+
         // Save the current scope
         String previousScope = symbolTable.current_scope;
 
@@ -215,22 +252,11 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
         // Execute the parameters (handles setting their values in the symbol table)
         this.params.execute(symbolTable);
 
-        if (this.id.getToken().getToken().equals("concat")) {
-            String str1 = symbolTable.getVar("str1").value;
-            String str2 = symbolTable.getVar("str2").value;
-            returnValue = str1 + str2;
-            
-        }
-        else if (this.id.getToken().getToken().equals("length")) { 
-            String str = symbolTable.getVar("str").value;
-            returnValue = str.length();
-        } 
-        else {
-            // Locate and execute the corresponding FunctionDefNode
-            FuncDefNode functionDefNode = funcInfo.getFunctionDefNode();
-            // Execute the function body and capture its return value
-            returnValue = functionDefNode.execute(symbolTable);
-        }
+
+        // Locate and execute the corresponding FunctionDefNode
+        FuncDefNode functionDefNode = funcInfo.getFunctionDefNode();
+        // Execute the function body and capture its return value
+        returnValue = functionDefNode.execute(symbolTable);
 
         // Restore the previous scope
         symbolTable.current_scope = previousScope;

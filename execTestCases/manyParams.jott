@@ -1,0 +1,10 @@
+Def foo[x:Integer, y:Integer, z:Integer]:Integer{
+    Integer sum;
+    sum = x + y;
+    sum = sum + z;
+    Return sum;
+}
+
+def main[]:Void{
+    ::foo[1, 3, 5];
+}
