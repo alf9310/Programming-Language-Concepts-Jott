@@ -127,60 +127,76 @@ public class BinaryOpNode implements ExpressionNode {
     @Override
     public Object execute(SymbolTable symbolTable) throws Exception {
         // Execute left and right operands to get their values
-        Object leftValue = leftOperand.execute(symbolTable);
-        Object rightValue = rightOperand.execute(symbolTable);
+        String leftValue = leftOperand.execute(symbolTable).toString();
+        String rightValue = rightOperand.execute(symbolTable).toString();
+
+        // Return the resulting value of the operation
+        Object result = null;
+
+        // Operator
+        String op = operator.getToken().getToken();
 
         if (operator.getTokenType() == TokenType.REL_OP) {
             // For Relational Operator checks
             // Perform relational operation
-            double left = Double.parseDouble(leftValue.toString());
-            double right = Double.parseDouble(rightValue.toString());
+            double left = Double.parseDouble(leftValue);
+            double right = Double.parseDouble(rightValue);
         
-            return switch (operator.getToken().getToken()) {
-                case ">" -> left > right;
-                case "<" -> left < right;
-                case ">=" -> left >= right;
-                case "<=" -> left <= right;
-                case "==" -> left == right;
-                case "!=" -> left != right;
-                default -> throw new UnsupportedOperationException("Unknown operator: " + operator.getToken());
-            };
+            if( ">".equals(op)){
+                result = left > right;
+            } else if ( "<".equals(op)){
+                result = left < right;
+            } else if ( ">=".equals(op)){
+                result = left >= right;
+            } else if ( "<=".equals(op)){
+                result = left <= right;
+            } else if ( "==".equals(op)){
+                result = left == right;
+            } else if ( "!=".equals(op)){
+                result = left != right;
+            }
 
         } else if (operator.getTokenType() == TokenType.MATH_OP) {
             // For Mathematical Operator checks
-            // Perform math operation based on the type
-            if (leftValue instanceof Integer && rightValue instanceof Integer) {
-                int left = (Integer) leftValue;
-                int right = (Integer) rightValue;
+            DataType leftType = leftOperand.getType(symbolTable);
+
+            // For Mathematical Operator checks
+            // Integer operation
+            if (leftType == DataType.INTEGER) {
+                int left = Integer.parseInt(leftValue);
+                int right = Integer.parseInt(rightValue);
+
+                if("+".equals(op)){
+                    result = left + right;
+                } else if("-".equals(op)){
+                    result = left - right;
+                } else if("*".equals(op)){
+                    result = left * right;
+                } else if("/".equals(op)){
+                    if (right == 0) throw new ArithmeticException("Division by zero");
+                    result = left / right;
+                }
+            // Double operation
+            } else if (leftType == DataType.DOUBLE) {
+                double left = Double.parseDouble(leftValue);
+                double right = Double.parseDouble(rightValue);
         
-                return switch (operator.getToken().getToken()) {
-                    case "+" -> left + right;
-                    case "-" -> left - right;
-                    case "*" -> left * right;
-                    case "/" -> {
-                        if (right == 0) throw new ArithmeticException("Division by zero");
-                        yield left / right;
-                    }
-                    default -> throw new UnsupportedOperationException("Unknown operator: " + operator.getToken());
-                };
-            } else if (leftValue instanceof Double || rightValue instanceof Double) {
-                double left = Double.parseDouble(leftValue.toString());
-                double right = Double.parseDouble(rightValue.toString());
-        
-                return switch (operator.getToken().getToken()) {
-                    case "+" -> left + right;
-                    case "-" -> left - right;
-                    case "*" -> left * right;
-                    case "/" -> {
-                        if (right == 0.0) throw new ArithmeticException("Division by zero");
-                        yield left / right;
-                    }
-                    default -> throw new UnsupportedOperationException("Unknown operator: " + operator.getToken());
-                };
+                if("+".equals(op)){
+                    result = left + right;
+                } else if("-".equals(op)){
+                    result = left - right;
+                } else if("*".equals(op)){
+                    result = left * right;
+                } else if("/".equals(op)){
+                    if (right == 0.0) throw new ArithmeticException("Division by zero");
+                    if (right == 0) throw new ArithmeticException("Division by zero");
+                    result = left / right;
+                }
             }
         }
 
-        return null;
+        // Return result
+        return result;
     }
 
     public static void main(String[] args) {

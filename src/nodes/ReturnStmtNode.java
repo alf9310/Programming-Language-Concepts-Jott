@@ -111,6 +111,7 @@ public class ReturnStmtNode implements JottTree {
             // body w/o return is valid
             return null;
         }
+
         String returnValue = expr.execute(symbolTable).toString();
         // Get function info and set return value
         FunctionInfo func = symbolTable.getFunction(symbolTable.current_scope);
