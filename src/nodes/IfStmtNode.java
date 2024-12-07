@@ -169,23 +169,39 @@ public class IfStmtNode implements BodyStmtNode {
     public Object execute(SymbolTable symbolTable) throws Exception {
         // To be implemented in phase 4
         Object runIf = this.expr.execute(symbolTable);
-        System.out.println("Run If:" + runIf);
+        Object result;
+        FunctionInfo func = symbolTable.getFunction(symbolTable.current_scope);
         if(runIf instanceof String) {
             // expr is a boolean variable
             if(runIf.toString().equalsIgnoreCase("true")) {
-                return this.body.execute(symbolTable);
+                result = this.body.execute(symbolTable);
+                if(result != null) {
+                    func.returnValue = result.toString();
+                }
+                return result;
             }
         } else if((Boolean)runIf) {
             // expr is a relational operation
-            return this.body.execute(symbolTable);
+            result = this.body.execute(symbolTable);
+            if(result != null) {
+                func.returnValue = result.toString();
+            }
+            return result;
         }
         for(ElseIfNode elseIf: this.elseIfs) {
-            Object result = elseIf.execute(symbolTable);
+            result = elseIf.execute(symbolTable);
             if(elseIf.runs() == true) {
+                if(result != null) {
+                    func.returnValue = result.toString();
+                }
                 return result;
             }
         }
-        return this.elseBlock.execute(symbolTable);
+        result = this.elseBlock.execute(symbolTable);
+        if(result != null) {
+            func.returnValue = result.toString();
+        }
+        return result;
     }
 
 }

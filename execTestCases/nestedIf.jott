@@ -13,5 +13,5 @@ Def foo[]:Integer{
 }
 
 def main[]:Void{
-    ::foo[];
+    ::print[::foo[]];
 }
