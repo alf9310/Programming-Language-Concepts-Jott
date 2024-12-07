@@ -116,11 +116,13 @@ public class WhileNode implements BodyStmtNode {
     public Object execute(SymbolTable symbolTable) throws Exception {
         // To be implemented in phase 4
         Object runLoop = this.expr.execute(symbolTable);
+        FunctionInfo func = symbolTable.getFunction(symbolTable.current_scope);
         if(runLoop instanceof String) {
             // special case where expr is an id (boolean variable)
             while(runLoop.toString().equalsIgnoreCase("true")) {
                 Object result = this.body.execute(symbolTable);
                 if(!result.equals("")) {
+                    func.returnValue = result.toString();
                     return result;
                 }
                 runLoop = this.expr.execute(symbolTable);
@@ -131,6 +133,7 @@ public class WhileNode implements BodyStmtNode {
             // expr is some sort of relational operation
             Object result = this.body.execute(symbolTable);
             if(!result.equals("")) {
+                func.returnValue = result.toString();
                 return result;
             }
             runLoop = this.expr.execute(symbolTable);

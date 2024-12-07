@@ -169,13 +169,13 @@ public class IfStmtNode implements BodyStmtNode {
     public Object execute(SymbolTable symbolTable) throws Exception {
         // To be implemented in phase 4
         Object runIf = this.expr.execute(symbolTable);
-        Object result;
+        Object result = null;
         FunctionInfo func = symbolTable.getFunction(symbolTable.current_scope);
         if(runIf instanceof String) {
             // expr is a boolean variable
             if(runIf.toString().equalsIgnoreCase("true")) {
                 result = this.body.execute(symbolTable);
-                if(result != null) {
+                if(result != null && !result.equals("")) {
                     func.returnValue = result.toString();
                 }
                 return result;
@@ -183,7 +183,7 @@ public class IfStmtNode implements BodyStmtNode {
         } else if((Boolean)runIf) {
             // expr is a relational operation
             result = this.body.execute(symbolTable);
-            if(result != null) {
+            if(result != null && !result.equals("")) {
                 func.returnValue = result.toString();
             }
             return result;
@@ -191,14 +191,14 @@ public class IfStmtNode implements BodyStmtNode {
         for(ElseIfNode elseIf: this.elseIfs) {
             result = elseIf.execute(symbolTable);
             if(elseIf.runs() == true) {
-                if(result != null) {
+                if(result != null && !result.equals("")) {
                     func.returnValue = result.toString();
                 }
                 return result;
             }
         }
         result = this.elseBlock.execute(symbolTable);
-        if(result != null) {
+        if(result != null && !result.equals("")) {
             func.returnValue = result.toString();
         }
         return result;

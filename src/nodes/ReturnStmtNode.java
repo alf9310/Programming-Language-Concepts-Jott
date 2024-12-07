@@ -109,7 +109,8 @@ public class ReturnStmtNode implements JottTree {
     public Object execute(SymbolTable symbolTable) throws Exception {
         if(this.expr == null) {
             // body w/o return is valid
-            return null;
+            return "";
+            //return null;
         }
 
         String returnValue = expr.execute(symbolTable).toString();
