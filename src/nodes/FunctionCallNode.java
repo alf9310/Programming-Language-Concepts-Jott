@@ -178,7 +178,7 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
      */
     @Override
     public Object execute(SymbolTable symbolTable) throws Exception{
-        //System.out.println("Function Call execute " + this.id.getToken().getToken());
+        // System.out.println("Function Call execute " + this.id.getToken().getToken());
         //Print
         String print_String;
         if (this.id.getToken().getToken().equals("print")) {

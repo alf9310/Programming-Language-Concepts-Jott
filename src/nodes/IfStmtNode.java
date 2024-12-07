@@ -169,6 +169,7 @@ public class IfStmtNode implements BodyStmtNode {
     public Object execute(SymbolTable symbolTable) throws Exception {
         // To be implemented in phase 4
         Object runIf = this.expr.execute(symbolTable);
+        System.out.println("Run If:" + runIf);
         if(runIf instanceof String) {
             // expr is a boolean variable
             if(runIf.toString().equalsIgnoreCase("true")) {

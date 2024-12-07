@@ -130,22 +130,28 @@ public class BodyNode implements JottTree {
      */
     @Override
     public Object execute(SymbolTable symbolTable) throws Exception {
+        // If a return value is encountered, terminate execution early and return value
+        FunctionInfo func = symbolTable.getFunction(symbolTable.current_scope);
+
         // Execute body statements
         for (BodyStmtNode bodyStmt : this.bodyStmts) {
             bodyStmt.execute(symbolTable);
-
-            // If a return value is encountered, terminate execution early and return value
-            FunctionInfo func = symbolTable.getFunction(symbolTable.current_scope);
             if (func.returnValue != null){
-                return func.returnValue;
+                String returnStr = func.returnValue;
+                func.returnValue = null;
+                return returnStr;
             }
         }
+
+        func.returnValue = null;
 
         if (this.returnStmt == null) {
             return "";
         }
         else {
-            return this.returnStmt.execute(symbolTable);
+            Object returnStmtVal = this.returnStmt.execute(symbolTable);
+            func.returnValue = null;
+            return returnStmtVal;
         }
         
     }

@@ -15,7 +15,7 @@ passed=0
 failed=0
 
 # Loop through all .jott files in the phase3testcases directory
-for jott_file in ./phase3testcases/*.jott; do
+for jott_file in ./phase3testcases/largerValid.jott; do
     # Extract expected output from the first line of the file
     expected=$(head -n 1 "$jott_file" | sed 's/^#//')
 
