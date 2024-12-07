@@ -1,4 +1,4 @@
-# should throw a runtime error for division by 0
+#Division by zero
 
 Def main[]:Void{
 	Integer x;

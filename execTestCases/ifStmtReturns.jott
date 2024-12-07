@@ -1,3 +1,4 @@
+#
 Def foo[]:Integer{
     Integer x;
     x = 5;

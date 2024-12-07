@@ -10,7 +10,6 @@ Def baz[]:Void{
 }
 
 Def bar[x:Double]:String{
-    ::print[x];
     If[x > 5.1]{
         Return "bar";
     }
