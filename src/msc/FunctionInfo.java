@@ -15,6 +15,8 @@ public class FunctionInfo {
     public String name;
     public String returnType;
     public String returnValue;
+    // "caller" function to be used when processing function call params
+    public FunctionInfo caller;
     //NOTE there is a seperate parameter list to validate correct types passed in
     // also check number to params
     public HashMap<String, String> parameterTypes;
@@ -27,6 +29,8 @@ public class FunctionInfo {
         this.returnType = returnType;
         // return value starts as null
         this.returnValue = null;
+        // "caller" function to be used when processing function call params
+        this.caller = null;
         this.parameterTypes = parameterTypes;
         this.functionDefNode = functionDefNode;
         // var list starts empty

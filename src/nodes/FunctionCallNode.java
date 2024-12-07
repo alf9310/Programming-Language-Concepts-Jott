@@ -254,17 +254,26 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
         String previousScope = symbolTable.current_scope;
 
         // Find the function being called
-        FunctionInfo funcInfo = symbolTable.getFunction(this.id.getToken().getToken());
+        FunctionInfo funcCall = symbolTable.getFunction(this.id.getToken().getToken());
 
-        // Set the scope to the called function
-        symbolTable.enterScope(id.getToken().getToken());
+        //System.out.println("Previous Scope: " + previousScope + ", Func Call: " + this.id.getToken().getToken()); 
+
+        // Get function info of the prevous scope
+        FunctionInfo funcPrev = symbolTable.getFunction(previousScope);
+        // Set the caller as the current function to be referenced in the parameters
+        funcPrev.caller = funcCall;
 
         // Execute the parameters (handles setting their values in the symbol table)
         this.params.execute(symbolTable);
 
+        // Reset the caller
+        funcPrev.caller = null;
+
+        // Set the scope to the called function
+        symbolTable.enterScope(id.getToken().getToken());
 
         // Locate and execute the corresponding FunctionDefNode
-        FuncDefNode functionDefNode = funcInfo.getFunctionDefNode();
+        FuncDefNode functionDefNode = funcCall.getFunctionDefNode();
         // Execute the function body and capture its return value
         returnValue = functionDefNode.execute(symbolTable);
 

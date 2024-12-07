@@ -103,20 +103,29 @@ public class ParamsNode implements JottTree {
     @Override
     public Object execute(SymbolTable symbolTable) throws Exception {
         // Get function info
-        FunctionInfo func = symbolTable.getFunction(symbolTable.current_scope);
+        FunctionInfo func = symbolTable.getFunction(symbolTable.current_scope).caller;
+        String previousScope = symbolTable.current_scope;
+        //System.out.println(func.name);
 
         // If first papameter's expression exists
         if (expr != null){
             //System.out.println("Execute first param");
             // Get the expression's value
             Object value = expr.execute(symbolTable);
+            // System.out.println(value);
             // Get the name of the first parameter from the function info
             String param_name = func.parameterOrder.get(1);
+
+            // Set the scope to the called function
+            symbolTable.enterScope(func.name);
 
             // Get the varInfo for the first param
             VarInfo param_info = symbolTable.getVar(param_name);
             // Set the value of the param
             param_info.value = String.valueOf(value);
+
+            // Restore the previous scope
+            symbolTable.current_scope = previousScope;
 
             // Execute other parameters
             Integer index = 2;
@@ -127,10 +136,17 @@ public class ParamsNode implements JottTree {
                 // Get the name of the current parametert from the function info
                 String param_name_t = func.parameterOrder.get(index);
 
+                // Set the scope to the called function
+                symbolTable.enterScope(func.name);
+
                 // Get the varInfo for the first param
                 VarInfo paramt_info = symbolTable.getVar(param_name_t);
                 // Set the value of the param
                 paramt_info.value = String.valueOf(valuet);
+
+                // Restore the previous scope
+                symbolTable.current_scope = previousScope;
+
                 index += 1;
             }
         }
